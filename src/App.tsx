@@ -14,6 +14,6 @@ export default App;
 
 const styles = StyleSheet.create({
   container: {
-    padding: PADDING.large,
+    padding: PADDING.xLarge,
   },
 });
