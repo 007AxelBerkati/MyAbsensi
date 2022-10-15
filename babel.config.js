@@ -9,26 +9,24 @@ module.exports = {
         path: '.env',
       },
     ],
+    [
+      'module-resolver',
+      {
+        root: ['./src'],
+        extensions: [
+          '.ts',
+          '.tsx',
+          '.jsx',
+          '.js',
+          '.jsx',
+          '.json',
+          '.svg',
+          '.jpg',
+        ],
+        alias: {
+          components: './src/components',
+        },
+      },
+    ],
   ],
-  // plugins: [
-  //   [
-  //     'module-resolver',
-  //     {
-  //       root: ['./src'],
-  //       extensions: [
-  //         '.ts',
-  //         '.tsx',
-  //         '.jsx',
-  //         '.js',
-  //         '.jsx',
-  //         '.json',
-  //         '.svg',
-  //         '.jpg',
-  //       ],
-  //       alias: {
-  //         components: './src/components',
-  //       },
-  //     },
-  //   ],
-  // ],
 };

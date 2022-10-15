@@ -7,7 +7,10 @@ import {COLORS} from 'theme';
 const MainApp = () => {
   return (
     <>
-      <StatusBar backgroundColor={COLORS.primary} barStyle="default" />
+      <StatusBar
+        backgroundColor={COLORS.background.secondary}
+        barStyle="default"
+      />
       <Navigation />
       <FlashMessage position="top" />
     </>

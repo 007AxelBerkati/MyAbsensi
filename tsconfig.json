@@ -10,7 +10,13 @@
     "paths": {
       "*": ["src/*"],
       "@components": ["src/components/*"],
-      "@themes": ["src/themes/*"]
+      "@themes": ["src/themes/*"],
+      "@screens": ["src/screens/*"],
+      "@utils": ["src/utils/*"],
+      "@assets": ["src/assets/*"],
+      "@hooks": ["src/hooks/*"],
+      "@navigations": ["src/navigations/*"],
+  
     }
   }
 }

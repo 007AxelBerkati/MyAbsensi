@@ -1,8 +1,13 @@
-import propTypes from 'prop-types';
 import React, {memo} from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {borderRadius, colors, fonts, fontSize} from '../../../utils';
+import {COLORS, RADIUS, SIZE, TYPE} from 'theme';
 import FloatingButton from './FloatingButton';
 import IconButton from './IconButton';
 
@@ -12,6 +17,10 @@ type CustomButton = {
   onPress: () => void;
   icon: string;
   disable: boolean;
+  nonButton: boolean;
+  label: string;
+  style: object;
+  styleText: object;
 };
 
 function CustomButton({
@@ -24,8 +33,7 @@ function CustomButton({
   label,
   style,
   styleText,
-  testID,
-}) {
+}: CustomButton) {
   if (type === 'icon-button') {
     return (
       <IconButton
@@ -44,23 +52,20 @@ function CustomButton({
     <TouchableOpacity
       style={
         !disable
-          ? {...styles.container(type), ...style}
+          ? {...container(type), ...style}
           : {...styles.disableBG, ...style}
       }
       onPress={onPress}
-      testID={testID}
       disabled={disable}>
       <Text
-        style={
-          !disable ? {...styles.text(type), ...styleText} : styles.disableText
-        }>
+        style={!disable ? {...text(type), ...styleText} : styles.disableText}>
         {title}
       </Text>
       {icon && (
         <Icon
           name={icon}
           size={24}
-          color={colors.background.primary}
+          color={COLORS.background.primary}
           style={styles.icon}
         />
       )}
@@ -70,67 +75,47 @@ function CustomButton({
 
 export default memo(CustomButton);
 
+const container = (type: string): ViewStyle => ({
+  backgroundColor:
+    type === 'secondary'
+      ? COLORS.button.secondary.background
+      : COLORS.button.primary.background,
+  paddingVertical: 10,
+  borderRadius: RADIUS.large,
+  borderWidth: 1,
+  borderColor:
+    type === 'secondary'
+      ? COLORS.button.secondary.border
+      : COLORS.button.primary.border,
+});
+
+const text = (type: string): TextStyle => ({
+  fontFamily: TYPE.montserratRegular,
+  textAlign: 'center',
+  color:
+    type === 'secondary'
+      ? COLORS.button.secondary.text
+      : COLORS.button.primary.text,
+  fontSize: SIZE.font16,
+});
+
 const styles = StyleSheet.create({
-  container: type => ({
-    backgroundColor:
-      type === 'secondary'
-        ? colors.button.secondary.background
-        : colors.button.primary.background,
-    paddingVertical: 10,
-    borderRadius: borderRadius.large,
-    borderWidth: 1,
-    borderColor:
-      type === 'secondary'
-        ? colors.button.secondary.border
-        : colors.button.primary.border,
-  }),
-  disableBG: {
-    paddingVertical: 10,
-    borderRadius: borderRadius.large,
-    backgroundColor: colors.disable.background,
-  },
   disableText: {
-    fontSize: fontSize.large,
-    fontFamily: fonts.Poppins.Regular,
-    color: colors.disable.text,
+    fontSize: SIZE.font16,
+    fontFamily: TYPE.montserratRegular,
+    color: COLORS.disable.text,
     textAlign: 'center',
   },
-  text: type => ({
-    fontSize: fontSize.large,
-    fontFamily: fonts.Poppins.Regular,
-    textAlign: 'center',
-    color:
-      type === 'secondary'
-        ? colors.button.secondary.text
-        : colors.button.primary.text,
-  }),
 
   icon: {
     position: 'absolute',
     right: 10,
     top: 10,
   },
+
+  disableBG: {
+    paddingVertical: 10,
+    borderRadius: RADIUS.large,
+    backgroundColor: COLORS.disable.background,
+  },
 });
-
-CustomButton.propTypes = {
-  type: propTypes.string,
-  title: propTypes.string,
-  onPress: propTypes.func.isRequired,
-  icon: propTypes.string,
-  disable: propTypes.bool,
-  nonButton: propTypes.bool,
-  label: propTypes.string,
-  style: propTypes.shape({}),
-  styleText: propTypes.shape({}),
-};
-
-CustomButton.defaultProps = {
-  title: undefined,
-  type: 'primary',
-  icon: null,
-  disable: false,
-  nonButton: false,
-  label: null,
-  style: {},
-  styleText: {},
-};
