@@ -1,19 +1,20 @@
+import Navigation from 'navigations';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {PADDING} from 'theme';
+import {StatusBar} from 'react-native';
+import FlashMessage from 'react-native-flash-message';
+import {COLORS} from 'theme';
 
-export const App: React.FC = () => {
+const MainApp = () => {
   return (
-    <View style={styles.container}>
-      <Text>Hallo</Text>
-    </View>
+    <>
+      <StatusBar backgroundColor={COLORS.primary} barStyle="default" />
+      <Navigation />
+      <FlashMessage position="top" />
+    </>
   );
+};
+const App = () => {
+  return <MainApp />;
 };
 
 export default App;
-
-const styles = StyleSheet.create({
-  container: {
-    padding: PADDING.xLarge,
-  },
-});
