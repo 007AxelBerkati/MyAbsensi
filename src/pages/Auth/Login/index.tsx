@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
-const Login = ({navigation}: any) => {
+const Login = () => {
   return (
     <View style={styles.container}>
       <Text>{process.env.NODE_ENV}</Text>

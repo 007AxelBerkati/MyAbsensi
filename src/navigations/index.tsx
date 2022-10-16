@@ -5,6 +5,7 @@ import Router from './Stack';
 
 const MyTheme = {
   ...DefaultTheme,
+
   colors: {
     ...DefaultTheme.colors,
     background: COLORS.background.primary,
