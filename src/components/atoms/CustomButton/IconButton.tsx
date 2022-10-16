@@ -3,24 +3,24 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {COLORS, RADIUS} from 'theme';
 
-type Icons = {
+type IconsType = {
   label: string;
 };
 
-type IconButton = {
+type IconButtonType = {
   onPress: () => void;
   nonButton: boolean;
   label: string;
   style: object;
 };
 
-function Icons({label}: Icons) {
+function Icons({label}: IconsType) {
   if (label === 'BackButton') {
-    return <Icon name="arrow-back" size={24} color={COLORS.black} />;
+    return <Icon name="arrow-back" size={24} color={COLORS.background.black} />;
   }
   return <Icon name="fingerprint" size={25} color={COLORS.secondary} />;
 }
-function IconButton({onPress, nonButton, label, style}: IconButton) {
+function IconButton({onPress, nonButton, label, style}: IconButtonType) {
   return (
     <View>
       {nonButton ? (

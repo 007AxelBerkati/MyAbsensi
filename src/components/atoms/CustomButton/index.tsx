@@ -11,7 +11,7 @@ import {COLORS, RADIUS, SIZE, TYPE} from 'theme';
 import FloatingButton from './FloatingButton';
 import IconButton from './IconButton';
 
-type CustomButton = {
+type CustomButtonType = {
   type: string;
   title: string;
   onPress: () => void;
@@ -33,7 +33,7 @@ function CustomButton({
   label,
   style,
   styleText,
-}: CustomButton) {
+}: CustomButtonType) {
   if (type === 'icon-button') {
     return (
       <IconButton

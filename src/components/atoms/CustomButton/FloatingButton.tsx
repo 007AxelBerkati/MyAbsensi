@@ -3,12 +3,12 @@ import {StyleSheet} from 'react-native';
 import {FAB} from 'react-native-paper';
 import {COLORS} from 'theme';
 
-type FloatingButton = {
+type FloatingButtonType = {
   onPress: () => void;
   icon: string;
 };
 
-function FloatingButton({onPress, icon}: FloatingButton) {
+function FloatingButton({onPress, icon}: FloatingButtonType) {
   return <FAB style={styles.fab} icon={icon} onPress={onPress} />;
 }
 
