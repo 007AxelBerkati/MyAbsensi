@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MyAbsensi</string>
+    <string moduleConfig="true" name="CodePushDeploymentKey">f1GECtTcqtIvZL6h5Rtes_yaJGw-HonX8DeWg</string>
 </resources>
