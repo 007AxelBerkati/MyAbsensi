@@ -1,16 +1,10 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import {CustomButton} from 'components';
+import {StyleSheet, Text, View} from 'react-native';
 
 const Login = ({navigation}: any) => {
   return (
     <View style={styles.container}>
-      <Text>Login</Text>
-      <CustomButton
-        onPress={() => navigation.navigate('Home')}
-        title="test"
-        disable={false}
-      />
+      <Text>{process.env.NODE_ENV}</Text>
     </View>
   );
 };

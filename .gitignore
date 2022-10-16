@@ -32,6 +32,8 @@ local.properties
 *.hprof
 .cxx/
 .env
+.env.prod
+.env.staging
 
 # node.js
 #
