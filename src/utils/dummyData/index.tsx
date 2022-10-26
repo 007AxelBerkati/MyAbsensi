@@ -1,3 +1,3 @@
-import marker from './marker';
+import marker from './marker.json';
 
 export {marker};

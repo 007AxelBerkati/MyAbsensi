@@ -1,5 +1,5 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Login, Geo} from '../pages';
+import {Login} from '../pages';
 import React from 'react';
 
 const Stack = createNativeStackNavigator();
@@ -12,7 +12,7 @@ function Router() {
         headerShown: false,
       }}>
       <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Geo" component={Geo} />
+      {/* <Stack.Screen name="Geo" component={Geo} /> */}
     </Stack.Navigator>
   );
 }

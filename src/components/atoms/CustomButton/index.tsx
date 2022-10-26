@@ -119,3 +119,15 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.disable.background,
   },
 });
+
+CustomButton.defaultProps = {
+  type: 'primary',
+  title: 'Button',
+  onPress: () => {},
+  icon: '',
+  disable: false,
+  nonButton: false,
+  label: '',
+  style: {},
+  styleText: {},
+};

@@ -62,15 +62,6 @@ function LoginScreen({navigation}: any) {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
-        <View style={{flex: 1}}>
-          <View
-            style={{
-              flex: 1,
-              width: null,
-              backgroundColor: COLORS.background.secondary,
-            }}
-          />
-        </View>
         <Animatable.View
           style={styles.animation}
           animation="fadeInUp"
@@ -129,6 +120,7 @@ function LoginScreen({navigation}: any) {
                 <View style={styles.iconWrapper} />
                 <Gap height={30} />
                 <CustomButton
+                  type={'primary'}
                   title="Login"
                   onPress={handleSubmit}
                   disable={
@@ -163,6 +155,7 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: COLORS.background.secondary,
   },
 
   linkWrapper: {

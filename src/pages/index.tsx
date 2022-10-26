@@ -1,4 +1,4 @@
 import Login from './Auth/Login';
-import Geo from './Geo';
+// import Geo from './Geo';
 
-export {Login, Geo};
+export {Login};
