@@ -43,8 +43,6 @@ function LoginScreen({navigation}: any) {
   useEffect(() => {
     getData('user').then(res => {
       if (res) {
-        console.log('res', res);
-
         setEverLogin(true);
       } else {
         setEverLogin(false);
