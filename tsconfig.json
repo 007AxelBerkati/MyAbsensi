@@ -5,18 +5,17 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Completeness */
-    "skipLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "*": ["src/*"],
-      "@components": ["src/components/*"],
-      "@themes": ["src/themes/*"],
-      "@screens": ["src/screens/*"],
-      "@utils": ["src/utils/*"],
-      "@assets": ["src/assets/*"],
-      "@hooks": ["src/hooks/*"],
-      "@navigations": ["src/navigations/*"],
-    },
+    // "skipLibCheck": true,
+    // "baseUrl": ".",
+    // "paths": {
+    //   "@components": ["src/components/*"],
+    //   "@themes": ["src/themes/*"],
+    //   "@screens": ["src/screens/*"],
+    //   "@utils": ["src/utils/*"],
+    //   "@assets": ["src/assets/*"],
+    //   "@hooks": ["src/hooks/*"],
+    //   "@navigations": ["src/navigations/*"],
+    // },
     "types": ["node"]
   }
 }

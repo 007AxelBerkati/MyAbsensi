@@ -1,7 +1,7 @@
 import React, {memo} from 'react';
 import {StyleSheet} from 'react-native';
 import {FAB} from 'react-native-paper';
-import {COLORS} from 'theme';
+import {COLORS} from '../../../theme';
 
 type FloatingButtonType = {
   onPress: () => void;

@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {COLORS, RADIUS} from 'theme';
+import {COLORS, RADIUS} from '../../../theme';
 
 type IconsType = {
   label: string;

@@ -7,20 +7,20 @@ import {
   ViewStyle,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {COLORS, RADIUS, SIZE, TYPE} from 'theme';
+import {COLORS, RADIUS, SIZE, TYPE} from '../../../theme';
 import FloatingButton from './FloatingButton';
 import IconButton from './IconButton';
 
 type CustomButtonType = {
   type: string;
-  title: string;
+  title?: string;
   onPress: () => void;
   icon: string;
-  disable: boolean;
+  disable?: boolean;
   nonButton: boolean;
   label: string;
   style: object;
-  styleText: object;
+  styleText?: object;
 };
 
 function CustomButton({

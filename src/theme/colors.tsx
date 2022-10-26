@@ -11,8 +11,6 @@ const mainColors = {
   dark1: '#112340',
   dark2: '#495A75',
   red1: '#E06379',
-  // blue1: '#2F80ED',
-  // blue2: '#0066CB',
   green1: '#2AC63A',
   green2: '#EDFCFD',
   orange1: '#FF8303',
@@ -20,30 +18,34 @@ const mainColors = {
   orange3: '#FFA84D',
   orange4: '#FFB669',
   orange5: '#FFCB94',
+  blue1: '#05445E',
+  blue2: '#189AB4',
+  blue3: '#75E6DA',
+  blue4: '#D4F1F4',
 };
 
 export const COLORS = {
   warning: mainColors.red1,
   success: mainColors.green1,
   primary: 'white',
-  secondary: mainColors.orange1,
+  secondary: mainColors.blue1,
   background: {
     primary: 'white',
-    secondary: mainColors.orange1,
+    secondary: mainColors.blue1,
+    tertiary: mainColors.blue2,
     black: mainColors.black1,
     grey: mainColors.grey7,
-    tertiary: mainColors.orange5,
   },
   button: {
     primary: {
-      background: mainColors.orange1,
+      background: mainColors.blue2,
       text: 'white',
-      border: mainColors.orange1,
+      border: mainColors.blue2,
     },
     secondary: {
       background: 'white',
       text: mainColors.black1,
-      border: mainColors.orange1,
+      border: mainColors.blue2,
     },
   },
 
@@ -51,7 +53,7 @@ export const COLORS = {
     primary: mainColors.black1,
     secondary: 'white',
     subtitle: mainColors.grey1,
-    tertiary: mainColors.orange1,
+    tertiary: mainColors.blue2,
   },
 
   disable: {
@@ -59,7 +61,7 @@ export const COLORS = {
     text: mainColors.grey5,
   },
 
-  lineTextInput: mainColors.orange1,
+  lineTextInput: mainColors.blue2,
   loadingBackground: mainColors.black2,
   outlineInput: mainColors.grey2,
   border: {

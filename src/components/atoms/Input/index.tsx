@@ -1,18 +1,18 @@
 import React, {memo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {TextInput} from 'react-native-paper';
-import {COLORS, RADIUS, SIZE, TYPE} from 'theme';
+import {COLORS, RADIUS, SIZE, TYPE} from '../../../theme';
 
 type input = {
   onChangeText: (text: string) => void;
   value: string;
-  placeholder: string;
-  label: string;
-  onBlur: any;
-  cannotEdited: boolean;
-  secureTextEntry: boolean;
-  leftIcon: string;
-  props: any;
+  placeholder?: string;
+  label?: string;
+  onBlur?: any;
+  cannotEdited?: boolean;
+  secureTextEntry?: boolean;
+  leftIcon?: string;
+  props?: any;
 };
 
 function Input({
@@ -37,8 +37,10 @@ function Input({
         onBlur={onBlur}
         placeholder={placeholder}
         mode="outlined"
-        activeOutlineColor={COLORS.grey2}
-        outlineColor={cannotEdited ? COLORS.grey8 : COLORS.grey1}
+        activeOutlineColor={COLORS.secondary}
+        outlineColor={
+          cannotEdited ? COLORS.border.primary : COLORS.border.secondary
+        }
         style={styles.input}
         secureTextEntry={secureTextEntry ? passwordVisible : false}
         left={<TextInput.Icon name={leftIcon} />}
@@ -47,7 +49,7 @@ function Input({
             <TextInput.Icon
               name={passwordVisible ? 'eye-off' : 'eye'}
               onPress={() => setPasswordVisible(!passwordVisible)}
-              color={passwordVisible ? COLORS.warning : COLORS.black}
+              color={passwordVisible ? COLORS.warning : COLORS.background.black}
             />
           ) : null
         }
@@ -61,8 +63,8 @@ export default memo(Input);
 
 const styles = StyleSheet.create({
   input: {
-    fontFamily: TYPE.montserratMedium,
-    fontSize: SIZE.font16,
+    fontFamily: TYPE.montserratRegular,
+    fontSize: SIZE.font14,
     color: COLORS.primary,
   },
 });

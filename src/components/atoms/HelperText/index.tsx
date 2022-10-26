@@ -1,12 +1,12 @@
 import React, {memo} from 'react';
 import {Text} from 'react-native';
-import {COLORS, SIZE, TYPE} from 'theme';
+import {COLORS, SIZE, TYPE} from '../../../theme';
 
-type HelperText = {
+type HelperTextProps = {
   text: string;
 };
 
-function HelperText({text}: HelperText) {
+function HelperText({text}: HelperTextProps) {
   return (
     <Text
       style={{

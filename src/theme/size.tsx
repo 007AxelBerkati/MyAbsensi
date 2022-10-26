@@ -35,4 +35,7 @@ const PADDING = {
   xLarge: normalize(24),
 };
 
-export {PADDING, MARGIN, RADIUS};
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
+export {PADDING, MARGIN, RADIUS, windowWidth, windowHeight};

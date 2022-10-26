@@ -1,9 +1,9 @@
-import Navigation from 'navigations';
 import React from 'react';
 import {StatusBar} from 'react-native';
 import CodePush from 'react-native-code-push';
 import FlashMessage from 'react-native-flash-message';
-import {COLORS} from 'theme';
+import Navigation from './navigations';
+import {COLORS} from './theme';
 
 const codePushOptions = {
   checkFrequency: CodePush.CheckFrequency.ON_APP_START,
