@@ -46,8 +46,8 @@ export default IconButton;
 
 const styles = StyleSheet.create({
   iconWrapper: {
-    width: 24,
-    height: 24,
+    width: 50,
+    height: 50,
     borderRadius: 24 / 2,
     justifyContent: 'center',
     backgroundColor: COLORS.primary,

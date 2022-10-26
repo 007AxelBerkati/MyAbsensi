@@ -1,5 +1,7 @@
 import {Formik} from 'formik';
-import React from 'react';
+import TouchID from 'react-native-touch-id';
+
+import React, {useState, useEffect} from 'react';
 import {
   Image,
   Keyboard,
@@ -7,6 +9,7 @@ import {
   Text,
   TouchableWithoutFeedback,
   View,
+  Alert,
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
@@ -19,9 +22,10 @@ import {
   LinkComponent,
 } from '../../../components';
 import {
-  databaseRef,
+  getData,
   login,
   loginSchema,
+  optionalConfigObject,
   showError,
   showSuccess,
   storeData,
@@ -34,21 +38,28 @@ type loginUserProps = {
 };
 
 function LoginScreen({navigation}: any) {
+  const [everLogin, setEverLogin] = useState(false);
+
+  useEffect(() => {
+    getData('user').then(res => {
+      if (res) {
+        console.log('res', res);
+
+        setEverLogin(true);
+      } else {
+        setEverLogin(false);
+      }
+    });
+  }, []);
+
   const loginUser = ({email, password}: loginUserProps) => {
     // dispatch(setLoading(true));
     login(email, password)
-      .then(res => {
+      .then(() => {
         // dispatch(setLoading(false));
-        databaseRef()
-          .ref(`users/${res.user.uid}/`)
-          .once('value')
-          .then(resDB => {
-            if (resDB.val()) {
-              storeData('user', resDB.val());
-              navigation.replace('DashboardPokemonScreen');
-              showSuccess('Login Success');
-            }
-          });
+        storeData('user', {email, password});
+        navigation.replace('Dashboard');
+        showSuccess('Login Success');
       })
       .catch(err => {
         // dispatch(setLoading(false));
@@ -57,6 +68,32 @@ function LoginScreen({navigation}: any) {
         }
         showError(err.message);
       });
+  };
+
+  const onFingerprint = () => {
+    TouchID.isSupported(optionalConfigObject).then(biometryType => {
+      if (biometryType === 'FaceID') {
+        Alert.alert('This device supports FaceID');
+      } else {
+        TouchID.authenticate('To access your account', optionalConfigObject)
+          .then(() => {
+            getData('user').then(user => {
+              if (user) {
+                const users = {
+                  email: user.email,
+                  password: user.password,
+                };
+                loginUser(users);
+              } else {
+                showError('Please Login first');
+              }
+            });
+          })
+          .catch((error: any) => {
+            showError(error.message);
+          });
+      }
+    });
   };
 
   return (
@@ -119,31 +156,24 @@ function LoginScreen({navigation}: any) {
                 </View>
                 <View style={styles.iconWrapper} />
                 <Gap height={30} />
-                <CustomButton
-                  type={'primary'}
-                  title="Login"
-                  onPress={handleSubmit}
-                  disable={
-                    !(dirty && isValid)
-                    // || stateGlobal.isLoading
-                  }
-                />
+                <View style={styles.buttonLogin}>
+                  <CustomButton
+                    style={{width: everLogin ? '83%' : '100%'}}
+                    type={'primary'}
+                    title="Login"
+                    onPress={handleSubmit}
+                    disable={
+                      !(dirty && isValid)
+                      // || stateGlobal.isLoading
+                    }
+                  />
+                  {everLogin && (
+                    <CustomButton type="icon-button" onPress={onFingerprint} />
+                  )}
+                </View>
               </View>
             )}
           </Formik>
-
-          <View style={styles.goRegisterWrapper}>
-            <Text style={styles.registerTitle}>
-              Don&lsquo;t have an account?{' '}
-            </Text>
-            <LinkComponent
-              // disable={stateGlobal.isLoading}
-              title="Register"
-              color={COLORS.text.primary}
-              size={16}
-              onPress={() => navigation.replace('RegisterScreen')}
-            />
-          </View>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -162,6 +192,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginLeft: windowWidth / 2,
     marginTop: 6,
+  },
+
+  buttonLogin: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 
   bottomView: {
