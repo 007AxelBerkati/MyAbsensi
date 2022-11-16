@@ -1,6 +1,6 @@
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import {COLORS} from 'theme';
+import {COLORS} from '../theme';
 import Router from './Stack';
 
 const MyTheme = {
