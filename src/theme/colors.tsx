@@ -28,10 +28,10 @@ export const COLORS = {
   warning: mainColors.red1,
   success: mainColors.green1,
   primary: 'white',
-  secondary: mainColors.blue1,
+  secondary: mainColors.blue2,
   background: {
     primary: 'white',
-    secondary: mainColors.blue1,
+    secondary: mainColors.blue2,
     tertiary: mainColors.blue2,
     black: mainColors.black1,
     grey: mainColors.grey7,

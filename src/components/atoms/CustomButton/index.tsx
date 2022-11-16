@@ -7,7 +7,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {COLORS, RADIUS, SIZE, TYPE} from '../../../theme';
+import {COLORS, FONTS, RADIUS, SIZE} from '../../../theme';
 import FloatingButton from './FloatingButton';
 import IconButton from './IconButton';
 
@@ -90,7 +90,7 @@ const container = (type: string): ViewStyle => ({
 });
 
 const text = (type: string): TextStyle => ({
-  fontFamily: TYPE.montserratRegular,
+  fontFamily: FONTS.primary[600],
   textAlign: 'center',
   color:
     type === 'secondary'
@@ -102,7 +102,7 @@ const text = (type: string): TextStyle => ({
 const styles = StyleSheet.create({
   disableText: {
     fontSize: SIZE.font16,
-    fontFamily: TYPE.montserratRegular,
+    fontFamily: FONTS.primary[600],
     color: COLORS.disable.text,
     textAlign: 'center',
   },

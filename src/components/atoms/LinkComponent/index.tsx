@@ -1,6 +1,6 @@
 import React, {memo} from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {COLORS, SIZE, TYPE} from '../../../theme';
+import {COLORS, FONTS, SIZE} from '../../../theme';
 
 type LinkComponentProps = {
   title: string;
@@ -23,7 +23,7 @@ export default memo(LinkComponent);
 
 const styles = StyleSheet.create({
   text: {
-    fontFamily: TYPE.montserratRegular,
+    fontFamily: FONTS.primary[600],
     fontSize: SIZE.font12,
     color: COLORS.text.subtitle,
     textAlign: 'center',

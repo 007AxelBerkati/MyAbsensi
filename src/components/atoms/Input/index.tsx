@@ -1,7 +1,7 @@
 import React, {memo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {TextInput} from 'react-native-paper';
-import {COLORS, RADIUS, SIZE, TYPE} from '../../../theme';
+import {COLORS, FONTS, RADIUS, SIZE} from '../../../theme';
 
 type input = {
   onChangeText: (text: string) => void;
@@ -63,7 +63,7 @@ export default memo(Input);
 
 const styles = StyleSheet.create({
   input: {
-    fontFamily: TYPE.montserratRegular,
+    fontFamily: FONTS.primary[400],
     fontSize: SIZE.font14,
     color: COLORS.primary,
   },

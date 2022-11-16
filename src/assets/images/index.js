@@ -1,4 +1,5 @@
-import iconsApp2 from './iconsApp2.png';
-import iconsApp from './iconsApp.svg';
+import IconsApp2 from './IconsApp2.png';
+import IconsApp from './IconsApp.svg';
+import Splash from './Splash.json';
 
-export {iconsApp2, iconsApp};
+export {IconsApp2, IconsApp, Splash};

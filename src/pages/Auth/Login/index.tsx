@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
-import {iconsApp2} from '../../../assets';
 import {
   CustomButton,
   Gap,
@@ -30,7 +29,8 @@ import {
   showSuccess,
   storeData,
 } from '../../../plugins';
-import {COLORS, TYPE, windowHeight, windowWidth} from '../../../theme';
+import {COLORS, FONTS, TYPE, windowHeight, windowWidth} from '../../../theme';
+import {IconsApp2} from '../../../assets';
 
 type loginUserProps = {
   email: string;
@@ -101,7 +101,7 @@ function LoginScreen({navigation}: any) {
           style={styles.animation}
           animation="fadeInUp"
           delay={1200}>
-          <Image style={styles.imageAnimation} source={iconsApp2} />
+          <Image style={styles.imageAnimation} source={IconsApp2} />
           <Text style={styles.animationText}>My Pokemon</Text>
         </Animatable.View>
         <View style={styles.bottomView}>
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
   },
 
   loginText: {
-    fontFamily: TYPE.montserratRegular,
+    fontFamily: FONTS.primary[600],
     fontSize: 24,
     marginTop: 12,
     marginBottom: 4,
@@ -227,19 +227,19 @@ const styles = StyleSheet.create({
   },
   loginButtonText: {
     color: COLORS.text.primary,
-    fontFamily: TYPE.montserratRegular,
+    fontFamily: FONTS.primary[600],
     alignSelf: 'center',
     fontSize: 18,
   },
   registerText: {
-    fontFamily: TYPE.montserratRegular,
+    fontFamily: FONTS.primary[600],
     fontSize: 16,
     color: COLORS.text.primary,
   },
   fpText: {
     marginTop: -10,
     alignSelf: 'flex-end',
-    fontFamily: TYPE.montserratRegular,
+    fontFamily: FONTS.primary[600],
     fontSize: 16,
     color: COLORS.text.secondary,
   },
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   registerTitle: {
-    fontFamily: TYPE.montserratRegular,
+    fontFamily: FONTS.primary[600],
     fontSize: 16,
     color: COLORS.text.primary,
   },
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
 
   animationText: {
     color: COLORS.text.tertiary,
-    fontFamily: TYPE.montserratRegular,
+    fontFamily: FONTS.primary[600],
     textShadowColor: COLORS.border.primary,
     textShadowRadius: 10,
     textShadowOffset: {width: 5, height: 5},
@@ -286,12 +286,12 @@ const styles = StyleSheet.create({
   },
 
   imageAnimation: {
-    width: windowWidth * 0.27,
-    height: windowHeight * 0.15,
+    width: windowWidth * 0.5,
+    height: windowHeight * 0.5,
   },
 
   errorText: {
-    fontFamily: TYPE.montserratMedium,
+    fontFamily: FONTS.primary[600],
     color: COLORS.warning,
     fontSize: 12,
   },

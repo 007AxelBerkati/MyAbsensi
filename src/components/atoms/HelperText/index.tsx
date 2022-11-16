@@ -1,6 +1,6 @@
 import React, {memo} from 'react';
 import {Text} from 'react-native';
-import {COLORS, SIZE, TYPE} from '../../../theme';
+import {COLORS, FONTS, SIZE} from '../../../theme';
 
 type HelperTextProps = {
   text: string;
@@ -10,7 +10,7 @@ function HelperText({text}: HelperTextProps) {
   return (
     <Text
       style={{
-        fontFamily: TYPE.montserratRegular,
+        fontFamily: FONTS.primary[400],
         fontSize: SIZE.font10,
         color: COLORS.warning,
       }}>
