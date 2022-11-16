@@ -1,6 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Dashboard, ForgetPass, Login, SplashScreen} from '../pages';
 import React from 'react';
+import MainApp from './MainApp';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,7 +13,7 @@ function Router() {
         headerShown: false,
       }}>
       <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Dashboard" component={Dashboard} />
+      <Stack.Screen name="Dashboard" component={MainApp} />
       <Stack.Screen name="SplashScreen" component={SplashScreen} />
       <Stack.Screen name="ForgetPass" component={ForgetPass} />
       {/* <Stack.Screen name="Geo" component={Geo} /> */}
