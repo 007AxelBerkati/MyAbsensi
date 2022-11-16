@@ -10,6 +10,7 @@ const codePushOptions = {
 };
 
 const MainApp = () => {
+  // const stateGlobal = useSelector(state => state);
   return (
     <>
       <StatusBar

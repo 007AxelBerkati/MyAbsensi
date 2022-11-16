@@ -13,6 +13,7 @@ type input = {
   secureTextEntry?: boolean;
   leftIcon?: string;
   props?: any;
+  color?: string;
 };
 
 function Input({
@@ -24,6 +25,7 @@ function Input({
   cannotEdited,
   secureTextEntry,
   leftIcon,
+  color,
   ...props
 }: input) {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(true);
@@ -43,13 +45,13 @@ function Input({
         }
         style={styles.input}
         secureTextEntry={secureTextEntry ? passwordVisible : false}
-        left={<TextInput.Icon name={leftIcon} />}
+        left={<TextInput.Icon name={leftIcon} color={color} />}
         right={
           secureTextEntry ? (
             <TextInput.Icon
               name={passwordVisible ? 'eye-off' : 'eye'}
               onPress={() => setPasswordVisible(!passwordVisible)}
-              color={passwordVisible ? COLORS.warning : COLORS.background.black}
+              color={passwordVisible ? COLORS.warning : COLORS.text.tertiary}
             />
           ) : null
         }

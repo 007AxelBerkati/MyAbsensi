@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: FONTS.primary[600],
     fontSize: SIZE.font12,
-    color: COLORS.text.subtitle,
+    color: COLORS.text.tertiary,
     textAlign: 'center',
   },
 });

@@ -1,4 +1,4 @@
-import { Formik } from 'formik';
+import {Formik} from 'formik';
 
 import React from 'react';
 import {
@@ -7,35 +7,42 @@ import {
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
-  View
+  View,
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
-import { IconsApp2 } from '../../../assets';
+import {IconsApp2} from '../../../assets';
 import {
   CustomButton,
   Gap,
   HelperText,
   Input,
-  LinkComponent
+  LinkComponent,
 } from '../../../components';
 import {
-  forgetPassword, loginSchema, showSuccess
+  forgetPassword,
+  loginSchema,
+  showError,
+  showSuccess,
 } from '../../../plugins';
-import { COLORS, FONTS, windowHeight, windowWidth } from '../../../theme';
+import {COLORS, FONTS, windowHeight, windowWidth} from '../../../theme';
 
-type loginUserProps = {
+type ForgetPassProps = {
   email: string;
-  password: string;
 };
 
 function LoginScreen({navigation}: any) {
-  const forgetPass = ({email}: loginUserProps) => {
+  const forgetPass = ({email}: ForgetPassProps) => {
     // dispatch(setLoading(true));
-    forgetPassword(email).then(() => {
-      // dispatch(setLoading(false));
-      showSuccess('Check your email');
-    }
+    forgetPassword(email)
+      .then(() => {
+        // dispatch(setLoading(false));
+        showSuccess('Check your email');
+      })
+      .catch(err => {
+        // dispatch(setLoading(false));
+        showError(err.message);
+      });
   };
 
   return (
@@ -48,11 +55,11 @@ function LoginScreen({navigation}: any) {
           <Image style={styles.imageAnimation} source={IconsApp2} />
         </Animatable.View>
         <View style={styles.bottomView}>
-          <Text style={styles.loginText}>Forget Password</Text>
+          <Text style={styles.loginText}>Lupa Password</Text>
           <Formik
             initialValues={{email: ''}}
             onSubmit={values => {
-             forgetPass(values);
+              forgetPass(values);
             }}
             validationSchema={loginSchema}>
             {({
@@ -77,29 +84,17 @@ function LoginScreen({navigation}: any) {
                   <Text style={styles.errorText}>{errors.email}</Text>
                 ) : null}
 
-                <Input
-                  label="Password"
-                  onBlur={handleBlur('password')}
-                  onChangeText={handleChange('password')}
-                  value={values.password}
-                  secureTextEntry
-                  leftIcon="key"
-                />
-                {errors.password && touched.password ? (
-                  <HelperText text={errors.password} />
-                ) : null}
-
                 <View style={styles.linkWrapper}>
                   <LinkComponent
-                    title="Forgot Password?"
-                    onPress={() => navigation.navigate('ForgotPasswordScreen')}
+                    title="Kembali Ke Login?"
+                    onPress={() => navigation.navigate('Login')}
                   />
                 </View>
                 <View style={styles.iconWrapper} />
                 <Gap height={30} />
                 <View style={styles.buttonLogin}>
                   <CustomButton
-                    style={{width: everLogin ? '83%' : '100%'}}
+                    style={{width: '100%'}}
                     type={'primary'}
                     title="Login"
                     onPress={handleSubmit}
@@ -108,9 +103,6 @@ function LoginScreen({navigation}: any) {
                       // || stateGlobal.isLoading
                     }
                   />
-                  {everLogin && (
-                    <CustomButton type="icon-button" onPress={onFingerprint} />
-                  )}
                 </View>
               </View>
             )}

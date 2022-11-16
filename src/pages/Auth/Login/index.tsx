@@ -29,7 +29,7 @@ import {
   showSuccess,
   storeData,
 } from '../../../plugins';
-import {COLORS, FONTS, TYPE, windowHeight, windowWidth} from '../../../theme';
+import {COLORS, FONTS, windowHeight, windowWidth} from '../../../theme';
 import {IconsApp2} from '../../../assets';
 
 type loginUserProps = {
@@ -129,6 +129,7 @@ function LoginScreen({navigation}: any) {
                   onChangeText={handleChange('email')}
                   value={values.email}
                   onBlur={handleBlur('email')}
+                  color={COLORS.text.tertiary}
                 />
                 {errors.email && touched.email ? (
                   <Text style={styles.errorText}>{errors.email}</Text>
@@ -140,6 +141,7 @@ function LoginScreen({navigation}: any) {
                   onChangeText={handleChange('password')}
                   value={values.password}
                   secureTextEntry
+                  color={COLORS.text.tertiary}
                   leftIcon="key"
                 />
                 {errors.password && touched.password ? (
@@ -148,8 +150,8 @@ function LoginScreen({navigation}: any) {
 
                 <View style={styles.linkWrapper}>
                   <LinkComponent
-                    title="Forgot Password?"
-                    onPress={() => navigation.navigate('ForgotPasswordScreen')}
+                    title="Lupa Password?"
+                    onPress={() => navigation.navigate('ForgetPass')}
                   />
                 </View>
                 <View style={styles.iconWrapper} />
