@@ -40,6 +40,6 @@ const styles = StyleSheet.create({
   date: {
     fontFamily: FONTS.primary.normal,
     fontSize: SIZE.font12,
-    color: COLORS.text.secondary,
+    color: COLORS.text.subtitle,
   },
 });
