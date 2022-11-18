@@ -1,11 +1,9 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {Fade, Placeholder, PlaceholderMedia} from 'rn-placeholder';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {version} from '../../../package.json';
-import {ILNullPhoto} from '../../assets';
 import {CardList, Headers} from '../../components';
+import {removeData, removeDataSecure, signOut} from '../../plugins';
 import {
   COLORS,
   FONTS,
@@ -21,7 +19,11 @@ function AkunScreen({navigation}: any) {
   }, []);
 
   const onLogout = () => {
-    navigation.replace('MainApp');
+    signOut().then(() => {
+      removeDataSecure('userLogin').then(() => {
+        navigation.replace('Login');
+      });
+    });
   };
 
   return (
