@@ -2,14 +2,27 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {memo} from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import {COLORS, FONTS, SIZE, windowHeight} from '../../../theme';
+import DarkProfile from './DarkProfile';
+import DashboardProfile from './DashboardProfile';
 
 type HeadersProps = {
   title: string;
-  onPress?: () => void;
+  onPress: () => void;
   type?: string;
+  desc: string;
+  photo?: any;
 };
 
-function Headers({onPress, title, type}: HeadersProps) {
+function Headers({onPress, title, type, desc, photo}: HeadersProps) {
+  if (type === 'dark-profile') {
+    return (
+      <DarkProfile onPress={onPress} title={title} desc={desc} photo={photo} />
+    );
+  }
+
+  if (type === 'dashboard-profile') {
+    return <DashboardProfile onPress={onPress} title={title} photo={photo} />;
+  }
   if (type === 'back-title') {
     return (
       <View style={styles.container}>
@@ -49,7 +62,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     height: 50,
-    width: null,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: windowHeight * 0.03,
@@ -57,7 +69,6 @@ const styles = StyleSheet.create({
 
   container2: {
     flexDirection: 'row',
-    width: null,
     height: 50,
     alignItems: 'center',
     marginTop: windowHeight * 0.03,
