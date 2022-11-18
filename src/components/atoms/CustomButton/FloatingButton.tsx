@@ -6,10 +6,11 @@ import {COLORS} from '../../../theme';
 type FloatingButtonType = {
   onPress: () => void;
   icon: string;
+  color: string;
 };
 
-function FloatingButton({onPress, icon}: FloatingButtonType) {
-  return <FAB style={styles.fab} icon={icon} onPress={onPress} />;
+function FloatingButton({onPress, icon, color}: FloatingButtonType) {
+  return <FAB style={styles.fab} icon={icon} onPress={onPress} color={color} />;
 }
 
 export default memo(FloatingButton);

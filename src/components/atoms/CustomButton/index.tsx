@@ -8,19 +8,22 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {COLORS, FONTS, RADIUS, SIZE} from '../../../theme';
+import BtnIconSend from './BtnIconSend';
 import FloatingButton from './FloatingButton';
 import IconButton from './IconButton';
+import IconOnly from './IconOnly';
 
 type CustomButtonType = {
   type: string;
   title?: string;
   onPress: () => void;
   icon: string;
-  disable?: boolean;
+  disable: boolean;
   nonButton: boolean;
   label: string;
   style: object;
   styleText?: object;
+  color: string;
 };
 
 function CustomButton({
@@ -33,6 +36,7 @@ function CustomButton({
   label,
   style,
   styleText,
+  color,
 }: CustomButtonType) {
   if (type === 'icon-button') {
     return (
@@ -45,7 +49,15 @@ function CustomButton({
     );
   }
   if (type === 'floating-btn') {
-    return <FloatingButton icon={icon} onPress={onPress} />;
+    return <FloatingButton icon={icon} onPress={onPress} color={color} />;
+  }
+
+  if (type === 'icon-only') {
+    return <IconOnly icon={icon} onPress={onPress} />;
+  }
+
+  if (type === 'Icon-send') {
+    return <BtnIconSend disable={disable} onPress={onPress} />;
   }
 
   return (
@@ -130,4 +142,5 @@ CustomButton.defaultProps = {
   label: '',
   style: {},
   styleText: {},
+  color: '',
 };
