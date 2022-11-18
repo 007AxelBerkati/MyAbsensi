@@ -1,18 +1,19 @@
 import {Formik} from 'formik';
 import TouchID from 'react-native-touch-id';
 
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   Image,
   Keyboard,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
   View,
-  Alert,
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
+import {IconsApp2} from '../../../assets';
 import {
   CustomButton,
   Gap,
@@ -21,16 +22,17 @@ import {
   LinkComponent,
 } from '../../../components';
 import {
-  getData,
+  databaseRef,
+  getDataSecure,
   login,
   loginSchema,
   optionalConfigObject,
   showError,
   showSuccess,
   storeData,
+  storeDataSecure,
 } from '../../../plugins';
 import {COLORS, FONTS, windowHeight, windowWidth} from '../../../theme';
-import {IconsApp2} from '../../../assets';
 
 type loginUserProps = {
   email: string;
@@ -41,7 +43,7 @@ function LoginScreen({navigation}: any) {
   const [everLogin, setEverLogin] = useState(false);
 
   useEffect(() => {
-    getData('user').then(res => {
+    getDataSecure('userLogin').then(res => {
       if (res) {
         setEverLogin(true);
       } else {
@@ -53,11 +55,23 @@ function LoginScreen({navigation}: any) {
   const loginUser = ({email, password}: loginUserProps) => {
     // dispatch(setLoading(true));
     login(email, password)
-      .then(() => {
+      .then(res => {
         // dispatch(setLoading(false));
-        storeData('user', {email, password});
-        navigation.replace('Dashboard');
-        showSuccess('Login Success');
+        databaseRef()
+          .ref(`users/${res.user.uid}`)
+          .once('value')
+          .then(snapshot => {
+            if (snapshot.val()) {
+              storeData('user', snapshot.val());
+              storeDataSecure('userLogin', {
+                email,
+                password,
+                uid: res.user.uid,
+              });
+              showSuccess('Login Success');
+              navigation.replace('Dashboard');
+            }
+          });
       })
       .catch(err => {
         // dispatch(setLoading(false));
@@ -75,7 +89,7 @@ function LoginScreen({navigation}: any) {
       } else {
         TouchID.authenticate('To access your account', optionalConfigObject)
           .then(() => {
-            getData('user').then(user => {
+            getDataSecure('userLogin').then(user => {
               if (user) {
                 const users = {
                   email: user.email,
