@@ -1,5 +1,13 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewProps,
+} from 'react-native';
 import {COLORS, FONTS} from '../../../theme';
 
 type DashboardProfileProps = {
@@ -10,7 +18,7 @@ type DashboardProfileProps = {
 
 function DashboardProfile({photo, title, onPress}: DashboardProfileProps) {
   return (
-    <View style={styles.container}>
+    <View style={styles.container as unknown as StyleProp<ViewProps>}>
       <View style={styles.content}>
         <Text style={styles.name}>{title}</Text>
       </View>

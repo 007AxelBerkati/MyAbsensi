@@ -29,9 +29,15 @@ const Chat = ({navigation}: any) => {
             (a: any, b: any) =>
               new Date(b.sendTime).getTime() - new Date(a.sendTime).getTime()
           );
-          const dataMsgNotNull = sortedArray.filter(
-            (it: any) => it.lastMsg !== ''
-          );
+
+          const dataMsgNotNull: any = [];
+
+          sortedArray.forEach((it: any) => {
+            if (it.lastMsg !== '') {
+              dataMsgNotNull.push(it);
+            }
+          });
+
           setallUser(dataMsgNotNull);
         }
       });
@@ -52,11 +58,13 @@ const Chat = ({navigation}: any) => {
       .ref(`admins/`)
       .once('value')
       .then(snapshot => {
-        setAllContact(
-          Object.values(snapshot.val()).filter(
-            it => it.fullname.toLowerCase().includes(text) && it.uid !== uid
-          )
+        const lowerFullname: any = Object.values(snapshot.val()).filter(
+          (it: any) => {
+            return it.fullname.toLowerCase().includes(text) && it.uid !== uid;
+          }
         );
+
+        setAllContact(lowerFullname);
       });
   };
 
@@ -130,7 +138,7 @@ const Chat = ({navigation}: any) => {
           <List
             name={item.fullname}
             chat={item.lastMsg}
-            profile={item.photo}
+            profile={{uri: item.photo}}
             date={moment(item.sendTime).format('YYYY/MM/DD')}
             time={moment(item.sendTime).format('h:mm a')}
             onPress={() => createChatList(item)}
@@ -149,6 +157,7 @@ const Chat = ({navigation}: any) => {
 };
 
 export default Chat;
+
 const styles = StyleSheet.create({
   page: {
     flex: 1,

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {version} from '../../../package.json';
@@ -43,7 +43,7 @@ function AkunScreen({navigation}: any) {
           type="akun"
           name="edit"
           title="Ubah Akun"
-          onPress={() => navigation.navigate('ProfileScreen')}
+          onPress={() => navigation.navigate('EditProfile')}
         />
         <CardList type="akun" name="setting" title="Pengaturan Akun" />
         <CardList type="akun" name="logout" title="Keluar" onPress={onLogout} />

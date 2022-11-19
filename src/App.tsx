@@ -2,7 +2,11 @@ import React from 'react';
 import {StatusBar} from 'react-native';
 import CodePush from 'react-native-code-push';
 import FlashMessage from 'react-native-flash-message';
+import {Provider, useSelector} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
+import {Loading} from './components';
 import Navigation from './navigations';
+import {Persistore, RootState, Store} from './reduxx';
 import {COLORS, RADIUS, windowHeight, windowWidth} from './theme';
 
 const codePushOptions = {
@@ -10,7 +14,7 @@ const codePushOptions = {
 };
 
 const MainApp = () => {
-  // const stateGlobal = useSelector(state => state);
+  const {isLoading} = useSelector((state: RootState) => state.dataGlobal);
   return (
     <>
       <StatusBar
@@ -27,11 +31,18 @@ const MainApp = () => {
           alignSelf: 'center',
         }}
       />
+      {isLoading && <Loading />}
     </>
   );
 };
 const App = () => {
-  return <MainApp />;
+  return (
+    <Provider store={Store}>
+      <PersistGate loading={null} persistor={Persistore}>
+        <MainApp />
+      </PersistGate>
+    </Provider>
+  );
 };
 
 export default CodePush(codePushOptions)(App);

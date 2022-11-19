@@ -30,7 +30,8 @@ const AllUser = ({navigation, route}: any) => {
       .then(snapshot => {
         setallUser(
           Object.values(snapshot.val()).filter(
-            it => it.fullname.toLowerCase().includes(text) && it.uid !== uid
+            (it: any) =>
+              it.fullname.toLowerCase().includes(text) && it.uid !== uid
           )
         );
       });

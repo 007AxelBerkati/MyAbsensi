@@ -64,6 +64,8 @@ export const COLORS = {
   lineTextInput: mainColors.blue2,
   loadingBackground: mainColors.black2,
   outlineInput: mainColors.grey2,
+  cardLight: mainColors.green2,
+
   border: {
     primary: mainColors.grey3,
     secondary: mainColors.grey6,

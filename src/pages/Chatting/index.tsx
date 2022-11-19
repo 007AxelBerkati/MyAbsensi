@@ -23,6 +23,7 @@ const Chatting = ({navigation, route}: any) => {
       photo: profile?.photo,
       sendTime: moment().format(''),
       msgType: 'text',
+      uid: profile?.uid,
     };
 
     const newReference = databaseRef()
@@ -53,7 +54,8 @@ const Chatting = ({navigation, route}: any) => {
       .ref(`/messages/${receiverData.roomId}`)
       .on('child_added', snapshot => {
         // console.log('A new node has been added', snapshot.val());
-        setallChat(state => [snapshot.val(), ...state]);
+        const data: any = (state: any) => [snapshot.val(), ...state];
+        setallChat(data);
       });
     // Stop listening for updates when no longer required
     return () => {
@@ -83,9 +85,9 @@ const Chatting = ({navigation, route}: any) => {
           style={{flex: 1}}
           data={allChat}
           showsVerticalScrollIndicator={false}
-          keyExtractor={(item, index) => index}
+          keyExtractor={(item, index: any) => index}
           inverted
-          renderItem={({item}) => (
+          renderItem={({item}: any) => (
             <ChatItem
               isMe={item.from === profile.uid}
               text={item.message}

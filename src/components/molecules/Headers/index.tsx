@@ -81,3 +81,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+Headers.defaultProps = {
+  type: 'default',
+  desc: '',
+  photo: '',
+  onPress: () => {},
+};

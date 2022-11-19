@@ -1,12 +1,13 @@
+import React from 'react';
 import {
   Image,
   Pressable,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
+  StyleProp,
+  ViewStyle,
 } from 'react-native';
-import React from 'react';
 import {
   IconEditProfile,
   IconHelp,
@@ -19,7 +20,7 @@ import {COLORS, FONTS, SIZE} from '../../../theme';
 type ListProps = {
   profile: any;
   name: string;
-  desc: string;
+  desc?: string;
   type?: any;
   onPress: () => void;
   chat?: any;
@@ -55,7 +56,9 @@ export default function List({
     return <IconEditProfile />;
   };
   return (
-    <Pressable style={styles.container} onPress={onPress}>
+    <Pressable
+      style={styles.container as unknown as StyleProp<ViewStyle>}
+      onPress={onPress}>
       {icon ? <Icon /> : <Image source={profile} style={styles.imageStyle} />}
       <View style={styles.titleWrapper}>
         <Text style={styles.names}>{name}</Text>
@@ -79,7 +82,7 @@ export default function List({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    borderBottomColor: COLORS.border,
+    borderBottomColor: COLORS.border.primary,
     borderBottomWidth: 1,
     padding: 16,
     alignItems: 'center',
@@ -116,3 +119,13 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.primary[600],
   },
 });
+
+List.defaultProps = {
+  type: '',
+  icon: '',
+  name: '',
+  desc: '',
+  chat: '',
+  time: '',
+  date: '',
+};

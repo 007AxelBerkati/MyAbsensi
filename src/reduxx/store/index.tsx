@@ -1,14 +1,32 @@
-import {configureStore, MiddlewareArray} from '@reduxjs/toolkit';
-import {useDispatch} from 'react-redux';
-import {loadingSlice} from '../reducer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {applyMiddleware, combineReducers, createStore} from 'redux';
+import reduxLogger from 'redux-logger';
+import {persistReducer, persistStore} from 'redux-persist';
+import ReduxThunk from 'redux-thunk';
+import {GlobalReducer} from '../reducer';
 
-export const store = configureStore({
-  reducer: {
-    loading: loadingSlice,
-  },
-});
+const persistConfig = {
+  key: 'root',
+  blacklist: ['dataPokemon, dataGlobal, dataPokemonDetail'],
+  storage: AsyncStorage,
+};
 
-export type RootState = ReturnType<typeof store.getState>;
+const rootReducer = {
+  dataGlobal: GlobalReducer,
+};
 
-export const useAppDispatch: () => AppDispatch = useDispatch;
-export type AppDispatch = typeof store.dispatch;
+const configPersist = persistReducer(
+  persistConfig,
+  combineReducers(rootReducer)
+);
+
+export const Store = createStore(
+  configPersist,
+  applyMiddleware(ReduxThunk, reduxLogger)
+);
+
+export const Persistore = persistStore(Store);
+
+export type RootState = ReturnType<typeof Store.getState>;
+
+export type AppDispatch = typeof Store.dispatch;
