@@ -16,6 +16,7 @@
     //   "@hooks": ["src/hooks/*"],
     //   "@navigations": ["src/navigations/*"],
     // },
-    "types": ["node"]
-  }
+    "types": ["node"],
+  },
+  "include": ["src", "./declarations.d.ts"],
 }

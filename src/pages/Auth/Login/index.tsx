@@ -1,5 +1,5 @@
 import {Formik} from 'formik';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   Alert,
   Image,
@@ -10,7 +10,6 @@ import {
   View,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import {ActivityIndicator} from 'react-native-paper';
 import TouchID from 'react-native-touch-id';
 import {IconsApp2} from '../../../assets';
 import {
