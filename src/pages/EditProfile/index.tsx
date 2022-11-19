@@ -1,17 +1,18 @@
+import {Formik} from 'formik';
+import React, {useCallback, useState} from 'react';
 import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import React, {useState} from 'react';
-import {Formik} from 'formik';
-import FormData from 'form-data';
 
-import {Headers, Input2, Profile, Gap, Select} from '../../components';
-import {kota} from '../../assets';
+import moment from 'moment';
+import {CustomButton, Gap, Headers, Input2} from '../../components';
+import {getData, updateProfileSchema} from '../../plugins';
+import {updateAkun, useAppDispatch, useAppSelector} from '../../reduxx';
 import {
   COLORS,
   FONTS,
@@ -21,23 +22,35 @@ import {
   windowWidth,
 } from '../../theme';
 
-function ProfileScreen({navigation}: any) {
-  const [photo, setPhoto] = useState(dataProfile.image_url);
+function EditProfile({navigation}: any) {
+  const {data, loading} = useAppSelector(state => state.dataAkun);
+  const [photo, setPhoto] = useState(data?.photo);
+  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [open, setOpen] = useState(false);
 
-  const updateProfile = data => {
-    const formData = new FormData();
-    formData.append('full_name', data.full_name);
-    formData.append('city', data.city);
-    formData.append('address', data.address);
-    formData.append('phone_number', data.phone_number);
-    formData.append('image', {
-      uri: data.image.uri,
-      type: 'image/jpeg',
-      name: data.image.filename,
+  const dispatch = useAppDispatch();
+  const updateProfile = (value: any) => {
+    console.log(value);
+
+    getData('user').then((res: any) => {
+      dispatch(updateAkun(res.uid, value));
     });
-    dispatch(putDataProfile(formData, navigation));
   };
 
+  const onDismissSingle = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
+
+  const onConfirmSingle = useCallback(
+    (params: any, setFieldValue: any) => {
+      setOpen(false);
+      console.log(params);
+
+      setDate(params.date);
+      setFieldValue('birth_date', moment(params.date).format('DD/MM/YYYY'));
+    },
+    [setOpen, setDate]
+  );
   return (
     <View style={styles.pages}>
       <View>
@@ -49,11 +62,14 @@ function ProfileScreen({navigation}: any) {
       </View>
       <Formik
         initialValues={{
-          full_name: dataProfile.full_name,
-          city: dataProfile.city,
-          address: dataProfile.address,
-          phone_number: dataProfile.phone_number,
-          image: dataProfile.image_url,
+          fullname: data?.fullname,
+          birth_date: data?.birth_date,
+          address: data?.address,
+          phone_number: data?.phone_number,
+          image: data?.image_url,
+          tempat_lahir: data?.tempat_lahir,
+          email: data?.email,
+          pekerjaan: data?.pekerjaan,
         }}
         onSubmit={values => updateProfile(values)}
         validationSchema={updateProfileSchema}>
@@ -78,27 +94,76 @@ function ProfileScreen({navigation}: any) {
                   />
                 </View>
                 <Input2
-                  leftIcon="account-circle"
                   label="Nama"
-                  onChangeText={handleChange('full_name')}
-                  value={values.full_name}
-                  onBlur={handleBlur('full_name')}
+                  onChangeText={handleChange('fullname')}
+                  value={values.fullname}
+                  onBlur={handleBlur('fullname')}
                 />
-                {errors.full_name && touched.full_name && (
-                  <Text style={styles.errorText}>{errors.full_name}</Text>
+                {errors.fullname && touched.fullname && (
+                  <Text style={styles.errorText}>{errors.fullname}</Text>
                 )}
                 <Gap height={15} />
 
-                <Select
-                  data={kota}
-                  onSelect={selectedItem => {
-                    // eslint-disable-next-line no-param-reassign
-                    values.city = selectedItem;
+                <Select2
+                  data={[
+                    {label: 'Laki-laki', value: 'Laki-laki'},
+                    {label: 'Perempuan', value: 'Perempuan'},
+                  ]}
+                  setFieldValue={setFieldValue}
+                  value={values.pekerjaan}
+                  initialData={values.pekerjaan}
+                  schema={{
+                    label: 'label',
+                    value: 'value',
                   }}
-                  defaultValue={values.city}
+                  mode="BADGE"
+                  name="pekerjaan"
+                  placeholder="Pilih Pekerjaan"
                 />
-                {errors.city && touched.city && (
-                  <Text style={styles.errorText}>{errors.city}</Text>
+                {errors.pekerjaan && touched.pekerjaan && (
+                  <Text style={styles.errorText}>{errors.pekerjaan}</Text>
+                )}
+                <Gap height={15} />
+
+                <Input2
+                  value={values.birth_date}
+                  label="Tanggal Lahir (DD/MM/YYYY)"
+                  rightIcon="calendar"
+                  onPressIn={() => setOpen(true)}
+                />
+                <DatePickerModal
+                  locale="id"
+                  mode="single"
+                  visible={open}
+                  onDismiss={onDismissSingle}
+                  date={date}
+                  onConfirm={() => onConfirmSingle({date}, setFieldValue)}
+                  startYear={1960} // optional, default is 1800
+                  endYear={2100} // optional, default is 2200
+
+                  // onChange={} // same props as onConfirm but triggered without confirmed by user
+                  // saveLabel="Save" // optional
+                  // saveLabelDisabled={true} // optional, default is false
+                  // uppercase={false} // optional, default is true
+                  // label="Select date" // optional
+                  // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
+                  // closeIcon="close" // optional, default is "close"
+                  // editIcon="pencil" // optional, default is "pencil"
+                  // calendarIcon="calendar" // optional, default is "calendar"
+                />
+                {errors.birth_date && touched.birth_date && (
+                  <Text style={styles.errorText}>{errors.birth_date}</Text>
+                )}
+                <Gap height={15} />
+                <Input2
+                  leftIcon="account-circle"
+                  label="Tempat Lahir"
+                  onChangeText={handleChange('tempat_lahir')}
+                  value={values.tempat_lahir}
+                  onBlur={handleBlur('tempat_lahir')}
+                />
+                {errors.tempat_lahir && touched.tempat_lahir && (
+                  <Text style={styles.errorText}>{errors.tempat_lahir}</Text>
                 )}
                 <Gap height={15} />
                 <Input2
@@ -124,12 +189,20 @@ function ProfileScreen({navigation}: any) {
                 {errors.phone_number && touched.phone_number && (
                   <Text style={styles.errorText}>{errors.phone_number}</Text>
                 )}
+                <Gap height={15} />
+
+                <Input2 label="Email" value={values.email} disabled />
+                {errors.email && touched.email && (
+                  <Text style={styles.errorText}>{errors.email}</Text>
+                )}
                 <Gap height={windowHeight * 0.05} />
-                <ButtonComponent
+
+                <CustomButton
                   title="Simpan"
                   onPress={handleSubmit}
-                  // disable={!isValid || stateGlobal.isLoading}
+                  disable={!isValid || loading}
                 />
+                <Gap height={windowHeight * 0.05} />
               </View>
             </TouchableWithoutFeedback>
           </ScrollView>
@@ -139,13 +212,13 @@ function ProfileScreen({navigation}: any) {
   );
 }
 
-export default ProfileScreen;
+export default EditProfile;
 
 const styles = StyleSheet.create({
   pages: {
     flex: 1,
     backgroundColor: 'white',
-    margin: 16,
+    marginHorizontal: 16,
   },
   input1: {
     borderWidth: 1,

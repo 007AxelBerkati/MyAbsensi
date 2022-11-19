@@ -1,9 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Fade, Placeholder, PlaceholderMedia} from 'rn-placeholder';
 
 import {version} from '../../../package.json';
-import {CardList, Headers} from '../../components';
-import {removeData, removeDataSecure, signOut} from '../../plugins';
+import {ILNullPhoto} from '../../assets';
+import {CardList, Headers, Profile} from '../../components';
+import {getData, removeDataSecure, signOut} from '../../plugins';
+import {getAkun, RootState, useAppDispatch, useAppSelector} from '../../reduxx';
+
 import {
   COLORS,
   FONTS,
@@ -14,8 +18,12 @@ import {
 } from '../../theme';
 
 function AkunScreen({navigation}: any) {
+  const dispatch = useAppDispatch();
+  const dataProfile = useAppSelector((state: RootState) => state.dataAkun);
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getData('user').then((res: any) => {
+      dispatch(getAkun(res.uid));
+    });
   }, []);
 
   const onLogout = () => {
@@ -31,14 +39,13 @@ function AkunScreen({navigation}: any) {
       <Headers title="Akun Saya" />
 
       <ScrollView>
-        {/* {dataProfile.isLoading ? (
+        {dataProfile.loading ? (
           <Placeholder Animation={Fade} style={styles.photoSection}>
             <PlaceholderMedia style={styles.placeholder} />
           </Placeholder>
         ) : (
-          // <Profile source={{uri: dataProfile.profile?.image_url}} />
-          <ILNullPhoto />
-        )} */}
+          <Profile source={{uri: dataProfile?.data?.photo}} />
+        )}
         <CardList
           type="akun"
           name="edit"

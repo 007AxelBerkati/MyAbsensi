@@ -14,6 +14,9 @@ type input = {
   leftIcon?: string;
   props?: any;
   color?: string;
+  keyboardType?: any;
+  multiline?: boolean;
+  numberOfLines?: number;
 };
 
 function Input({
@@ -26,6 +29,8 @@ function Input({
   secureTextEntry,
   leftIcon,
   color,
+  multiline,
+  numberOfLines,
   ...props
 }: input) {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(true);
@@ -56,6 +61,8 @@ function Input({
           ) : null
         }
         {...props}
+        multiline={multiline}
+        numberOfLines={numberOfLines}
       />
     </View>
   );

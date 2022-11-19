@@ -14,7 +14,7 @@ const codePushOptions = {
 };
 
 const MainApp = () => {
-  const {isLoading} = useSelector((state: RootState) => state.dataGlobal);
+  const {loading} = useSelector((state: RootState) => state.dataGlobal);
   return (
     <>
       <StatusBar
@@ -31,7 +31,7 @@ const MainApp = () => {
           alignSelf: 'center',
         }}
       />
-      {isLoading && <Loading />}
+      {loading && <Loading />}
     </>
   );
 };

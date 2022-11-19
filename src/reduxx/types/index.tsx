@@ -1,0 +1,11 @@
+export const SET_LOADING = '@SET_LOADING';
+
+// Akun
+export const SET_AKUN_LOADING = '@SET_AKUN_LOADING';
+export const SET_AKUN_ERROR = '@SET_AKUN_ERROR';
+export const SET_AKUN_SUCCESS = '@SET_AKUN_SUCCESS';
+
+// update akun
+export const SET_UPDATE_AKUN_LOADING = '@SET_UPDATE_AKUN_LOADING';
+export const SET_UPDATE_AKUN_ERROR = '@SET_UPDATE_AKUN_ERROR';
+export const SET_UPDATE_AKUN_SUCCESS = '@SET_UPDATE_AKUN_SUCCESS';
