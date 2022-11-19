@@ -4,14 +4,23 @@ import {
   Keyboard,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
 
 import moment from 'moment';
-import {CustomButton, Gap, Headers, Input2} from '../../components';
+import {DatePickerModal} from 'react-native-paper-dates';
+import {
+  CustomButton,
+  Gap,
+  Headers,
+  Input2,
+  Profile,
+  Select2,
+  HelperText,
+} from '../../components';
 import {getData, updateProfileSchema} from '../../plugins';
+import {getImage} from '../../plugins/imagePicker';
 import {updateAkun, useAppDispatch, useAppSelector} from '../../reduxx';
 import {
   COLORS,
@@ -24,14 +33,12 @@ import {
 
 function EditProfile({navigation}: any) {
   const {data, loading} = useAppSelector(state => state.dataAkun);
-  const [photo, setPhoto] = useState(data?.photo);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [open, setOpen] = useState(false);
 
   const dispatch = useAppDispatch();
-  const updateProfile = (value: any) => {
-    console.log(value);
 
+  const updateProfile = (value: any) => {
     getData('user').then((res: any) => {
       dispatch(updateAkun(res.uid, value));
     });
@@ -51,6 +58,7 @@ function EditProfile({navigation}: any) {
     },
     [setOpen, setDate]
   );
+
   return (
     <View style={styles.pages}>
       <View>
@@ -66,7 +74,7 @@ function EditProfile({navigation}: any) {
           birth_date: data?.birth_date,
           address: data?.address,
           phone_number: data?.phone_number,
-          image: data?.image_url,
+          photo: data?.photo,
           tempat_lahir: data?.tempat_lahir,
           email: data?.email,
           pekerjaan: data?.pekerjaan,
@@ -88,9 +96,9 @@ function EditProfile({navigation}: any) {
               <View>
                 <View style={styles.photo}>
                   <Profile
-                    source={{uri: photo}}
+                    source={{uri: values.photo}}
                     isRemove
-                    onPress={() => getImage(setFieldValue, setPhoto)}
+                    onPress={() => getImage(setFieldValue)}
                   />
                 </View>
                 <Input2
@@ -99,9 +107,9 @@ function EditProfile({navigation}: any) {
                   value={values.fullname}
                   onBlur={handleBlur('fullname')}
                 />
-                {errors.fullname && touched.fullname && (
-                  <Text style={styles.errorText}>{errors.fullname}</Text>
-                )}
+                {errors.fullname && touched.fullname ? (
+                  <HelperText text={errors.fullname} />
+                ) : null}
                 <Gap height={15} />
 
                 <Select2
@@ -121,7 +129,7 @@ function EditProfile({navigation}: any) {
                   placeholder="Pilih Pekerjaan"
                 />
                 {errors.pekerjaan && touched.pekerjaan && (
-                  <Text style={styles.errorText}>{errors.pekerjaan}</Text>
+                  <HelperText text={errors.pekerjaan} />
                 )}
                 <Gap height={15} />
 
@@ -152,7 +160,7 @@ function EditProfile({navigation}: any) {
                   // calendarIcon="calendar" // optional, default is "calendar"
                 />
                 {errors.birth_date && touched.birth_date && (
-                  <Text style={styles.errorText}>{errors.birth_date}</Text>
+                  <HelperText text={errors.birth_date} />
                 )}
                 <Gap height={15} />
                 <Input2
@@ -163,7 +171,7 @@ function EditProfile({navigation}: any) {
                   onBlur={handleBlur('tempat_lahir')}
                 />
                 {errors.tempat_lahir && touched.tempat_lahir && (
-                  <Text style={styles.errorText}>{errors.tempat_lahir}</Text>
+                  <HelperText text={errors.tempat_lahir} />
                 )}
                 <Gap height={15} />
                 <Input2
@@ -176,7 +184,7 @@ function EditProfile({navigation}: any) {
                   numberOfLines={4}
                 />
                 {errors.address && touched.address && (
-                  <Text style={styles.errorText}>{errors.address}</Text>
+                  <HelperText text={errors.address} />
                 )}
                 <Gap height={15} />
                 <Input2
@@ -187,13 +195,13 @@ function EditProfile({navigation}: any) {
                   onBlur={handleBlur('phone_number')}
                 />
                 {errors.phone_number && touched.phone_number && (
-                  <Text style={styles.errorText}>{errors.phone_number}</Text>
+                  <HelperText text={errors.phone_number} />
                 )}
                 <Gap height={15} />
 
                 <Input2 label="Email" value={values.email} disabled />
                 {errors.email && touched.email && (
-                  <Text style={styles.errorText}>{errors.email}</Text>
+                  <HelperText text={errors.email} />
                 )}
                 <Gap height={windowHeight * 0.05} />
 

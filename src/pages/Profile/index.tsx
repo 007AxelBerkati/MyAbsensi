@@ -3,10 +3,15 @@ import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {Fade, Placeholder, PlaceholderMedia} from 'rn-placeholder';
 
 import {version} from '../../../package.json';
-import {ILNullPhoto} from '../../assets';
 import {CardList, Headers, Profile} from '../../components';
-import {getData, removeDataSecure, signOut} from '../../plugins';
-import {getAkun, RootState, useAppDispatch, useAppSelector} from '../../reduxx';
+import {getData} from '../../plugins';
+import {
+  getAkun,
+  RootState,
+  signOutUser,
+  useAppDispatch,
+  useAppSelector,
+} from '../../reduxx';
 
 import {
   COLORS,
@@ -27,11 +32,7 @@ function AkunScreen({navigation}: any) {
   }, []);
 
   const onLogout = () => {
-    signOut().then(() => {
-      removeDataSecure('userLogin').then(() => {
-        navigation.replace('Login');
-      });
-    });
+    dispatch(signOutUser(navigation));
   };
 
   return (
@@ -65,7 +66,7 @@ export default AkunScreen;
 const styles = StyleSheet.create({
   pages: {
     flex: 1,
-    margin: 16,
+    marginHorizontal: 16,
   },
 
   version: {
