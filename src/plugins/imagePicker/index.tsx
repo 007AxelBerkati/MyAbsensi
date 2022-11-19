@@ -1,7 +1,7 @@
 import {launchImageLibrary} from 'react-native-image-picker';
 import {showError} from '../showMessage';
 
-export const getImage = (setFieldValue: any, setPhoto: any) => {
+export const getImage = (setFieldValue: any) => {
   launchImageLibrary(
     {
       quality: 1,
@@ -16,10 +16,8 @@ export const getImage = (setFieldValue: any, setPhoto: any) => {
       } else {
         const source = response?.assets[0];
         const Uri = source.uri;
-        if (setPhoto !== undefined) {
-          setPhoto(Uri);
-        }
-        setFieldValue('image', source, true);
+
+        setFieldValue('photo', Uri, true);
       }
     }
   );

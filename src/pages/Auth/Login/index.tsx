@@ -1,6 +1,4 @@
 import {Formik} from 'formik';
-import TouchID from 'react-native-touch-id';
-
 import React, {useEffect, useState} from 'react';
 import {
   Alert,
@@ -11,8 +9,9 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-
 import * as Animatable from 'react-native-animatable';
+import {ActivityIndicator} from 'react-native-paper';
+import TouchID from 'react-native-touch-id';
 import {IconsApp2} from '../../../assets';
 import {
   CustomButton,
@@ -22,16 +21,17 @@ import {
   LinkComponent,
 } from '../../../components';
 import {
-  databaseRef,
   getDataSecure,
-  login,
   loginSchema,
   optionalConfigObject,
   showError,
-  showSuccess,
-  storeData,
-  storeDataSecure,
 } from '../../../plugins';
+import {
+  loginUser,
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+} from '../../../reduxx';
 import {COLORS, FONTS, windowHeight, windowWidth} from '../../../theme';
 
 type loginUserProps = {
@@ -40,46 +40,14 @@ type loginUserProps = {
 };
 
 function LoginScreen({navigation}: any) {
-  const [everLogin, setEverLogin] = useState(false);
+  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    getDataSecure('userLogin').then(res => {
-      if (res) {
-        setEverLogin(true);
-      } else {
-        setEverLogin(false);
-      }
-    });
-  }, []);
+  const {loading, isLogin} = useAppSelector(
+    (state: RootState) => state.dataAuth
+  );
 
-  const loginUser = ({email, password}: loginUserProps) => {
-    // dispatch(setLoading(true));
-    login(email, password)
-      .then(res => {
-        // dispatch(setLoading(false));
-        databaseRef()
-          .ref(`users/${res.user.uid}`)
-          .once('value')
-          .then(snapshot => {
-            if (snapshot.val()) {
-              storeData('user', snapshot.val());
-              storeDataSecure('userLogin', {
-                email,
-                password,
-                uid: res.user.uid,
-              });
-              showSuccess('Login Success');
-              navigation.replace('Dashboard');
-            }
-          });
-      })
-      .catch(err => {
-        // dispatch(setLoading(false));
-        if (err.code === 'auth/invalid-email') {
-          showError('That email address is invalid!');
-        }
-        showError(err.message);
-      });
+  const login = ({email, password}: loginUserProps) => {
+    dispatch(loginUser(email, password, navigation));
   };
 
   const onFingerprint = () => {
@@ -95,7 +63,7 @@ function LoginScreen({navigation}: any) {
                   email: user.email,
                   password: user.password,
                 };
-                loginUser(users);
+                login(users);
               } else {
                 showError('Please Login first');
               }
@@ -123,7 +91,7 @@ function LoginScreen({navigation}: any) {
           <Formik
             initialValues={{email: '', password: ''}}
             onSubmit={values => {
-              loginUser(values);
+              login(values);
             }}
             validationSchema={loginSchema}>
             {({
@@ -146,7 +114,7 @@ function LoginScreen({navigation}: any) {
                   color={COLORS.text.tertiary}
                 />
                 {errors.email && touched.email ? (
-                  <Text style={styles.errorText}>{errors.email}</Text>
+                  <HelperText text={errors.email} />
                 ) : null}
 
                 <Input
@@ -172,16 +140,13 @@ function LoginScreen({navigation}: any) {
                 <Gap height={30} />
                 <View style={styles.buttonLogin}>
                   <CustomButton
-                    style={{width: everLogin ? '83%' : '100%'}}
+                    style={{width: isLogin ? '83%' : '100%'}}
                     type={'primary'}
-                    title="Login"
+                    title={'Login'}
                     onPress={handleSubmit}
-                    disable={
-                      !(dirty && isValid)
-                      // || stateGlobal.isLoading
-                    }
+                    disable={!(dirty && isValid) || loading}
                   />
-                  {everLogin && (
+                  {isLogin && (
                     <CustomButton type="icon-button" onPress={onFingerprint} />
                   )}
                 </View>

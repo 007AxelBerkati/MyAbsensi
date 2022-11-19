@@ -1,5 +1,4 @@
 import {Formik} from 'formik';
-
 import React from 'react';
 import {
   Image,
@@ -9,22 +8,16 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-
 import * as Animatable from 'react-native-animatable';
 import {IconsApp2} from '../../../assets';
+import {CustomButton, Gap, Input, LinkComponent} from '../../../components';
+import {forgetPassSchema, loginSchema} from '../../../plugins';
 import {
-  CustomButton,
-  Gap,
-  HelperText,
-  Input,
-  LinkComponent,
-} from '../../../components';
-import {
-  forgetPassword,
-  loginSchema,
-  showError,
-  showSuccess,
-} from '../../../plugins';
+  forgetPass,
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+} from '../../../reduxx';
 import {COLORS, FONTS, windowHeight, windowWidth} from '../../../theme';
 
 type ForgetPassProps = {
@@ -32,17 +25,12 @@ type ForgetPassProps = {
 };
 
 function LoginScreen({navigation}: any) {
-  const forgetPass = ({email}: ForgetPassProps) => {
-    // dispatch(setLoading(true));
-    forgetPassword(email)
-      .then(() => {
-        // dispatch(setLoading(false));
-        showSuccess('Check your email');
-      })
-      .catch(err => {
-        // dispatch(setLoading(false));
-        showError(err.message);
-      });
+  const dispatch = useAppDispatch();
+
+  const {loading} = useAppSelector((state: RootState) => state.dataAuth);
+
+  const forgetPassword = ({email}: ForgetPassProps) => {
+    dispatch(forgetPass(email, navigation));
   };
 
   return (
@@ -59,9 +47,9 @@ function LoginScreen({navigation}: any) {
           <Formik
             initialValues={{email: ''}}
             onSubmit={values => {
-              forgetPass(values);
+              forgetPassword(values);
             }}
-            validationSchema={loginSchema}>
+            validationSchema={forgetPassSchema}>
             {({
               handleChange,
               handleBlur,
@@ -79,6 +67,7 @@ function LoginScreen({navigation}: any) {
                   onChangeText={handleChange('email')}
                   value={values.email}
                   onBlur={handleBlur('email')}
+                  color={COLORS.text.tertiary}
                 />
                 {errors.email && touched.email ? (
                   <Text style={styles.errorText}>{errors.email}</Text>
@@ -96,12 +85,9 @@ function LoginScreen({navigation}: any) {
                   <CustomButton
                     style={{width: '100%'}}
                     type={'primary'}
-                    title="Login"
+                    title="Kirim"
                     onPress={handleSubmit}
-                    disable={
-                      !(dirty && isValid)
-                      // || stateGlobal.isLoading
-                    }
+                    disable={!(dirty && isValid) || loading}
                   />
                 </View>
               </View>
