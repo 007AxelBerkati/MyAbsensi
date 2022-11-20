@@ -24,7 +24,7 @@ import {
 
 function AkunScreen({navigation}: any) {
   const dispatch = useAppDispatch();
-  const dataProfile = useAppSelector((state: RootState) => state.dataAkun);
+  const {loading, data} = useAppSelector((state: RootState) => state.dataAkun);
   useEffect(() => {
     getData('user').then((res: any) => {
       dispatch(getAkun(res.uid));
@@ -40,12 +40,12 @@ function AkunScreen({navigation}: any) {
       <Headers title="Akun Saya" />
 
       <ScrollView>
-        {dataProfile.loading ? (
+        {loading ? (
           <Placeholder Animation={Fade} style={styles.photoSection}>
             <PlaceholderMedia style={styles.placeholder} />
           </Placeholder>
         ) : (
-          <Profile source={{uri: dataProfile?.data?.photo}} />
+          <Profile source={{uri: data?.photo}} />
         )}
         <CardList
           type="akun"

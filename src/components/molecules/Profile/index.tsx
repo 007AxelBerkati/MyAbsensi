@@ -24,7 +24,7 @@ function Profile({isRemove, source, onPress}: ProfileProps) {
       )}
       {isRemove && (
         <TouchableOpacity style={styles.photo} onPress={onPress}>
-          <FastImage source={source || ILNullPhoto} style={styles.avatar} />
+          <FastImage source={source} style={styles.avatar} />
           {isRemove && <IconRemovePhoto style={styles.removePhoto} />}
         </TouchableOpacity>
       )}

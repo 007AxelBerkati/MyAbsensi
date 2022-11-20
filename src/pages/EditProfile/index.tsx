@@ -15,9 +15,9 @@ import {
   Gap,
   Headers,
   Input2,
-  Profile,
   Select2,
   HelperText,
+  Profile,
 } from '../../components';
 import {getData, updateProfileSchema} from '../../plugins';
 import {getImage} from '../../plugins/imagePicker';
@@ -30,6 +30,7 @@ import {
   windowHeight,
   windowWidth,
 } from '../../theme';
+import FastImage from 'react-native-fast-image';
 
 function EditProfile({navigation}: any) {
   const {data, loading} = useAppSelector(state => state.dataAkun);

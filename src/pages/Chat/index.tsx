@@ -5,9 +5,19 @@ import uuid from 'react-native-uuid';
 import {ILNullPhoto} from '../../assets';
 import {CustomButton, Headers, List} from '../../components';
 import {databaseRef, getData} from '../../plugins';
+import {
+  getAllUser,
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+} from '../../reduxx';
 import {COLORS} from '../../theme';
 
 const Chat = ({navigation}: any) => {
+  const dispatch = useAppDispatch();
+
+  const {data} = useAppSelector((state: RootState) => state.dataChat);
+
   const [profile, setProfile] = useState({
     photo: ILNullPhoto,
     fullname: '',
@@ -45,28 +55,29 @@ const Chat = ({navigation}: any) => {
 
   const getUserData = () => {
     getData('user').then(res => {
+      console.log('res', res);
       const data = res;
       data.photo = res?.photo?.length > 1 ? {uri: res.photo} : ILNullPhoto;
       setProfile(res);
       getChatList(res.uid);
-      getAllUser(res.uid, '');
+      dispatch(getAllUser(res?.uid, ''));
     });
   };
 
-  const getAllUser = (uid: any, text: any) => {
-    databaseRef()
-      .ref(`admins/`)
-      .once('value')
-      .then(snapshot => {
-        const lowerFullname: any = Object.values(snapshot.val()).filter(
-          (it: any) => {
-            return it.fullname.toLowerCase().includes(text) && it.uid !== uid;
-          }
-        );
+  // const getAllUser = (uid: any, text: any) => {
+  //   databaseRef()
+  //     .ref(`admins/`)
+  //     .once('value')
+  //     .then(snapshot => {
+  //       const lowerFullname: any = Object.values(snapshot.val()).filter(
+  //         (it: any) => {
+  //           return it.fullname.toLowerCase().includes(text) && it.uid !== uid;
+  //         }
+  //       );
 
-        setAllContact(lowerFullname);
-      });
-  };
+  //       setAllContact(lowerFullname);
+  //     });
+  // };
 
   useEffect(() => {
     getUserData();
@@ -150,7 +161,7 @@ const Chat = ({navigation}: any) => {
         icon="account-multiple"
         type="floating-btn"
         color={COLORS.secondary}
-        onPress={() => navigation.navigate('AllUser', {profile, allContact})}
+        onPress={() => navigation.navigate('AllUser', {profile, data})}
       />
     </View>
   );

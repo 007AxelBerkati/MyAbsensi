@@ -1,24 +1,21 @@
-import {FlatList, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {ILNullPhoto} from '../../assets';
-import {databaseRef, getData} from '../../plugins';
-import {Gap, Headers, List} from '../../components';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {Searchbar} from 'react-native-paper';
 import uuid from 'react-native-uuid';
+import {Gap, Headers, List} from '../../components';
+import {databaseRef} from '../../plugins';
 import {COLORS} from '../../theme';
-import {useIsFocused} from '@react-navigation/native';
 
 const AllUser = ({navigation, route}: any) => {
   const {params} = route;
-  const {allContact} = params;
+  const {data} = params;
   const {profile} = params;
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const [allUser, setallUser] = useState(allContact);
+  const [allUser, setallUser] = useState(data);
 
   const onChangeSearch = (query: any) => {
-    // console.log(query);
     setSearchQuery(query);
     getAllUser(profile.uid, query);
   };
@@ -38,13 +35,10 @@ const AllUser = ({navigation, route}: any) => {
   };
 
   const createChatList = (data: any) => {
-    // console.log('data', data);
     databaseRef()
       .ref(`/chatlist/${profile.uid}/${data.uid}`)
       .once('value')
       .then(snapshot => {
-        // console.log('User data: ', snapshot.val());
-
         if (snapshot.val() == null) {
           const roomId = uuid.v4();
           const myData = {
@@ -94,7 +88,7 @@ const AllUser = ({navigation, route}: any) => {
 
   useEffect(() => {
     console.log('allUser', allUser);
-    console.log('profile', profile);
+    console.log('profile', data);
   }, []);
 
   return (
@@ -116,13 +110,16 @@ const AllUser = ({navigation, route}: any) => {
         keyExtractor={(Item, index) => index.toString()}
         data={allUser}
         renderItem={({item}: any) => (
-          <List
-            name={item.fullname}
-            profile={{uri: item.photo}}
-            chat={item.role}
-            type="next"
-            onPress={() => createChatList(item)}
-          />
+          <>
+            {console.log('item', item)}
+            <List
+              name={item.fullname}
+              profile={{uri: item?.photo}}
+              chat={item?.role}
+              type="next"
+              onPress={() => createChatList(item)}
+            />
+          </>
         )}
       />
     </View>

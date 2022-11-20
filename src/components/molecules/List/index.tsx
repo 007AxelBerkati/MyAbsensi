@@ -7,6 +7,7 @@ import {
   View,
   StyleProp,
   ViewStyle,
+  TouchableOpacity,
 } from 'react-native';
 import {
   IconEditProfile,
@@ -56,9 +57,7 @@ export default function List({
     return <IconEditProfile />;
   };
   return (
-    <Pressable
-      style={styles.container as unknown as StyleProp<ViewStyle>}
-      onPress={onPress}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       {icon ? <Icon /> : <Image source={profile} style={styles.imageStyle} />}
       <View style={styles.titleWrapper}>
         <Text style={styles.names}>{name}</Text>
@@ -75,7 +74,7 @@ export default function List({
         <Text style={styles.time}>{time}</Text>
         <Text style={styles.time}>{date}</Text>
       </View>
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 
@@ -120,12 +119,12 @@ const styles = StyleSheet.create({
   },
 });
 
-List.defaultProps = {
-  type: '',
-  icon: '',
-  name: '',
-  desc: '',
-  chat: '',
-  time: '',
-  date: '',
-};
+// List.defaultProps = {
+//   type: '',
+//   icon: '',
+//   name: '',
+//   desc: '',
+//   chat: '',
+//   time: '',
+//   date: '',
+// };
