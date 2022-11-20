@@ -34,7 +34,7 @@ jobs:
             mkdir -p android/app/build/generated/res/react/release android/app/build/generated/assets/react/release
         - name: Build Android Release
           run: |
-            cd android && chmod +x ./gradlew && ./gradlew assembleRelease -x bundleReleaseJsAndAssets
+            cd android && chmod +x ./gradlew && ./gradlew app:assembleRelease -x bundleReleaseJsAndAssets
         - name: Upload Artifact
           uses: wzieba/AppCenter-Github-Action@v1
           with:
