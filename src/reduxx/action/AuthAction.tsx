@@ -71,24 +71,17 @@ export const loginUser =
     await login(email, password)
       .then((res: any) => {
         console.log('res', res.user.uid);
-
-        // databaseRef()
-        //   .ref(`users/${res.user.uid}`)
-        //   .on('value', snapshot => {
-        //     dispatch(setLoginSuccess(snapshot.val()));
-        //     storeData('user', snapshot.val());
-        //     storeDataSecure('userLogin', {email, password, uid: res.user.uid});
-        //     showSuccess('Login Berhasil');
-
-        //     navigation.replace('Dashboard');
-        //   });
         databaseRef()
           .ref(`users/${res?.user?.uid}`)
           .once('value')
           .then(snapshot => {
             if (snapshot.val() !== null) {
               dispatch(setLoginSuccess(snapshot.val()));
-              storeData('user', snapshot.val());
+              storeData('user', {
+                ...snapshot.val(),
+                photo: snapshot.val().photo,
+                role: snapshot.val().role,
+              });
               storeDataSecure('userLogin', {
                 email,
                 password,
@@ -100,8 +93,14 @@ export const loginUser =
               databaseRef()
                 .ref(`admins/${res?.user?.uid}`)
                 .on('value', snapshot => {
+                  console.log('snapshot', snapshot.val());
+
                   dispatch(setLoginSuccess(snapshot.val()));
-                  storeData('user', snapshot.val());
+                  storeData('user', {
+                    ...snapshot.val(),
+                    photo: snapshot.val().photo,
+                    role: snapshot.val().role,
+                  });
                   storeDataSecure('userLogin', {
                     email,
                     password,

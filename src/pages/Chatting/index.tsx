@@ -21,6 +21,7 @@ const Chatting = ({navigation, route}: any) => {
       from: profile?.uid,
       to: receiverData.uid,
       photo: profile?.photo,
+      role: profile?.role,
       sendTime: moment().format(''),
       msgType: 'text',
       uid: profile?.uid,
@@ -38,8 +39,6 @@ const Chatting = ({navigation, route}: any) => {
       databaseRef()
         .ref(`/chatlist/${receiverData?.uid}/${profile?.uid}`)
         .update(chatListupdate);
-      // .then(() => console.log('Data updated.'));
-      // console.log("'/chatlist/' + profile?.uid + '/' + data?.uid", receiverData);
       databaseRef()
         .ref(`/chatlist/${profile?.uid}/${receiverData?.uid}`)
         .update(chatListupdate);
@@ -49,7 +48,8 @@ const Chatting = ({navigation, route}: any) => {
   };
 
   useEffect(() => {
-    // onLogScreenView('ChatScreen');
+    console.log('receiverData', receiverData);
+
     const onChildAdd = databaseRef()
       .ref(`/messages/${receiverData.roomId}`)
       .on('child_added', snapshot => {
@@ -71,13 +71,12 @@ const Chatting = ({navigation, route}: any) => {
       <Headers
         type="dark-profile"
         title={receiverData.fullname}
-        photo={
-          // receiverData.photo.length > 1
-          //   ? {uri: receiverData.photo}
-          //   : receiverData.photo
-          {uri: receiverData.photo}
-        }
-        desc={receiverData.role}
+        photo={{
+          uri: receiverData?.photo?.uri
+            ? receiverData.photo.uri
+            : receiverData.photo,
+        }}
+        desc={receiverData?.role}
         onPress={() => navigation.goBack()}
       />
       <View style={styles.content}>
@@ -99,7 +98,11 @@ const Chatting = ({navigation, route}: any) => {
               //     ? {uri: item.photo}
               //     : item.photo
               // }
-              photo={item.from === profile.uid ? null : {uri: item.photo}}
+              photo={
+                item.from === profile.uid
+                  ? null
+                  : {uri: item?.photo?.uri ? item.photo.uri : item.photo}
+              }
             />
           )}
         />

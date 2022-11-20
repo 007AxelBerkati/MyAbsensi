@@ -1,40 +1,45 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {Searchbar} from 'react-native-paper';
 import uuid from 'react-native-uuid';
 import {Gap, Headers, List} from '../../components';
 import {databaseRef} from '../../plugins';
+import {
+  getSearchUser,
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+} from '../../reduxx';
 import {COLORS} from '../../theme';
 
 const AllUser = ({navigation, route}: any) => {
   const {params} = route;
-  const {data} = params;
   const {profile} = params;
+
+  const dispatch = useAppDispatch();
+
+  const {dataSearch} = useAppSelector((state: RootState) => state.dataChat);
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const [allUser, setallUser] = useState(data);
+  const onChangeSearch = useCallback(
+    (query: any) => {
+      setSearchQuery(query);
+    },
+    [dispatch]
+  );
 
-  const onChangeSearch = (query: any) => {
-    setSearchQuery(query);
-    getAllUser(profile.uid, query);
-  };
+  useEffect(() => {
+    const getSearch = setTimeout(() => {
+      dispatch(getSearchUser(profile.uid, searchQuery));
+    }, 500);
 
-  const getAllUser = (uid: any, text: any) => {
-    databaseRef()
-      .ref(`admins/`)
-      .once('value')
-      .then(snapshot => {
-        setallUser(
-          Object.values(snapshot.val()).filter(
-            (it: any) =>
-              it.fullname.toLowerCase().includes(text) && it.uid !== uid
-          )
-        );
-      });
-  };
+    return () => clearTimeout(getSearch);
+  }, [dispatch, searchQuery]);
 
   const createChatList = (data: any) => {
+    console.log('data test', data);
+
     databaseRef()
       .ref(`/chatlist/${profile.uid}/${data.uid}`)
       .once('value')
@@ -54,14 +59,12 @@ const AllUser = ({navigation, route}: any) => {
           databaseRef()
             .ref(`/chatlist/${data.uid}/${profile.uid}`)
             .update(myData);
-          // .then(() => console.log('Data updated.'));
 
           data.lastMsg = '';
           data.roomId = roomId;
           databaseRef()
             .ref(`/chatlist/${profile.uid}/${data.uid}`)
             .update(data);
-          // .then(() => console.log('Data updated.'));
 
           navigation.navigate('Chatting', {receiverData: data, profile});
         } else {
@@ -71,25 +74,20 @@ const AllUser = ({navigation, route}: any) => {
               ...snapshot.val(),
               photo: data.photo,
               fullname: data.fullname,
-              bio: data.bio,
+              role: data.role,
             });
           navigation.navigate('Chatting', {
             receiverData: {
               ...snapshot.val(),
               photo: data.photo,
               fullname: data.fullname,
-              bio: data.bio,
+              role: data.role,
             },
             profile,
           });
         }
       });
   };
-
-  useEffect(() => {
-    console.log('allUser', allUser);
-    console.log('profile', data);
-  }, []);
 
   return (
     <View style={styles.page}>
@@ -108,7 +106,7 @@ const AllUser = ({navigation, route}: any) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         keyExtractor={(Item, index) => index.toString()}
-        data={allUser}
+        data={dataSearch}
         renderItem={({item}: any) => (
           <>
             {console.log('item', item)}

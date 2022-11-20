@@ -60,20 +60,35 @@ export const getAkun = (id: any) => async (dispatch: any) => {
   }
 };
 
-export const updateAkun = (id: any, data: any) => async (dispatch: any) => {
-  dispatch(setUpdateAkunLoading(true));
-  console.log('data', data);
-
-  try {
-    databaseRef()
-      .ref(`users/${id}`)
-      .update(data)
-      .then(() => {
-        dispatch(setUpdateAkunSuccess(true));
-        showSuccess('Berhasil update akun');
-      });
-  } catch (error: any) {
-    dispatch(setUpdateAkunError(error));
-    showError('gagal');
-  }
-};
+export const updateAkun =
+  (id: any, data: any, navigation: any) => async (dispatch: any) => {
+    dispatch(setUpdateAkunLoading(true));
+    try {
+      databaseRef()
+        .ref(`users/${id}`)
+        .on('value', snapshot => {
+          if (snapshot.val() !== null) {
+            databaseRef()
+              .ref(`users/${id}`)
+              .update(data)
+              .then(() => {
+                dispatch(setUpdateAkunSuccess(true));
+                showSuccess('Berhasil update akun');
+                navigation.goBack();
+              });
+          } else {
+            databaseRef()
+              .ref(`admins/${id}`)
+              .update(data)
+              .then(() => {
+                dispatch(setUpdateAkunSuccess(true));
+                showSuccess('Berhasil update akun');
+                navigation.goBack();
+              });
+          }
+        });
+    } catch (error: any) {
+      dispatch(setUpdateAkunError(error));
+      showError('gagal');
+    }
+  };

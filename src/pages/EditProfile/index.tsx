@@ -41,7 +41,7 @@ function EditProfile({navigation}: any) {
 
   const updateProfile = (value: any) => {
     getData('user').then((res: any) => {
-      dispatch(updateAkun(res.uid, value));
+      dispatch(updateAkun(res.uid, value, navigation));
     });
   };
 

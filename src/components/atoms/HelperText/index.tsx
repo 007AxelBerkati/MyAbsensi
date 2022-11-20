@@ -3,7 +3,7 @@ import {Text} from 'react-native';
 import {COLORS, FONTS, SIZE} from '../../../theme';
 
 type HelperTextProps = {
-  text: string;
+  text?: string;
 };
 
 function HelperText({text}: HelperTextProps) {
