@@ -18,5 +18,6 @@
     // },
     "types": ["node"],
   },
-  "include": ["src", "./declarations.d.ts"],
+  "include": ["src", "custom.d.ts"],
+  "files": ["custom.d.ts"],
 }
