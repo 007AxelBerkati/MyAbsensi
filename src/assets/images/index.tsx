@@ -1,4 +1,4 @@
-const IconsApp2 = require('./IconsApp2.png');
+const IconsApp2 = require('./IconsApp2.png') as String;
 const Splash = require('./Splash.json');
 const ILNullPhoto = require('./null-photo.png');
 const BackgroundChat = require('./BackgroundChat.png');
