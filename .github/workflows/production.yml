@@ -31,7 +31,7 @@ jobs:
             yarn install
         - name: Build Android Release
           run: |
-            cd android && chmod +x ./gradlew && ./gradlew assembleRelease
+            cd android && chmod +x ./gradlew && ./gradlew assembleRelease -x bundleReleaseJsAndAssets
         - name: Upload Artifact
           uses: wzieba/AppCenter-Github-Action@v1
           with:
