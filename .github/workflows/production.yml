@@ -29,6 +29,9 @@ jobs:
         - name: Install npm dependencies
           run: |
             yarn install
+        - name :mkdir code push
+          run: |
+            mkdir -p android/app/build/generated/res/react/release android/app/build/generated/assets/react/release
         - name: Build Android Release
           run: |
             cd android && chmod +x ./gradlew && ./gradlew assembleRelease -x bundleReleaseJsAndAssets
