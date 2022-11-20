@@ -3,6 +3,7 @@ import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {Fade, Placeholder, PlaceholderMedia} from 'rn-placeholder';
 
 import {version} from '../../../package.json';
+import {ILNullPhoto} from '../../assets';
 import {CardList, Headers, Profile} from '../../components';
 import {getData} from '../../plugins';
 import {

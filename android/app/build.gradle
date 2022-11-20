@@ -83,8 +83,19 @@ import org.apache.tools.ant.taskdefs.condition.Os
  * ]
  */
 
+
+
 project.ext.react = [
     enableHermes: true,  // clean and rebuild if changing
+    root: "../../",
+    entryFile: "index.android.js",
+    cliPath: "node_modules/haul/bin/cli.js",
+    devDisabledInAppDev: true,
+    devDisabledInAppTest: true,
+    devDisabledInRelease: true,
+    bundleInAppDev: true,
+    bundleInAppTest: true,
+    bundleInRelease: true,
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"

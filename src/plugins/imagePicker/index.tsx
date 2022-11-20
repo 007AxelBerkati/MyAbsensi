@@ -15,9 +15,11 @@ export const getImage = (setFieldValue: any) => {
         showError('Sepertinya anda tidak memilih fotonya');
       } else {
         const source = response?.assets[0];
-        const Uri = source.uri;
-
-        setFieldValue('photo', Uri, true);
+        setFieldValue(
+          'photo',
+          `data:${source.type};base64, ${source.base64}`,
+          true
+        );
       }
     }
   );
