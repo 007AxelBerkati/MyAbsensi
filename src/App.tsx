@@ -1,5 +1,5 @@
 import React from 'react';
-import {StatusBar} from 'react-native';
+import {Button, StatusBar} from 'react-native';
 import CodePush from 'react-native-code-push';
 import FlashMessage from 'react-native-flash-message';
 import {Provider, useSelector} from 'react-redux';
@@ -28,7 +28,7 @@ const MainApp = () => {
           marginTop: windowHeight * 0.05,
           width: windowWidth * 0.9,
           borderRadius: RADIUS.xLarge,
-          alignSelf: 'center', 
+          alignSelf: 'center',
         }}
       />
       {loading && <Loading />}

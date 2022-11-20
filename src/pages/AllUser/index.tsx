@@ -91,7 +91,11 @@ const AllUser = ({navigation, route}: any) => {
 
   return (
     <View style={styles.page}>
-      <Headers title="Contact" onPress={() => navigation.goBack()} />
+      <Headers
+        type="back-title"
+        title="Contact"
+        onPress={() => navigation.goBack()}
+      />
       <Gap height={16} />
       <Searchbar
         style={{

@@ -1,8 +1,8 @@
-import {StyleSheet, View, Image, StatusBar, Text} from 'react-native';
-import React, {useEffect} from 'react';
-import {IconsApp2, Splash} from '../../assets';
 import LottieView from 'lottie-react-native';
-import {COLORS, SIZE, FONTS, windowHeight, windowWidth} from '../../theme';
+import React, {useEffect} from 'react';
+import {StatusBar, StyleSheet, Text, View} from 'react-native';
+import {Splash} from '../../assets';
+import {COLORS, FONTS, SIZE, windowHeight, windowWidth} from '../../theme';
 
 function SplashScreen({navigation}: any) {
   useEffect(() => {
