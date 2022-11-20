@@ -28,7 +28,7 @@ const MainApp = () => {
           marginTop: windowHeight * 0.05,
           width: windowWidth * 0.9,
           borderRadius: RADIUS.xLarge,
-          alignSelf: 'center',
+          alignSelf: 'center', 
         }}
       />
       {loading && <Loading />}
