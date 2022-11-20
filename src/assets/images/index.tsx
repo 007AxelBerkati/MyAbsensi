@@ -1,20 +1,3 @@
-// const IconsApp2 = require('./IconsApp2.png') as String;
-// const Splash = require('./Splash.json');
-// const ILNullPhoto = require('./null-photo.png');
-// const BackgroundChat = require('./BackgroundChat.png');
-// const IconsApp = require('./IconsApp.svg');
-// const IconRemovePhoto = require('./ic-remove-photo.svg');
-// const IconAddPhoto = require('./ic-add-photo.svg');
-// const IconBackDark = require('./ic-back-dark.svg');
-// const IconBackLight = require('./ic-back-light.svg');
-// const IconNext = require('./ic-next.svg');
-// const IconSendDark = require('./ic-send-dark.svg');
-// const IconSendLight = require('./ic-send-light.svg');
-// const IconEditProfile = require('./ic-edit-profile.svg');
-// const IconLanguage = require('./ic-language.svg');
-// const IconRate = require('./ic-rate.svg');
-// const IconHelp = require('./ic-help.svg');
-
 import IconsApp from './IconsApp.svg';
 import IconRemovePhoto from './ic-remove-photo.svg';
 import IconRate from './ic-rate.svg';
