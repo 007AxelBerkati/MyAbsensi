@@ -68,17 +68,49 @@ export const setSignOutSuccess = () => ({
 export const loginUser =
   (email: any, password: any, navigation: any) => async (dispatch: any) => {
     dispatch(setLoginLoading(true));
-
     await login(email, password)
       .then((res: any) => {
+        console.log('res', res.user.uid);
+
+        // databaseRef()
+        //   .ref(`users/${res.user.uid}`)
+        //   .on('value', snapshot => {
+        //     dispatch(setLoginSuccess(snapshot.val()));
+        //     storeData('user', snapshot.val());
+        //     storeDataSecure('userLogin', {email, password, uid: res.user.uid});
+        //     showSuccess('Login Berhasil');
+
+        //     navigation.replace('Dashboard');
+        //   });
         databaseRef()
-          .ref(`users/${res.user.uid}`)
-          .on('value', snapshot => {
-            dispatch(setLoginSuccess(snapshot.val()));
-            storeData('user', snapshot.val());
-            storeDataSecure('userLogin', {email, password, uid: res.user.uid});
-            showSuccess('Login Berhasil');
-            navigation.replace('Dashboard');
+          .ref(`users/${res?.user?.uid}`)
+          .once('value')
+          .then(snapshot => {
+            if (snapshot.val() !== null) {
+              dispatch(setLoginSuccess(snapshot.val()));
+              storeData('user', snapshot.val());
+              storeDataSecure('userLogin', {
+                email,
+                password,
+                uid: res.user.uid,
+              });
+              showSuccess('Login Berhasil');
+              navigation.replace('Dashboard');
+            } else {
+              databaseRef()
+                .ref(`admins/${res?.user?.uid}`)
+                .on('value', snapshot => {
+                  dispatch(setLoginSuccess(snapshot.val()));
+                  storeData('user', snapshot.val());
+                  storeDataSecure('userLogin', {
+                    email,
+                    password,
+                    uid: res.user.uid,
+                  });
+                  showSuccess('Login Berhasil');
+                  navigation.replace('Dashboard');
+                });
+            }
           });
       })
       .catch((error: any) => {

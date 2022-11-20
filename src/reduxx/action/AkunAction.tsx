@@ -44,7 +44,15 @@ export const getAkun = (id: any) => async (dispatch: any) => {
     databaseRef()
       .ref(`users/${id}`)
       .on('value', snapshot => {
-        dispatch(setAkunSuccess(snapshot.val()));
+        if (snapshot.val() !== null) {
+          dispatch(setAkunSuccess(snapshot.val()));
+        } else {
+          databaseRef()
+            .ref(`admins/${id}`)
+            .on('value', snapshot => {
+              dispatch(setAkunSuccess(snapshot.val()));
+            });
+        }
       });
   } catch (error: any) {
     dispatch(setAkunError(error));
