@@ -96,6 +96,7 @@ project.ext.react = [
     bundleInAppDev: true,
     bundleInAppTest: true,
     bundleInRelease: true,
+    bundleAssetName: "index.android.bundle",
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"

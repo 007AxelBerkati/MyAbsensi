@@ -1,21 +1,21 @@
 import {StyleSheet, Text, View, Alert} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Headers} from '../../components';
-import RNMockLocationDetector from 'react-native-mock-location-detector';
+// import RNMockLocationDetector from 'react-native-mock-location-detector';
 
 const Riwayat = ({navigation}: any) => {
-  const [isMock, setIsMock] = useState(false);
-  useEffect(() => {
-    const isLocationMocked: boolean =
-      RNMockLocationDetector.checkMockLocationProvider();
-    if (isLocationMocked) {
-      // Location is mocked or spoofed
-      Alert.alert(
-        'Peringatan',
-        'Anda menggunakan aplikasi yang tidak aman, silahkan uninstall aplikasi ini'
-      );
-    }
-  }, []);
+  // const [isMock, setIsMock] = useState(false);
+  // useEffect(() => {
+  //   const isLocationMocked: boolean =
+  //     RNMockLocationDetector.checkMockLocationProvider();
+  //   if (isLocationMocked) {
+  //     // Location is mocked or spoofed
+  //     Alert.alert(
+  //       'Peringatan',
+  //       'Anda menggunakan aplikasi yang tidak aman, silahkan uninstall aplikasi ini'
+  //     );
+  //   }
+  // }, []);
 
   return (
     <View style={styles.pages}>
