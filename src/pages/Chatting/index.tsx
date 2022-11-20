@@ -83,9 +83,9 @@ const Chatting = ({navigation, route}: any) => {
         <FlatList
           style={{flex: 1}}
           data={allChat}
+          inverted
           showsVerticalScrollIndicator={false}
           keyExtractor={(item, index: any) => index}
-          inverted
           renderItem={({item}: any) => (
             <ChatItem
               isMe={item.from === profile.uid}
