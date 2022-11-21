@@ -1,7 +1,7 @@
 import {Formik} from 'formik';
+import LottieView from 'lottie-react-native';
 import React from 'react';
 import {
-  Image,
   Keyboard,
   StyleSheet,
   Text,
@@ -9,7 +9,6 @@ import {
   View,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import {IconsApp2} from '../../../assets';
 import {CustomButton, Gap, Input, LinkComponent} from '../../../components';
 import {forgetPassSchema} from '../../../plugins';
 import {
@@ -40,7 +39,14 @@ function LoginScreen({navigation}: any) {
           style={styles.animation}
           animation="fadeInUp"
           delay={1200}>
-          <Image style={styles.imageAnimation} source={IconsApp2} />
+          <LottieView
+            source={{
+              uri: 'https://assets8.lottiefiles.com/packages/lf20_IUWMcw.json',
+            }}
+            autoPlay
+            loop
+            style={{width: windowWidth * 0.5, height: windowHeight * 0.5}}
+          />
         </Animatable.View>
         <View style={styles.bottomView}>
           <Text style={styles.loginText}>Lupa Password</Text>
@@ -76,7 +82,7 @@ function LoginScreen({navigation}: any) {
                 <View style={styles.linkWrapper}>
                   <LinkComponent
                     title="Kembali Ke Login?"
-                    onPress={() => navigation.navigate('Login')}
+                    onPress={() => navigation.replace('Login')}
                   />
                 </View>
                 <View style={styles.iconWrapper} />

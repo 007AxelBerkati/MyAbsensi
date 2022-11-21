@@ -2,7 +2,6 @@ import {Formik} from 'formik';
 import React from 'react';
 import {
   Alert,
-  Image,
   Keyboard,
   StyleSheet,
   Text,
@@ -11,7 +10,6 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import TouchID from 'react-native-touch-id';
-import {IconsApp2} from '../../../assets';
 import {
   CustomButton,
   Gap,
@@ -31,7 +29,8 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../../reduxx';
-import {COLORS, FONTS, windowHeight, windowWidth} from '../../../theme';
+import {COLORS, FONTS, SIZE, windowHeight, windowWidth} from '../../../theme';
+import LottieView from 'lottie-react-native';
 
 type loginUserProps = {
   email: string;
@@ -82,8 +81,16 @@ function LoginScreen({navigation}: any) {
           style={styles.animation}
           animation="fadeInUp"
           delay={1200}>
-          <Image style={styles.imageAnimation} source={IconsApp2} />
-          <Text style={styles.animationText}>My Pokemon</Text>
+          <LottieView
+            source={{
+              uri: 'https://assets7.lottiefiles.com/packages/lf20_jcikwtux.json',
+            }}
+            autoPlay
+            loop
+            style={styles.imageAnimation}
+          />
+          <Text style={styles.animationText}>"Absen Lebih Mudah</Text>
+          <Text style={styles.animationText}>Dengan My Absensi"</Text>
         </Animatable.View>
         <View style={styles.bottomView}>
           <Text style={styles.loginText}>Login</Text>
@@ -132,7 +139,7 @@ function LoginScreen({navigation}: any) {
                 <View style={styles.linkWrapper}>
                   <LinkComponent
                     title="Lupa Password?"
-                    onPress={() => navigation.navigate('ForgetPass')}
+                    onPress={() => navigation.replace('ForgetPass')}
                   />
                 </View>
                 <View style={styles.iconWrapper} />
@@ -237,19 +244,22 @@ const styles = StyleSheet.create({
 
   animation: {
     position: 'absolute',
-    top: windowHeight * 0.1,
+    top: windowHeight * 0.03,
     left: 0,
     right: 0,
     alignItems: 'center',
   },
 
   animationText: {
-    color: COLORS.text.tertiary,
-    fontFamily: FONTS.primary[600],
-    textShadowColor: COLORS.border.primary,
+    color: COLORS.text.secondary,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    marginHorizontal: 20,
+    fontFamily: FONTS.primary[800],
+    textShadowColor: COLORS.text.primary,
     textShadowRadius: 10,
     textShadowOffset: {width: 5, height: 5},
-    fontSize: 30,
+    fontSize: SIZE.font20,
     shadowColor: COLORS.background.secondary,
     shadowOffset: {
       width: 0,
@@ -266,8 +276,8 @@ const styles = StyleSheet.create({
   },
 
   imageAnimation: {
-    width: windowWidth * 0.5,
-    height: windowHeight * 0.5,
+    width: windowWidth,
+    height: windowHeight * 0.4,
   },
 
   errorText: {

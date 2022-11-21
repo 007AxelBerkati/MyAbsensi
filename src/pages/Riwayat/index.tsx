@@ -16,7 +16,6 @@ const Riwayat = ({navigation}: any) => {
         }
       })
       .catch((error: MockLocationDetectorError) => {
-        // error.message - descriptive message
         switch (error.code) {
           case MockLocationDetectorErrorCode.GPSNotEnabled: {
             Alert.alert('GPS Not Enabled', 'Please enable GPS');
