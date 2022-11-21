@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import React from 'react';
+import {StyleSheet, TextInput, View} from 'react-native';
 import {COLORS, FONTS} from '../../../theme';
 import {CustomButton} from '../../atoms';
 
@@ -52,5 +52,6 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.primary.normal,
     fontSize: 14,
     maxHeight: 45,
+    color: COLORS.text.primary,
   },
 });

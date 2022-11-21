@@ -91,13 +91,6 @@ const Chatting = ({navigation, route}: any) => {
               isMe={item.from === profile.uid}
               text={item.message}
               date={item.sendTime}
-              // photo={
-              //   item.from === profile.uid
-              //     ? null
-              //     : item.photo.length > 1
-              //     ? {uri: item.photo}
-              //     : item.photo
-              // }
               photo={
                 item.from === profile.uid
                   ? null

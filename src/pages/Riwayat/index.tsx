@@ -1,21 +1,43 @@
-import {StyleSheet, Text, View, Alert} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+import {StyleSheet, View, Alert} from 'react-native';
+import {
+  isMockingLocation,
+  MockLocationDetectorErrorCode,
+  MockLocationDetectorError,
+} from 'react-native-turbo-mock-location-detector';
 import {Headers} from '../../components';
-// import RNMockLocationDetector from 'react-native-mock-location-detector';
 
 const Riwayat = ({navigation}: any) => {
-  // const [isMock, setIsMock] = useState(false);
-  // useEffect(() => {
-  //   const isLocationMocked: boolean =
-  //     RNMockLocationDetector.checkMockLocationProvider();
-  //   if (isLocationMocked) {
-  //     // Location is mocked or spoofed
-  //     Alert.alert(
-  //       'Peringatan',
-  //       'Anda menggunakan aplikasi yang tidak aman, silahkan uninstall aplikasi ini'
-  //     );
-  //   }
-  // }, []);
+  useEffect(() => {
+    isMockingLocation()
+      .then(({isLocationMocked}) => {
+        if (isLocationMocked) {
+          Alert.alert('Mock Location Detected', 'Please disable mock location');
+        }
+      })
+      .catch((error: MockLocationDetectorError) => {
+        // error.message - descriptive message
+        switch (error.code) {
+          case MockLocationDetectorErrorCode.GPSNotEnabled: {
+            Alert.alert('GPS Not Enabled', 'Please enable GPS');
+            return;
+          }
+          case MockLocationDetectorErrorCode.NoLocationPermissionEnabled: {
+            Alert.alert(
+              'No Location Permission',
+              'Please enable location permission'
+            );
+            return;
+          }
+          case MockLocationDetectorErrorCode.CantDetermine: {
+            Alert.alert(
+              'Can not determine if mock location is enabled',
+              'Please try again'
+            );
+          }
+        }
+      });
+  }, []);
 
   return (
     <View style={styles.pages}>
