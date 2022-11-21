@@ -141,7 +141,7 @@ function LoginScreen({navigation}: any) {
                   <CustomButton
                     style={{width: isLogin ? '83%' : '100%'}}
                     type={'primary'}
-                    title={'Login'}
+                    title={loading ? 'Loading...' : 'Login'}
                     onPress={handleSubmit}
                     disable={!(dirty && isValid) || loading}
                   />

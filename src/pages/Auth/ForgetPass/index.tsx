@@ -11,7 +11,7 @@ import {
 import * as Animatable from 'react-native-animatable';
 import {IconsApp2} from '../../../assets';
 import {CustomButton, Gap, Input, LinkComponent} from '../../../components';
-import {forgetPassSchema, loginSchema} from '../../../plugins';
+import {forgetPassSchema} from '../../../plugins';
 import {
   forgetPass,
   RootState,
@@ -85,7 +85,7 @@ function LoginScreen({navigation}: any) {
                   <CustomButton
                     style={{width: '100%'}}
                     type={'primary'}
-                    title="Kirim"
+                    title={loading ? 'Loading...' : 'Kirim'}
                     onPress={handleSubmit}
                     disable={!(dirty && isValid) || loading}
                   />
