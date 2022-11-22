@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, View} from 'react-native';
 import CodePush from 'react-native-code-push';
 import FlashMessage from 'react-native-flash-message';
 import {Provider, useSelector} from 'react-redux';
@@ -26,21 +26,12 @@ const MainApp = () => {
   );
 
   const dispatch = useAppDispatch();
-  const removeNetInfo = NetInfo.addEventListener(state => {
-    const offline = !(state.isConnected && state.isInternetReachable);
-    console.log('offline', offline);
 
-    dispatch(setOnline(!offline));
-  });
   useEffect(() => {
     const removeNetInfo = NetInfo.addEventListener(state => {
       const offline = !(state.isConnected && state.isInternetReachable);
-      console.log('offline', offline);
-
       dispatch(setOnline(!offline));
     });
-    removeNetInfo();
-
     return () => {
       removeNetInfo();
     };
@@ -62,7 +53,7 @@ const MainApp = () => {
           alignSelf: 'center',
         }}
       />
-      {isOnline ? null : <NoInternet onPress={removeNetInfo} />}
+      {isOnline ? null : <NoInternet />}
 
       {loading && <Loading />}
     </>

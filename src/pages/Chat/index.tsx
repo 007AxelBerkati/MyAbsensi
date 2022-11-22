@@ -1,12 +1,17 @@
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  View,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 import uuid from 'react-native-uuid';
-import {ILNullPhoto} from '../../assets';
 import {CustomButton, Headers, List} from '../../components';
 import {databaseRef, getData} from '../../plugins';
 import {
-  getAllUser,
+  refreshing,
   RootState,
   useAppDispatch,
   useAppSelector,
@@ -25,12 +30,15 @@ const Chat = ({navigation}: any) => {
 
   const [allUser, setallUser] = useState([]);
 
+  const dispatch = useAppDispatch();
+
+  const {isRefreshing} = useAppSelector((state: RootState) => state.dataGlobal);
+
   const getChatList = (uid: any) => {
     databaseRef()
       .ref(`chatlist/${uid}/`)
       .on('value', snapshot => {
         if (snapshot.val()) {
-          console.log('snapshot.val()', snapshot.val());
           const array = Object.values(snapshot.val());
           const sortedArray = array.sort(
             (a: any, b: any) =>
@@ -45,8 +53,6 @@ const Chat = ({navigation}: any) => {
             }
           });
 
-          console.log('dataMsgNotNull', dataMsgNotNull);
-
           setallUser(dataMsgNotNull);
         }
       });
@@ -54,7 +60,6 @@ const Chat = ({navigation}: any) => {
 
   const getUserData = () => {
     getData('user').then(res => {
-      console.log('res user', res);
       setProfile(res);
       getChatList(res.uid);
     });
@@ -62,7 +67,6 @@ const Chat = ({navigation}: any) => {
 
   useEffect(() => {
     getUserData();
-    console.log(allUser);
   }, []);
 
   const createChatList = (data: any) => {
@@ -115,6 +119,15 @@ const Chat = ({navigation}: any) => {
 
   return (
     <View style={styles.page}>
+      {/* <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={() => dispatch(refreshing(getChatList(profile.uid)))}
+            colors={[COLORS.primary]}
+          />
+        }> */}
       <Headers title="Semua Pesan" />
       <FlatList
         showsVerticalScrollIndicator={false}
@@ -140,6 +153,7 @@ const Chat = ({navigation}: any) => {
         color={COLORS.secondary}
         onPress={() => navigation.navigate('AllUser', {profile})}
       />
+      {/* </ScrollView> */}
     </View>
   );
 };
