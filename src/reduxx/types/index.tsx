@@ -1,4 +1,5 @@
 export const SET_LOADING = '@SET_LOADING';
+export const SET_IS_ONLINE = '@SET_IS_ONLINE';
 
 // Akun
 export const SET_AKUN_LOADING = '@SET_AKUN_LOADING';

@@ -22,3 +22,10 @@ declare module '*.jpg' {
 declare module '*.jpeg' {
   const content: any;
 }
+
+declare module '@env' {
+  export const REACT_STORAGE_BUCKET: string;
+  export const REACT_PROJECT_ID: string;
+  export const REACT_FIREBASE_URL: string;
+  export const REACT_PROJECT_NUMBER: string;
+}

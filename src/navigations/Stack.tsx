@@ -9,8 +9,9 @@ import {
   Login,
   SplashScreen,
 } from '../pages';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import MainApp from './MainApp';
+import NetInfo from '@react-native-community/netinfo';
 
 const Stack = createNativeStackNavigator();
 

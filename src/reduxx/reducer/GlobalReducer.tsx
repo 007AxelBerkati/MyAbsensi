@@ -1,11 +1,13 @@
-import {SET_LOADING} from '../types';
+import {SET_IS_ONLINE, SET_LOADING} from '../types';
 
 type initialStateGLobalProps = {
   loading: boolean;
+  isOnline: boolean;
 };
 
 const initialStateGLobal: initialStateGLobalProps = {
   loading: false,
+  isOnline: true,
 };
 
 export function GlobalReducer(
@@ -17,6 +19,11 @@ export function GlobalReducer(
       return {
         ...state,
         loading: action.loading,
+      };
+    case SET_IS_ONLINE:
+      return {
+        ...state,
+        isOnline: action.isOnline,
       };
     default:
       return state;

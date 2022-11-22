@@ -49,6 +49,7 @@ function LoginScreen({navigation}: any) {
           />
         </Animatable.View>
         <View style={styles.bottomView}>
+          {/* <Text style={styles.loginText}>Lupa Password</Text> */}
           <Text style={styles.loginText}>Lupa Password</Text>
           <Formik
             initialValues={{email: ''}}

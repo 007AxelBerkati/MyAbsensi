@@ -1,6 +1,6 @@
 // prettier-ignore
 {
-  "extends": "@tsconfig/react-native/tsconfig.json",     /* Recommended React Native TSConfig base */
+  "extends": "@tsconfig/react-native/tsconfig.json" /* Recommended React Native TSConfig base */,
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
@@ -16,7 +16,7 @@
     //   "@hooks": ["src/hooks/*"],
     //   "@navigations": ["src/navigations/*"],
     // },
-    "types": ["node"],
+    "types": ["node"]
   },
-  
+  "typeRoots": ["./custom.d.ts"]
 }

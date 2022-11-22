@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
-import {StyleSheet, View, Alert} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import {
   isMockingLocation,
-  MockLocationDetectorErrorCode,
   MockLocationDetectorError,
+  MockLocationDetectorErrorCode,
 } from 'react-native-turbo-mock-location-detector';
 import {Headers} from '../../components';
 
@@ -12,7 +12,7 @@ const Riwayat = ({navigation}: any) => {
     isMockingLocation()
       .then(({isLocationMocked}) => {
         if (isLocationMocked) {
-          Alert.alert('Mock Location Detected', 'Please disable mock location');
+          Alert.alert('Mocking Location Detected');
         }
       })
       .catch((error: MockLocationDetectorError) => {

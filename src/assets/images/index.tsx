@@ -14,6 +14,7 @@ import BackgroundChat from './BackgroundChat.png';
 import ILNullPhoto from './null-photo.png';
 import Splash from './Splash.json';
 import IconsApp2 from './IconsApp2.png';
+import ILLogin from './ILLogin.svg';
 
 export {
   IconsApp2,
@@ -32,4 +33,5 @@ export {
   IconSendDark,
   IconSendLight,
   IconAddPhoto,
+  ILLogin,
 };

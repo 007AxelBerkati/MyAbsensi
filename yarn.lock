@@ -1446,6 +1446,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/eslint-plugin/-/eslint-plugin-1.2.0.tgz#7d6d789ae8edf73dc9bed1246cd48277edea8066"
   integrity sha512-o6aam+0Ug1xGK3ABYmBm0B1YuEKfM/5kaoZO0eHbZwSpw9UzDX4G5y4Nx/K20FHqUmJHkZmLvOUFYwN4N+HqKA==
 
+"@react-native-community/netinfo@^9.3.6":
+  version "9.3.6"
+  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-9.3.6.tgz#730de4ebf83f7263fa61b0cbec6cde9b28660077"
+  integrity sha512-SwbBnHZuXcCUpYdL6ebt4HPAZEugPASl+RPxIyNe91Y+boZptzAFLywYW6yU93DYAhiHHFQBL6x6LxwF/K/tOQ==
+
 "@react-native-firebase/analytics@^15.7.0":
   version "15.7.1"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-15.7.1.tgz#a0d272453959f25bd451caa62a78b851d42c1d55"
@@ -1816,6 +1821,11 @@
   version "15.7.5"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
   integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
+
+"@types/react-native-dotenv@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@types/react-native-dotenv/-/react-native-dotenv-0.2.0.tgz#32c58422a422c1adf68acce363ed791314d5a8e7"
+  integrity sha512-ZxX+dU/yoQc0jTk+/NWttkiuXceJyN5FpOSqDl0WynN5GDzxwH7OMruQ47qcY8llo2RD3irjvzJ9BwC8gDiq0A==
 
 "@types/react-native-vector-icons@^6.4.12":
   version "6.4.12"

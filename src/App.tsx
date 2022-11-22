@@ -1,20 +1,51 @@
-import React from 'react';
-import {Button, StatusBar} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StatusBar} from 'react-native';
 import CodePush from 'react-native-code-push';
 import FlashMessage from 'react-native-flash-message';
 import {Provider, useSelector} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
-import {Loading} from './components';
+import {Loading, NoInternet} from './components';
 import Navigation from './navigations';
-import {Persistore, RootState, Store} from './reduxx';
+import {
+  Persistore,
+  RootState,
+  setOnline,
+  Store,
+  useAppDispatch,
+} from './reduxx';
 import {COLORS, RADIUS, windowHeight, windowWidth} from './theme';
+import NetInfo from '@react-native-community/netinfo';
 
 const codePushOptions = {
   checkFrequency: CodePush.CheckFrequency.ON_APP_START,
 };
 
 const MainApp = () => {
-  const {loading} = useSelector((state: RootState) => state.dataGlobal);
+  const {loading, isOnline} = useSelector(
+    (state: RootState) => state.dataGlobal
+  );
+
+  const dispatch = useAppDispatch();
+  const removeNetInfo = NetInfo.addEventListener(state => {
+    const offline = !(state.isConnected && state.isInternetReachable);
+    console.log('offline', offline);
+
+    dispatch(setOnline(!offline));
+  });
+  useEffect(() => {
+    const removeNetInfo = NetInfo.addEventListener(state => {
+      const offline = !(state.isConnected && state.isInternetReachable);
+      console.log('offline', offline);
+
+      dispatch(setOnline(!offline));
+    });
+    removeNetInfo();
+
+    return () => {
+      removeNetInfo();
+    };
+  }, []);
+
   return (
     <>
       <StatusBar
@@ -31,6 +62,8 @@ const MainApp = () => {
           alignSelf: 'center',
         }}
       />
+      {isOnline ? null : <NoInternet onPress={removeNetInfo} />}
+
       {loading && <Loading />}
     </>
   );
