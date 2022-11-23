@@ -15,6 +15,7 @@ import {
 } from './reduxx';
 import {COLORS, RADIUS, windowHeight, windowWidth} from './theme';
 import NetInfo from '@react-native-community/netinfo';
+import 'react-native-gesture-handler';
 
 const codePushOptions = {
   checkFrequency: CodePush.CheckFrequency.ON_APP_START,

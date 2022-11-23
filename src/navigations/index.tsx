@@ -1,5 +1,6 @@
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import React from 'react';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {COLORS} from '../theme';
 import Router from './Stack';
 
@@ -15,7 +16,9 @@ const MyTheme = {
 const Navigation = () => {
   return (
     <NavigationContainer theme={MyTheme}>
-      <Router />
+      <GestureHandlerRootView style={{flex: 1}}>
+        <Router />
+      </GestureHandlerRootView>
     </NavigationContainer>
   );
 };
