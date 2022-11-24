@@ -6,6 +6,9 @@ import List from './List';
 import InputChat from './InputChat';
 import ChatItem from './ChatItem';
 import NoInternet from './NoInternet';
+import CardProfile from './CardProfile';
+import CardCircle from './CardCircle';
+import CardService from './CardService';
 
 export {
   CardList,
@@ -16,4 +19,7 @@ export {
   InputChat,
   ChatItem,
   NoInternet,
+  CardProfile,
+  CardCircle,
+  CardService,
 };

@@ -133,7 +133,6 @@ export default AllUser;
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    backgroundColor: COLORS.background.primary,
     marginHorizontal: 16,
   },
 });

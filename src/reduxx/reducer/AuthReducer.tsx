@@ -5,6 +5,7 @@ import {
   SET_LOGIN_ERROR,
   SET_LOGIN_LOADING,
   SET_LOGIN_SUCCESS,
+  SET_ROLE,
   SET_SIGNOUT_ERROR,
   SET_SIGNOUT_LOADING,
   SET_SIGNOUT_SUCCESS,
@@ -15,6 +16,7 @@ type initialStateAuthProps = {
   error: any;
   data: any;
   isLogin: boolean;
+  role: any;
 };
 
 const initialStateAuth: initialStateAuthProps = {
@@ -22,6 +24,7 @@ const initialStateAuth: initialStateAuthProps = {
   error: null,
   data: null,
   isLogin: false,
+  role: null,
 };
 
 export function AuthReducer(
@@ -84,6 +87,12 @@ export function AuthReducer(
         ...state,
         loading: false,
         isLogin: false,
+      };
+
+    case SET_ROLE:
+      return {
+        ...state,
+        role: action.role,
       };
 
     default:

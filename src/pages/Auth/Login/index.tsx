@@ -89,8 +89,8 @@ function LoginScreen({navigation}: any) {
             loop
             style={styles.imageAnimation}
           />
-          <Text style={styles.animationText}>"Absen Lebih Mudah</Text>
-          <Text style={styles.animationText}>Dengan My Absensi"</Text>
+          {/* <Text style={styles.animationText}>"Absen Lebih Mudah</Text>
+          <Text style={styles.animationText}>Dengan My Absensi"</Text> */}
         </Animatable.View>
         <View style={styles.bottomView}>
           <Text style={styles.loginText}>Login</Text>
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
 
   animation: {
     position: 'absolute',
-    top: windowHeight * 0.03,
+    top: windowHeight * 0.05,
     left: 0,
     right: 0,
     alignItems: 'center',
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
 
   imageAnimation: {
     width: windowWidth,
-    height: windowHeight * 0.4,
+    height: windowHeight * 0.5,
   },
 
   errorText: {

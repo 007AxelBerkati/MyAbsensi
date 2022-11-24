@@ -17,6 +17,7 @@ import {
   SET_LOGIN_ERROR,
   SET_LOGIN_LOADING,
   SET_LOGIN_SUCCESS,
+  SET_ROLE,
   SET_SIGNOUT_ERROR,
   SET_SIGNOUT_LOADING,
   SET_SIGNOUT_SUCCESS,
@@ -65,6 +66,11 @@ export const setSignOutSuccess = () => ({
   type: SET_SIGNOUT_SUCCESS,
 });
 
+export const setRole = (role: any) => ({
+  type: SET_ROLE,
+  role,
+});
+
 export const loginUser =
   (email: any, password: any, navigation: any) => async (dispatch: any) => {
     dispatch(setLoginLoading(true));
@@ -77,6 +83,7 @@ export const loginUser =
           .then(snapshot => {
             if (snapshot.val() !== null) {
               dispatch(setLoginSuccess(snapshot.val()));
+              dispatch(setRole(snapshot.val().role));
               storeData('user', {
                 ...snapshot.val(),
                 photo: snapshot.val().photo,
@@ -93,9 +100,8 @@ export const loginUser =
               databaseRef()
                 .ref(`admins/${res?.user?.uid}`)
                 .on('value', snapshot => {
-                  console.log('snapshot', snapshot.val());
-
                   dispatch(setLoginSuccess(snapshot.val()));
+                  dispatch(setRole(snapshot.val().role));
                   storeData('user', {
                     ...snapshot.val(),
                     photo: snapshot.val().photo,

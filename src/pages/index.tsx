@@ -9,7 +9,9 @@ import Profile from './Profile';
 import InformasiProfile from './InformasiProfile';
 import EditProfile from './EditProfile';
 import AllUser from './AllUser';
+
 import Chatting from './Chatting';
+import Notif from './Notif';
 
 export {
   Login,
@@ -23,4 +25,5 @@ export {
   EditProfile,
   AllUser,
   Chatting,
+  Notif,
 };

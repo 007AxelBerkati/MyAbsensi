@@ -1,21 +1,21 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React from 'react';
 import {
   AllUser,
   Chatting,
-  Dashboard,
   EditProfile,
   ForgetPass,
   InformasiProfile,
   Login,
   SplashScreen,
 } from '../pages';
-import React, {useEffect, useState} from 'react';
+import {RootState, useAppSelector} from '../reduxx';
 import MainApp from './MainApp';
-import NetInfo from '@react-native-community/netinfo';
 
 const Stack = createNativeStackNavigator();
 
 function Router() {
+  const {role} = useAppSelector((state: RootState) => state.dataAuth);
   return (
     <Stack.Navigator
       initialRouteName="SplashScreen"
