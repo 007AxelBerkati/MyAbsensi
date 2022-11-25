@@ -20,7 +20,7 @@ function Router() {
   const {role} = useAppSelector((state: RootState) => state.dataAuth);
   return (
     <Stack.Navigator
-      initialRouteName="Dashboard"
+      initialRouteName="SplashScreen"
       screenOptions={{
         headerShown: false,
       }}>
