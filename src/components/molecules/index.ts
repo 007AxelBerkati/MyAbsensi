@@ -9,6 +9,8 @@ import NoInternet from './NoInternet';
 import CardProfile from './CardProfile';
 import CardCircle from './CardCircle';
 import CardService from './CardService';
+import CardNotif from './CardNotif';
+import CardRiwayat from './CardRiwayat';
 
 export {
   CardList,
@@ -22,4 +24,6 @@ export {
   CardProfile,
   CardCircle,
   CardService,
+  CardNotif,
+  CardRiwayat,
 };

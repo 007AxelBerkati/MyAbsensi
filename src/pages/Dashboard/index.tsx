@@ -1,17 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {Text, View, Button, StyleSheet, ScrollView} from 'react-native';
-import crashlytics from '@react-native-firebase/crashlytics';
-import {
-  CardCircle,
-  CardList,
-  CardProfile,
-  CardService,
-  Gap,
-} from '../../components';
-import {ILNullPhoto} from '../../assets';
 import moment from 'moment';
-import {COLORS, FONTS, SIZE, windowHeight, windowWidth} from '../../theme';
 import 'moment/locale/id';
+import React, {useEffect, useState} from 'react';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ILNullPhoto} from '../../assets';
+import {CardCircle, CardProfile, CardService, Gap} from '../../components';
+import {COLORS, FONTS, SIZE, windowHeight, windowWidth} from '../../theme';
 
 const Dashboard = ({navigation}: any) => {
   const [currTime, setCurrTime] = useState(moment());
@@ -41,7 +34,13 @@ const Dashboard = ({navigation}: any) => {
           title="Ijin Tidak Hadir"
           onPress={() => {}}
         />
-        <CardService icon="history" title="Lihat History" onPress={() => {}} />
+        <CardService
+          icon="history"
+          title="Lihat History"
+          onPress={() => {
+            navigation.navigate('Riwayat');
+          }}
+        />
       </View>
     </ScrollView>
   );

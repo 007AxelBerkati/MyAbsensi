@@ -72,20 +72,6 @@ const MainApp = ({navigation}: any) => {
               ),
             }}
           />
-          <Tab.Screen
-            name="Riwayat"
-            component={Riwayat}
-            options={{
-              tabBarLabel: 'Riwayat',
-              tabBarIcon: ({color, focused}) => (
-                <Icon
-                  name={focused ? 'list-circle' : 'list-circle-outline'}
-                  color={color}
-                  size={24}
-                />
-              ),
-            }}
-          />
 
           <Tab.Screen
             name="Profile"
@@ -133,20 +119,6 @@ const MainApp = ({navigation}: any) => {
                       ? 'chatbubble-ellipses'
                       : 'chatbubble-ellipses-outline'
                   }
-                  color={color}
-                  size={24}
-                />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Riwayat"
-            component={Riwayat}
-            options={{
-              tabBarLabel: 'Riwayat',
-              tabBarIcon: ({color, focused}) => (
-                <Icon
-                  name={focused ? 'list-circle' : 'list-circle-outline'}
                   color={color}
                   size={24}
                 />

@@ -12,6 +12,7 @@ import AllUser from './AllUser';
 
 import Chatting from './Chatting';
 import Notif from './Notif';
+import DetailRiwayat from './DetailRiwayat';
 
 export {
   Login,
@@ -26,4 +27,5 @@ export {
   AllUser,
   Chatting,
   Notif,
+  DetailRiwayat,
 };

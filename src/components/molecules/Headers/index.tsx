@@ -11,9 +11,17 @@ type HeadersProps = {
   type?: string;
   desc: string;
   photo?: any;
+  pressFilter?: () => void;
 };
 
-function Headers({onPress, title, type, desc, photo}: HeadersProps) {
+function Headers({
+  onPress,
+  title,
+  type,
+  desc,
+  photo,
+  pressFilter,
+}: HeadersProps) {
   if (type === 'dark-profile') {
     return (
       <DarkProfile onPress={onPress} title={title} desc={desc} photo={photo} />
@@ -32,6 +40,19 @@ function Headers({onPress, title, type, desc, photo}: HeadersProps) {
           <Icon name="arrow-left" size={24} color={COLORS.background.black} />
         </TouchableOpacity>
         <Text style={styles.titleBack}>{title}</Text>
+        {pressFilter && (
+          <TouchableOpacity
+            onPress={onPress}
+            style={{
+              position: 'absolute',
+              right: 0,
+              padding: 10,
+              borderRadius: 10,
+              backgroundColor: COLORS.background.tertiary,
+            }}>
+            <Icon name="filter" size={24} color={COLORS.background.primary} />
+          </TouchableOpacity>
+        )}
       </View>
     );
   }

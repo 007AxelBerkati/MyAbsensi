@@ -1,46 +1,28 @@
-import React, {useEffect} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
-import {
-  isMockingLocation,
-  MockLocationDetectorError,
-  MockLocationDetectorErrorCode,
-} from 'react-native-turbo-mock-location-detector';
-import {Headers} from '../../components';
+import moment from 'moment';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import {CardRiwayat, Headers} from '../../components';
 
 const Riwayat = ({navigation}: any) => {
-  useEffect(() => {
-    isMockingLocation()
-      .then(({isLocationMocked}) => {
-        if (isLocationMocked) {
-          Alert.alert('Mocking Location Detected');
-        }
-      })
-      .catch((error: MockLocationDetectorError) => {
-        switch (error.code) {
-          case MockLocationDetectorErrorCode.GPSNotEnabled: {
-            Alert.alert('GPS Not Enabled', 'Please enable GPS');
-            return;
-          }
-          case MockLocationDetectorErrorCode.NoLocationPermissionEnabled: {
-            Alert.alert(
-              'No Location Permission',
-              'Please enable location permission'
-            );
-            return;
-          }
-          case MockLocationDetectorErrorCode.CantDetermine: {
-            Alert.alert(
-              'Can not determine if mock location is enabled',
-              'Please try again'
-            );
-          }
-        }
-      });
-  }, []);
-
   return (
     <View style={styles.pages}>
-      <Headers title="Riwayat Absen" />
+      <Headers title="Riwayat Absen" type="back-title" pressFilter={() => {}} />
+      <CardRiwayat
+        jamKeluar={moment().format('hh:mm:ss')}
+        jamMasuk={moment().format('hh:mm:ss')}
+        tanggal={moment().format('DD MMMM YYYY')}
+        onPress={() => {
+          navigation.navigate('DetailRiwayat');
+        }}
+      />
+      <CardRiwayat
+        jamKeluar={moment().format('hh:mm:ss')}
+        jamMasuk={moment().format('hh:mm:ss')}
+        tanggal={moment().format('DD MMMM YYYY')}
+        onPress={() => {
+          navigation.navigate('DetailRiwayat');
+        }}
+      />
     </View>
   );
 };
