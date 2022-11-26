@@ -1,10 +1,18 @@
 import moment from 'moment';
 import 'moment/locale/id';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef, useMemo} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {ILNullPhoto} from '../../assets';
-import {CardCircle, CardProfile, CardService, Gap} from '../../components';
+import {
+  BackDropComponent,
+  CardCircle,
+  CardProfile,
+  CardService,
+  Gap,
+} from '../../components';
 import {COLORS, FONTS, SIZE, windowHeight, windowWidth} from '../../theme';
+import BottomSheet from '@gorhom/bottom-sheet';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const Dashboard = ({navigation}: any) => {
   const [currTime, setCurrTime] = useState(moment());
@@ -17,32 +25,57 @@ const Dashboard = ({navigation}: any) => {
     return () => clearInterval(interval);
   }, []);
 
+  // bottomSheet
+  const bottomSheetRef = useRef(null);
+  const snapPoints = useMemo(() => ['1%', '70%'], []);
+
+  const handleOpenPress = (index: any) =>
+    bottomSheetRef.current?.snapToIndex(index);
+  const handleClosePress = () => bottomSheetRef.current?.close();
+
   return (
-    <ScrollView style={styles.page}>
-      <CardProfile name="Axel" title="Selamat Datang, " photo={ILNullPhoto} />
-      <View style={styles.cardAbsen}>
-        <Gap height={30} />
-        <Text style={styles.hourMinutes}>{currTime.format('hh:mm:ss')}</Text>
-        <Text style={styles.date}>{currTime.format('dddd, d MMM YYYY')}</Text>
-        <Gap height={30} />
-        <CardCircle icon="fingerprint" title="Absen Masuk" onPress={() => {}} />
-      </View>
-      <Gap height={40} />
-      <View style={styles.service}>
-        <CardService
-          icon="article"
-          title="Ijin Tidak Hadir"
-          onPress={() => {}}
-        />
-        <CardService
-          icon="history"
-          title="Lihat History"
-          onPress={() => {
-            navigation.navigate('Riwayat');
-          }}
-        />
-      </View>
-    </ScrollView>
+    <GestureHandlerRootView style={styles.page}>
+      <ScrollView>
+        <CardProfile name="Axel" title="Selamat Datang, " photo={ILNullPhoto} />
+        <View style={styles.cardAbsen}>
+          <Gap height={30} />
+          <Text style={styles.hourMinutes}>{currTime.format('hh:mm:ss')}</Text>
+          <Text style={styles.date}>{currTime.format('dddd, d MMM YYYY')}</Text>
+          <Gap height={30} />
+          <CardCircle
+            icon="fingerprint"
+            title="Absen Masuk"
+            onPress={() => {}}
+          />
+        </View>
+        <Gap height={40} />
+        <View style={styles.service}>
+          <CardService
+            icon="article"
+            title="Ijin Tidak Hadir"
+            onPress={() => {}}
+          />
+          <CardService
+            icon="history"
+            title="Lihat History"
+            onPress={() => {
+              navigation.navigate('Riwayat');
+            }}
+          />
+        </View>
+        <Gap height={40} />
+        {/* <BottomSheet
+          enablePanDownToClose
+          enableContentPanningGesture
+          enableHandlePanningGesture
+          animateOnMount
+          enableOverDrag
+          ref={bottomSheetRef}
+          index={0}
+          snapPoints={snapPoints}
+          backdropComponent={BackDropComponent}></BottomSheet> */}
+      </ScrollView>
+    </GestureHandlerRootView>
   );
 };
 

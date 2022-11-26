@@ -5,5 +5,15 @@ import LinkComponent from './LinkComponent';
 import Gap from './Gap';
 import Input2 from './Input2';
 import Select2 from './Select2';
+import BackDropComponent from './BackDropComponent';
 
-export {Input, CustomButton, HelperText, LinkComponent, Gap, Input2, Select2};
+export {
+  Input,
+  CustomButton,
+  HelperText,
+  LinkComponent,
+  Gap,
+  Input2,
+  Select2,
+  BackDropComponent,
+};
