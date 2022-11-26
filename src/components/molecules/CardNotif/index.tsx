@@ -12,9 +12,29 @@ type Props = {
   request: string;
   time: string;
   onPress: () => void;
+  read: boolean;
+  status: string;
 };
 
-const CardNotif = ({name, photo, request, time, onPress, read}: Props) => {
+const CardNotif = ({
+  name,
+  photo,
+  request,
+  time,
+  onPress,
+  read,
+  status,
+}: Props) => {
+  const titleNotif = () => {
+    switch (status) {
+      case 'pending':
+        return 'Berhasi Mengirimkan Permintaan';
+      case 'accepted':
+        return 'Permintaan Anda Diterima';
+      case 'declined':
+        return 'Permintaan Anda Ditolak';
+    }
+  };
   return (
     <TouchableOpacity onPress={onPress} style={styles.containerNotif}>
       <FastImage source={photo} style={styles.photoProfile} />
@@ -27,7 +47,9 @@ const CardNotif = ({name, photo, request, time, onPress, read}: Props) => {
             {name} {``}
           </Text>
           {request === 'Izin' && (
-            <Text style={styles.request}>Telah Mengajukan {``}</Text>
+            <Text style={styles.request}>
+              {titleNotif()} {``}
+            </Text>
           )}
           <Text style={styles.reqTitle}>{request}</Text>
         </View>
