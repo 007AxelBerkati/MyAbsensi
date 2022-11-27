@@ -48,8 +48,6 @@ const Chatting = ({navigation, route}: any) => {
   };
 
   useEffect(() => {
-    console.log('receiverData', receiverData);
-
     const onChildAdd = databaseRef()
       .ref(`/messages/${receiverData.roomId}`)
       .on('child_added', snapshot => {

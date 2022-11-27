@@ -11,16 +11,14 @@ import {
   Riwayat,
   SplashScreen,
 } from '../pages';
-import {RootState, useAppSelector} from '../reduxx';
 import MainApp from './MainApp';
 
 const Stack = createNativeStackNavigator();
 
 function Router() {
-  const {role} = useAppSelector((state: RootState) => state.dataAuth);
   return (
     <Stack.Navigator
-      initialRouteName="SplashScreen"
+      initialRouteName="Login"
       screenOptions={{
         headerShown: false,
       }}>

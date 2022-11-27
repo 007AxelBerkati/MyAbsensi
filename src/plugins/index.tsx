@@ -5,3 +5,4 @@ export * from './firebase';
 export * from './geolocation';
 export * from './touchId';
 export * from './localStorageSecure';
+export * from './imagePicker';

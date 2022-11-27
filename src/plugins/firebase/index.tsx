@@ -1,5 +1,7 @@
 import auth from '@react-native-firebase/auth';
 import {firebase} from '@react-native-firebase/database';
+import firestore from '@react-native-firebase/firestore';
+
 export const login = (email: string, pass: string) =>
   auth().signInWithEmailAndPassword(email, pass);
 
@@ -14,3 +16,5 @@ export const databaseRef = () =>
     .database(
       'https://my-absensi-2-default-rtdb.asia-southeast1.firebasedatabase.app/'
     );
+
+export const firestoreRef = () => firestore();

@@ -28,7 +28,7 @@ const CardNotif = ({
   const titleNotif = () => {
     switch (status) {
       case 'pending':
-        return 'Berhasi Mengirimkan Permintaan';
+        return 'Berhasil Mengirimkan Permintaan';
       case 'accepted':
         return 'Permintaan Anda Diterima';
       case 'declined':

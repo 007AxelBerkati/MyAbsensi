@@ -13,6 +13,7 @@ import AllUser from './AllUser';
 import Chatting from './Chatting';
 import Notif from './Notif';
 import DetailRiwayat from './DetailRiwayat';
+import DashboardAdmin from './Admin/DashboardAdmin';
 
 export {
   Login,
@@ -28,4 +29,5 @@ export {
   Chatting,
   Notif,
   DetailRiwayat,
+  DashboardAdmin,
 };

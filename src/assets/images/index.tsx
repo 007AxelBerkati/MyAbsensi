@@ -15,6 +15,7 @@ import ILNullPhoto from './null-photo.png';
 import Splash from './Splash.json';
 import IconsApp2 from './IconsApp2.png';
 import ILLogin from './ILLogin.svg';
+import IconSellNull from './sellNull.svg';
 
 export {
   IconsApp2,
@@ -34,4 +35,5 @@ export {
   IconSendLight,
   IconAddPhoto,
   ILLogin,
+  IconSellNull,
 };

@@ -6,6 +6,8 @@ import ReduxThunk, {ThunkDispatch} from 'redux-thunk';
 import {GlobalReducer, AkunReducer, AuthReducer, ChatReducer} from '../reducer';
 
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
+import {NotificationReducer} from '../reducer/NotificationReducer';
+import {RequestReducer} from '../reducer/RequestReducer';
 
 const persistConfig = {
   key: 'root',
@@ -18,6 +20,8 @@ const rootReducer = {
   dataAkun: AkunReducer,
   dataAuth: AuthReducer,
   dataChat: ChatReducer,
+  dataNotif: NotificationReducer,
+  dataRequest: RequestReducer,
 };
 
 const rootReducers = combineReducers(rootReducer);

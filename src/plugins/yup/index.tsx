@@ -39,3 +39,13 @@ export const forgetPassSchema = Yup.object().shape({
     .required('Tolong isi Email Anda')
     .trim(),
 });
+
+export const requestSchema = Yup.object().shape({
+  alasan: Yup.string()
+    .min(2, 'Too Short!')
+    .max(100, 'Too Long!')
+    .required('Required')
+    .trim(),
+
+  jenis_izin: Yup.string().required('Required'),
+});

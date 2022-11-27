@@ -13,11 +13,20 @@ import {
 import {COLORS, FONTS, SIZE, windowHeight, windowWidth} from '../../theme';
 import BottomSheet from '@gorhom/bottom-sheet';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import PermintaanIzin from './PermintaanIzin';
+import {getData} from '../../plugins';
+import {getAkun, RootState, useAppDispatch, useAppSelector} from '../../reduxx';
 
 const Dashboard = ({navigation}: any) => {
+  const dispatch = useAppDispatch();
   const [currTime, setCurrTime] = useState(moment());
+  const {data} = useAppSelector((state: RootState) => state.dataAkun);
 
   useEffect(() => {
+    getData('user').then((res: any) => {
+      dispatch(getAkun(res.uid));
+    });
+
     const interval = setInterval(() => {
       setCurrTime(moment());
     }, 1000);
@@ -35,8 +44,12 @@ const Dashboard = ({navigation}: any) => {
 
   return (
     <GestureHandlerRootView style={styles.page}>
-      <ScrollView>
-        <CardProfile name="Axel" title="Selamat Datang, " photo={ILNullPhoto} />
+      <ScrollView style={{paddingHorizontal: 16}}>
+        <CardProfile
+          name={data?.fullname}
+          title="Selamat Datang, "
+          photo={{uri: data?.photo}}
+        />
         <View style={styles.cardAbsen}>
           <Gap height={30} />
           <Text style={styles.hourMinutes}>{currTime.format('hh:mm:ss')}</Text>
@@ -53,7 +66,9 @@ const Dashboard = ({navigation}: any) => {
           <CardService
             icon="article"
             title="Ijin Tidak Hadir"
-            onPress={() => {}}
+            onPress={() => {
+              handleOpenPress(1);
+            }}
           />
           <CardService
             icon="history"
@@ -64,17 +79,19 @@ const Dashboard = ({navigation}: any) => {
           />
         </View>
         <Gap height={40} />
-        {/* <BottomSheet
-          enablePanDownToClose
-          enableContentPanningGesture
-          enableHandlePanningGesture
-          animateOnMount
-          enableOverDrag
-          ref={bottomSheetRef}
-          index={0}
-          snapPoints={snapPoints}
-          backdropComponent={BackDropComponent}></BottomSheet> */}
       </ScrollView>
+      <BottomSheet
+        enablePanDownToClose
+        enableContentPanningGesture
+        enableHandlePanningGesture
+        animateOnMount
+        enableOverDrag
+        ref={bottomSheetRef}
+        index={0}
+        snapPoints={snapPoints}
+        backdropComponent={BackDropComponent}>
+        <PermintaanIzin handleClosePress={handleClosePress} />
+      </BottomSheet>
     </GestureHandlerRootView>
   );
 };
@@ -84,7 +101,6 @@ export default Dashboard;
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    marginHorizontal: 16,
   },
   hourMinutes: {
     fontSize: SIZE.font32,

@@ -4,29 +4,70 @@ import {
   View,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
 } from 'react-native';
 import React from 'react';
 import {Formik} from 'formik';
-import {COLORS, FONTS} from '../../theme';
+import {COLORS, FONTS, SIZE, windowHeight} from '../../theme';
+import {databaseRef, getData, getImage, requestSchema} from '../../plugins';
+import {
+  CustomButton,
+  Gap,
+  HelperText,
+  Input2,
+  Select2,
+  UploadPhoto,
+} from '../../components';
+import moment from 'moment';
+import {setNotif, setRequest, useAppDispatch} from '../../reduxx';
+import uuid from 'react-native-uuid';
 
-type Props = {};
+const PermintaanIzin = (handleClosePress: any) => {
+  const dispatch = useAppDispatch();
 
-const PermintaanIzin = ({}: Props) => {
+  const reqIzin = ({alasan, photo, jenis_izin}: any) => {
+    getData('user').then((res: any) => {
+      const bodyId = uuid.v4();
+      const dataNotif = {
+        uid: bodyId,
+        id_user: res.uid,
+        fullname: res.fullname,
+        alasan,
+        photo,
+        jenis_izin,
+        status: 'pending',
+        createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+        updatedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+        isRead: false,
+      };
+
+      dispatch(setNotif(res.uid, dataNotif, bodyId));
+
+      const dataReq = {
+        id_user: res.uid,
+        fullname: res.fullname,
+        alasan,
+        photo,
+        jenis_izin,
+        createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+        updatedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+        status: 'pending',
+      };
+
+      // dispatch(setRequest(res.uid, dataReq));
+      handleClosePress;
+    });
+  };
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <Formik
         initialValues={{
-          fullname: data?.fullname,
-          birth_date: data?.birth_date,
-          address: data?.address,
-          phone_number: data?.phone_number,
-          photo: data?.photo,
-          tempat_lahir: data?.tempat_lahir,
-          email: data?.email,
-          pekerjaan: data?.pekerjaan,
+          alasan: '',
+          photo: '',
+          jenis_izin: '',
         }}
-        onSubmit={values => updateProfile(values)}
-        validationSchema={updateProfileSchema}>
+        onSubmit={values => reqIzin(values)}
+        validationSchema={requestSchema}>
         {({
           handleChange,
           handleSubmit,
@@ -36,129 +77,70 @@ const PermintaanIzin = ({}: Props) => {
           touched,
           setFieldValue,
           isValid,
+          dirty,
         }) => (
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-              <View>
-                <View style={styles.photo}>
-                  <Profile
-                    source={{uri: values.photo}}
-                    isRemove
-                    onPress={() => getImage(setFieldValue)}
-                  />
-                </View>
-                <Input2
-                  label="Nama"
-                  onChangeText={handleChange('fullname')}
-                  value={values.fullname}
-                  onBlur={handleBlur('fullname')}
-                />
-                {errors.fullname && touched.fullname ? (
-                  <HelperText text={errors.fullname} />
-                ) : null}
-                <Gap height={15} />
+          <ScrollView style={{padding: 16}}>
+            <Text
+              style={{
+                color: COLORS.text.primary,
+                fontFamily: FONTS.primary[600],
+                fontSize: SIZE.font20,
+              }}>
+              Masukan Harga Tawarmu
+            </Text>
+            <Select2
+              data={[
+                {label: 'Izin', value: 'Izin'},
+                {label: 'Sakit', value: 'Sakit'},
+                {label: 'Cuti', value: 'Cuti'},
+              ]}
+              setFieldValue={setFieldValue}
+              value={values.jenis_izin}
+              initialData={values.jenis_izin}
+              schema={{
+                label: 'label',
+                value: 'value',
+              }}
+              mode="BADGE"
+              name="jenis_izin"
+              placeholder="Pilih Jenis Izin"
+            />
+            {errors.jenis_izin && touched.jenis_izin && (
+              <HelperText text={errors.jenis_izin} />
+            )}
+            <Gap height={15} />
 
-                <Select2
-                  data={[
-                    {label: 'Laki-laki', value: 'Laki-laki'},
-                    {label: 'Perempuan', value: 'Perempuan'},
-                  ]}
-                  setFieldValue={setFieldValue}
-                  value={values.pekerjaan}
-                  initialData={values.pekerjaan}
-                  schema={{
-                    label: 'label',
-                    value: 'value',
-                  }}
-                  mode="BADGE"
-                  name="pekerjaan"
-                  placeholder="Pilih Pekerjaan"
-                />
-                {errors.pekerjaan && touched.pekerjaan && (
-                  <HelperText text={errors.pekerjaan} />
-                )}
-                <Gap height={15} />
+            <Input2
+              label="Alasan"
+              onChangeText={handleChange('alasan')}
+              value={values.alasan}
+              onBlur={handleBlur('alasan')}
+              multiline
+              numberOfLines={4}
+            />
+            {errors.alasan && touched.alasan ? (
+              <HelperText text={errors.alasan} />
+            ) : null}
+            <Gap height={15} />
 
-                <Input2
-                  value={values.birth_date}
-                  label="Tanggal Lahir (DD/MM/YYYY)"
-                  rightIcon="calendar"
-                  onPressIn={() => setOpen(true)}
-                />
-                <DatePickerModal
-                  locale="id"
-                  mode="single"
-                  visible={open}
-                  onDismiss={onDismissSingle}
-                  date={date}
-                  onConfirm={() => onConfirmSingle({date}, setFieldValue)}
-                  startYear={1960} // optional, default is 1800
-                  endYear={2100} // optional, default is 2200
+            <UploadPhoto
+              label="Bukti Foto jika ada"
+              source={{uri: values.photo}}
+              onPress={() => getImage(setFieldValue)}
+            />
 
-                  // onChange={} // same props as onConfirm but triggered without confirmed by user
-                  // saveLabel="Save" // optional
-                  // saveLabelDisabled={true} // optional, default is false
-                  // uppercase={false} // optional, default is true
-                  // label="Select date" // optional
-                  // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
-                  // closeIcon="close" // optional, default is "close"
-                  // editIcon="pencil" // optional, default is "pencil"
-                  // calendarIcon="calendar" // optional, default is "calendar"
-                />
-                {errors.birth_date && touched.birth_date && (
-                  <HelperText text={errors.birth_date} />
-                )}
-                <Gap height={15} />
-                <Input2
-                  leftIcon="account-circle"
-                  label="Tempat Lahir"
-                  onChangeText={handleChange('tempat_lahir')}
-                  value={values.tempat_lahir}
-                  onBlur={handleBlur('tempat_lahir')}
-                />
-                {errors.tempat_lahir && touched.tempat_lahir && (
-                  <HelperText text={errors.tempat_lahir} />
-                )}
-                <Gap height={15} />
-                <Input2
-                  leftIcon="map-marker"
-                  label="Alamat"
-                  onChangeText={handleChange('address')}
-                  value={values.address}
-                  onBlur={handleBlur('address')}
-                  multiline
-                  numberOfLines={4}
-                />
-                {errors.address && touched.address && (
-                  <HelperText text={errors.address} />
-                )}
-                <Gap height={15} />
-                <Input2
-                  leftIcon="phone"
-                  label="Nomor Telepon +62"
-                  onChangeText={handleChange('phone_number')}
-                  value={values.phone_number}
-                  onBlur={handleBlur('phone_number')}
-                />
-                {errors.phone_number && touched.phone_number && (
-                  <HelperText text={errors.phone_number} />
-                )}
-                <Gap height={15} />
+            <Gap height={windowHeight * 0.05} />
 
-                <Input2 label="Email" value={values.email} disabled />
-                {errors.email && touched.email && (
-                  <HelperText text={errors.email} />
-                )}
-                <Gap height={windowHeight * 0.05} />
-
-                <CustomButton
-                  title="Simpan"
-                  onPress={handleSubmit}
-                  disable={!isValid || loading}
-                />
-                <Gap height={windowHeight * 0.05} />
-              </View>
-            </TouchableWithoutFeedback>
+            <View
+              style={{position: 'absolute', bottom: 0, left: 16, right: 16}}>
+              <CustomButton
+                title="Simpan"
+                onPress={handleSubmit}
+                // disable={!isValid || loading}
+                disable={!isValid || !dirty}
+              />
+            </View>
+            <Gap height={windowHeight * 0.05} />
           </ScrollView>
         )}
       </Formik>
@@ -167,5 +149,3 @@ const PermintaanIzin = ({}: Props) => {
 };
 
 export default PermintaanIzin;
-
-const styles = StyleSheet.create({});

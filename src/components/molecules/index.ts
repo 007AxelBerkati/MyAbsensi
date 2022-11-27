@@ -11,6 +11,8 @@ import CardCircle from './CardCircle';
 import CardService from './CardService';
 import CardNotif from './CardNotif';
 import CardRiwayat from './CardRiwayat';
+import UploadPhoto from './UploadPhoto';
+import EmptySkeletonNotif from './EmptySkeletonNotif';
 
 export {
   CardList,
@@ -26,4 +28,6 @@ export {
   CardService,
   CardNotif,
   CardRiwayat,
+  UploadPhoto,
+  EmptySkeletonNotif,
 };
