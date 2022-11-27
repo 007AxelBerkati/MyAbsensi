@@ -13,7 +13,8 @@
     "build-production": "cp .env.production .env && react-native run-android --variant=productionRelease",
     "cleanG": "cd android && ./gradlew clean && cd ..",
     "buildG": "cd android && gradlew assembleRelease -x bundleReleaseJsAndAssets && cd ../",
-    "installG": "cd android && ./gradlew installRelease && cd .."
+    "installG": "cd android && ./gradlew installRelease && cd ..",
+    "bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "4",
