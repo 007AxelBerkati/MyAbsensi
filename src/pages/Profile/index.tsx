@@ -1,4 +1,3 @@
-import {useIsFocused} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {Fade, Placeholder, PlaceholderMedia} from 'rn-placeholder';
@@ -25,15 +24,12 @@ import {
 function AkunScreen({navigation}: any) {
   const dispatch = useAppDispatch();
 
-  const isFocused = useIsFocused();
   const {loading, data} = useAppSelector((state: RootState) => state.dataAkun);
   useEffect(() => {
-    if (isFocused) {
-      getData('user').then((res: any) => {
-        dispatch(getAkun(res.uid));
-      });
-    }
-  }, [isFocused]);
+    getData('user').then((res: any) => {
+      dispatch(getAkun(res.uid));
+    });
+  }, []);
 
   const onLogout = () => {
     dispatch(signOutUser(navigation));

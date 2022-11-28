@@ -20,6 +20,8 @@ import {
 } from '../../components';
 import moment from 'moment';
 import {
+  getNotif,
+  getRequest,
   RootState,
   setNotif,
   setRequest,
@@ -65,6 +67,8 @@ const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
       };
 
       dispatch(setRequest(res.uid, dataReq));
+      dispatch(getRequest());
+      dispatch(getNotif(res.uid));
       handleCloseSheet();
     });
   };

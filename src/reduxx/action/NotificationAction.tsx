@@ -29,15 +29,14 @@ export const getNotif = (uid: any) => {
     dispatch(getNotifLoading(true));
     databaseRef()
       .ref(`notifications/${uid}`)
-      .on(
-        'value',
+      .once('value')
+      .then(
         (snapshot: any) => {
           if (snapshot.val()) {
             const oldData = snapshot.val();
             const data: any = [];
             Object.keys(oldData).map((key: any) => {
               data.push({
-                id: key,
                 ...oldData[key],
               });
             });

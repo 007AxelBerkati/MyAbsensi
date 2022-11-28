@@ -60,13 +60,13 @@ export const getRequest = () => async (dispatch: any) => {
   try {
     databaseRef()
       .ref(`requests`)
-      .on('value', (snapshot: any) => {
+      .once('value')
+      .then((snapshot: any) => {
         if (snapshot.val()) {
           const oldData = snapshot.val();
           const data: any = [];
           Object.keys(oldData).map((key: any) => {
             data.push({
-              id: key,
               ...oldData[key],
             });
           });

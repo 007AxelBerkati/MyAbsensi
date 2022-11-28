@@ -1,12 +1,10 @@
-import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import moment from 'moment';
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {Alert, FlatList, StyleSheet, Text, View} from 'react-native';
 import {IconSellNull, ILNullPhoto} from '../../../assets';
 import {CardNotif, EmptySkeletonNotif, Headers} from '../../../components';
 import {
   deleteRequest,
-  getNotif,
   getRequest,
   RootState,
   updateNotif,
@@ -18,7 +16,6 @@ import {COLORS, FONTS, SIZE, windowHeight, windowWidth} from '../../../theme';
 
 const Notif = ({navigation}: any) => {
   const dispatch = useAppDispatch();
-  const isFocused = useIsFocused();
   const {dataRequest, loading} = useAppSelector(
     (state: RootState) => state.dataRequest
   );
@@ -37,8 +34,8 @@ const Notif = ({navigation}: any) => {
   );
 
   useEffect(() => {
-    isFocused && dispatch(getRequest());
-  }, [isFocused]);
+    dispatch(getRequest());
+  }, []);
 
   const renderItem = ({item}: any) =>
     loading ? (
@@ -115,7 +112,7 @@ const Notif = ({navigation}: any) => {
       <Headers title="Notification" />
       <FlatList
         data={dataRequest}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.uid}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
         maxToRenderPerBatch={5}

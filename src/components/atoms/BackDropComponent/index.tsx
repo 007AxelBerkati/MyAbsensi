@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 
 function BackDropComponent(props: any) {
@@ -7,4 +7,4 @@ function BackDropComponent(props: any) {
   );
 }
 
-export default BackDropComponent;
+export default memo(BackDropComponent);

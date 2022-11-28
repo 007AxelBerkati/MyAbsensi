@@ -12,8 +12,6 @@ type Props = {
 };
 
 function UploadPhoto({label, source, onPress}: Props) {
-  console.log('source', source);
-
   return (
     <View>
       <Text style={styles.label}>{label}</Text>

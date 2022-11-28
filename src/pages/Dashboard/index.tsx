@@ -1,8 +1,9 @@
+import BottomSheet from '@gorhom/bottom-sheet';
 import moment from 'moment';
 import 'moment/locale/id';
-import React, {useEffect, useState, useRef, useMemo} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {ILNullPhoto} from '../../assets';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {
   BackDropComponent,
   CardCircle,
@@ -10,10 +11,6 @@ import {
   CardService,
   Gap,
 } from '../../components';
-import {COLORS, FONTS, SIZE, windowHeight, windowWidth} from '../../theme';
-import BottomSheet from '@gorhom/bottom-sheet';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import PermintaanIzin from './PermintaanIzin';
 import {getData} from '../../plugins';
 import {
   getAkun,
@@ -22,13 +19,13 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../reduxx';
-import {useIsFocused} from '@react-navigation/native';
+import {COLORS, FONTS, SIZE, windowHeight} from '../../theme';
+import PermintaanIzin from './PermintaanIzin';
 
 const Dashboard = ({navigation}: any) => {
   const dispatch = useAppDispatch();
   const [currTime, setCurrTime] = useState(moment());
   const [isRequestPending, setIsRequestPending] = useState(false);
-  const isFocused = useIsFocused();
   const {data} = useAppSelector((state: RootState) => state.dataAkun);
   const {dataRequest} = useAppSelector((state: RootState) => state.dataRequest);
 
@@ -40,22 +37,20 @@ const Dashboard = ({navigation}: any) => {
   }, []);
 
   useEffect(() => {
-    if (isFocused) {
-      getData('user').then((res: any) => {
-        dispatch(getAkun(res.uid));
-        dispatch(getRequest());
-        if (dataRequest !== null && dataRequest.length > 0) {
-          dataRequest?.forEach((element: any) => {
-            if (element.id_user === res.uid && element.status === 'pending') {
-              setIsRequestPending(true);
-              return;
-            }
-            setIsRequestPending(false);
-          });
-        }
-      });
-    }
-  }, [isFocused]);
+    getData('user').then((res: any) => {
+      dispatch(getAkun(res.uid));
+      dispatch(getRequest());
+      if (dataRequest !== null && dataRequest.length > 0) {
+        dataRequest?.forEach((element: any) => {
+          if (element.id_user === res.uid && element.status === 'pending') {
+            setIsRequestPending(true);
+            return;
+          }
+          setIsRequestPending(false);
+        });
+      }
+    });
+  }, []);
 
   // bottomSheet
   const bottomSheetRef = useRef(null);
@@ -116,7 +111,7 @@ const Dashboard = ({navigation}: any) => {
         snapPoints={snapPoints}
         backdropComponent={BackDropComponent}>
         <PermintaanIzin
-          handleCloseSheet={() => handleClosePress()}
+          handleCloseSheet={handleClosePress}
           isRequestPending={isRequestPending}
         />
       </BottomSheet>

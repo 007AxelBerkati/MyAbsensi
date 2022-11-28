@@ -34,8 +34,8 @@ const Notif = ({navigation}: any) => {
   );
 
   useEffect(() => {
-    isFocused && dispatch(getNotif(data?.uid));
-  }, [isFocused]);
+    dispatch(getNotif(data?.uid));
+  }, []);
 
   const renderItem = ({item}: any) =>
     loading ? (
@@ -57,7 +57,7 @@ const Notif = ({navigation}: any) => {
       <Headers title="Notification" />
       <FlatList
         data={dataNotif}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.uid}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
         maxToRenderPerBatch={5}
