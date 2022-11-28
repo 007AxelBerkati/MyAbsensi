@@ -28,12 +28,9 @@ import {
 } from '../../reduxx';
 import uuid from 'react-native-uuid';
 
-const PermintaanIzin = ({handleCloseSheet}: any) => {
+const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
   const dispatch = useAppDispatch();
-
-  const {loading, dataRequest} = useAppSelector(
-    (state: RootState) => state.dataRequest
-  );
+  const {loading} = useAppSelector((state: RootState) => state.dataRequest);
 
   const reqIzin = ({alasan, photo, jenis_izin}: any) => {
     getData('user').then((res: any) => {
@@ -44,6 +41,7 @@ const PermintaanIzin = ({handleCloseSheet}: any) => {
         fullname: res.fullname,
         alasan,
         photo,
+        photoUser: res.photo,
         jenis_izin,
         status: 'pending',
         createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -59,13 +57,14 @@ const PermintaanIzin = ({handleCloseSheet}: any) => {
         fullname: res.fullname,
         alasan,
         photo,
+        photoUser: res.photo,
         jenis_izin,
         createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
         updatedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
         status: 'pending',
       };
 
-      dispatch(setRequest(res.uid, dataReq, bodyId));
+      dispatch(setRequest(res.uid, dataReq));
       handleCloseSheet();
     });
   };
@@ -140,7 +139,7 @@ const PermintaanIzin = ({handleCloseSheet}: any) => {
 
             <UploadPhoto
               label="Bukti Foto jika ada"
-              source={{uri: values.photo}}
+              source={values.photo ? {uri: values.photo} : null}
               onPress={() => getImage(setFieldValue)}
             />
 
@@ -148,10 +147,15 @@ const PermintaanIzin = ({handleCloseSheet}: any) => {
             <View
               style={{position: 'absolute', bottom: 0, left: 16, right: 16}}>
               <CustomButton
-                title="Simpan"
+                title={
+                  isRequestPending
+                    ? 'Telah mengajukan izin'
+                    : loading
+                    ? 'Loading...'
+                    : 'Ajukan Izin'
+                }
                 onPress={handleSubmit}
-                disable={!isValid || !dirty || loading}
-                // disable={!isValid || !dirty}
+                disable={!isValid || !dirty || loading || isRequestPending}
               />
             </View>
             <Gap height={windowHeight * 0.05} />

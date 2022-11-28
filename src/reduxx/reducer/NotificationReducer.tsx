@@ -5,6 +5,7 @@ import {
   SET_SETNOTIF_ERROR,
   SET_SETNOTIF_LOADING,
   SET_SETNOTIF_SUCCESS,
+  SET_SIGNOUT_SUCCESS,
   UPDATE_NOTIF_ERROR,
   UPDATE_NOTIF_LOADING,
   UPDATE_NOTIF_SUCCESS,
@@ -78,6 +79,8 @@ export const NotificationReducer = (state = initialNotif, action: any) => {
         loading: false,
       };
 
+    case SET_SIGNOUT_SUCCESS:
+      return initialNotif;
     default:
       return state;
   }

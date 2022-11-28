@@ -18,7 +18,7 @@ function UploadPhoto({label, source, onPress}: Props) {
     <View>
       <Text style={styles.label}>{label}</Text>
       <Gap height={4} />
-      {source === {uri: ''} ? (
+      {source === null ? (
         <TouchableOpacity style={styles.parent} onPress={onPress}>
           <Icon name="plus" size={20} color={COLORS.disable.background} />
         </TouchableOpacity>

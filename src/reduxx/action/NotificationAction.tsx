@@ -42,8 +42,10 @@ export const getNotif = (uid: any) => {
               });
             });
             dispatch(getNotifSuccess(data));
+          } else {
+            dispatch(getNotifSuccess([]));
+            dispatch(getNotifLoading(false));
           }
-          dispatch(getNotifLoading(false));
         },
         (error: any) => {
           dispatch(getNotifError(error));

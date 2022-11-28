@@ -22,10 +22,13 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../reduxx';
+import {useIsFocused} from '@react-navigation/native';
 
 const Dashboard = ({navigation}: any) => {
   const dispatch = useAppDispatch();
   const [currTime, setCurrTime] = useState(moment());
+  const [isRequestPending, setIsRequestPending] = useState(false);
+  const isFocused = useIsFocused();
   const {data} = useAppSelector((state: RootState) => state.dataAkun);
   const {dataRequest} = useAppSelector((state: RootState) => state.dataRequest);
 
@@ -37,11 +40,22 @@ const Dashboard = ({navigation}: any) => {
   }, []);
 
   useEffect(() => {
-    getData('user').then((res: any) => {
-      dispatch(getAkun(res.uid));
-      dispatch(getRequest(res.uid));
-    });
-  }, []);
+    if (isFocused) {
+      getData('user').then((res: any) => {
+        dispatch(getAkun(res.uid));
+        dispatch(getRequest());
+        if (dataRequest !== null && dataRequest.length > 0) {
+          dataRequest?.forEach((element: any) => {
+            if (element.id_user === res.uid && element.status === 'pending') {
+              setIsRequestPending(true);
+              return;
+            }
+            setIsRequestPending(false);
+          });
+        }
+      });
+    }
+  }, [isFocused]);
 
   // bottomSheet
   const bottomSheetRef = useRef(null);
@@ -101,7 +115,10 @@ const Dashboard = ({navigation}: any) => {
         index={0}
         snapPoints={snapPoints}
         backdropComponent={BackDropComponent}>
-        <PermintaanIzin handleCloseSheet={() => handleClosePress()} />
+        <PermintaanIzin
+          handleCloseSheet={() => handleClosePress()}
+          isRequestPending={isRequestPending}
+        />
       </BottomSheet>
     </GestureHandlerRootView>
   );
@@ -135,9 +152,9 @@ const styles = StyleSheet.create({
   },
 
   circleButton: {
-    width: windowWidth / 1.9,
-    height: windowHeight / 3.5,
-    borderRadius: windowWidth / 1.5,
+    width: windowHeight * 0.5,
+    height: windowHeight * 0.5,
+    borderRadius: (windowHeight * 0.5) / 2,
     backgroundColor: COLORS.background.tertiary,
     alignItems: 'center',
     justifyContent: 'center',

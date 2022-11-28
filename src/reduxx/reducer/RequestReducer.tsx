@@ -5,6 +5,7 @@ import {
   SET_REQUEST_ERROR,
   SET_REQUEST_LOADING,
   SET_REQUEST_SUCCESS,
+  SET_SIGNOUT_SUCCESS,
 } from '../types';
 
 type initialRequestProps = {
@@ -56,6 +57,8 @@ export const RequestReducer = (state = initialRequest, action: any) => {
         loading: false,
       };
 
+    case SET_SIGNOUT_SUCCESS:
+      return initialRequest;
     default:
       return state;
   }
