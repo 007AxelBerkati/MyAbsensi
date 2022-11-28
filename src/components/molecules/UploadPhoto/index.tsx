@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import FastImage from 'react-native-fast-image';
@@ -12,11 +12,13 @@ type Props = {
 };
 
 function UploadPhoto({label, source, onPress}: Props) {
+  console.log('source', source);
+
   return (
     <View>
       <Text style={styles.label}>{label}</Text>
       <Gap height={4} />
-      {source === '' ? (
+      {source === {uri: ''} ? (
         <TouchableOpacity style={styles.parent} onPress={onPress}>
           <Icon name="plus" size={20} color={COLORS.disable.background} />
         </TouchableOpacity>
@@ -59,4 +61,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UploadPhoto;
+export default memo(UploadPhoto);

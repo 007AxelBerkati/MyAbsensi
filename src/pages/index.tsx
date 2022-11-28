@@ -14,6 +14,8 @@ import Chatting from './Chatting';
 import Notif from './Notif';
 import DetailRiwayat from './DetailRiwayat';
 import DashboardAdmin from './Admin/DashboardAdmin';
+import TrackingAdmin from './Admin/TrackingAdmin';
+import NotifAdmin from './Admin/NotifAdmin';
 
 export {
   Login,
@@ -30,4 +32,6 @@ export {
   Notif,
   DetailRiwayat,
   DashboardAdmin,
+  TrackingAdmin,
+  NotifAdmin,
 };

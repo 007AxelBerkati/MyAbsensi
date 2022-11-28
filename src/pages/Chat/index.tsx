@@ -6,8 +6,10 @@ import {
   View,
   ScrollView,
   RefreshControl,
+  Text,
 } from 'react-native';
 import uuid from 'react-native-uuid';
+import {IconSellNull} from '../../assets';
 import {CustomButton, Headers, List} from '../../components';
 import {databaseRef, getData} from '../../plugins';
 import {
@@ -16,7 +18,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../reduxx';
-import {COLORS} from '../../theme';
+import {COLORS, FONTS, SIZE, windowHeight, windowWidth} from '../../theme';
 
 const Chat = ({navigation}: any) => {
   const [profile, setProfile] = useState({
@@ -69,6 +71,13 @@ const Chat = ({navigation}: any) => {
   useEffect(() => {
     getUserData();
   }, []);
+
+  const emptyComponent = () => (
+    <View style={styles.empty}>
+      <IconSellNull style={styles.image} />
+      <Text style={styles.emptyText}>Notifikasi Anda Masih Kosong </Text>
+    </View>
+  );
 
   const createChatList = (data: any) => {
     databaseRef()
@@ -146,6 +155,7 @@ const Chat = ({navigation}: any) => {
             onPress={() => createChatList(item)}
           />
         )}
+        ListEmptyComponent={emptyComponent}
       />
 
       <CustomButton
@@ -166,5 +176,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background.primary,
     marginHorizontal: 16,
+  },
+  emptyText: {
+    fontSize: SIZE.font14,
+    color: COLORS.text.subtitle,
+    fontFamily: FONTS.primary[400],
+  },
+  empty: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 16,
+  },
+
+  image: {
+    width: windowWidth * 0.8,
+    height: windowHeight * 0.5,
+    resizeMode: 'contain',
   },
 });

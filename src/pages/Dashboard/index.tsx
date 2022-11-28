@@ -15,23 +15,32 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import PermintaanIzin from './PermintaanIzin';
 import {getData} from '../../plugins';
-import {getAkun, RootState, useAppDispatch, useAppSelector} from '../../reduxx';
+import {
+  getAkun,
+  getRequest,
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+} from '../../reduxx';
 
 const Dashboard = ({navigation}: any) => {
   const dispatch = useAppDispatch();
   const [currTime, setCurrTime] = useState(moment());
   const {data} = useAppSelector((state: RootState) => state.dataAkun);
+  const {dataRequest} = useAppSelector((state: RootState) => state.dataRequest);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrTime(moment());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     getData('user').then((res: any) => {
       dispatch(getAkun(res.uid));
+      dispatch(getRequest(res.uid));
     });
-
-    const interval = setInterval(() => {
-      setCurrTime(moment());
-    }, 1000);
-
-    return () => clearInterval(interval);
   }, []);
 
   // bottomSheet

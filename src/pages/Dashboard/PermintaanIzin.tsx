@@ -6,7 +6,7 @@ import {
   Keyboard,
   ScrollView,
 } from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import {Formik} from 'formik';
 import {COLORS, FONTS, SIZE, windowHeight} from '../../theme';
 import {databaseRef, getData, getImage, requestSchema} from '../../plugins';
@@ -31,7 +31,9 @@ import uuid from 'react-native-uuid';
 const PermintaanIzin = ({handleCloseSheet}: any) => {
   const dispatch = useAppDispatch();
 
-  const {loading} = useAppSelector((state: RootState) => state.dataNotif);
+  const {loading, dataRequest} = useAppSelector(
+    (state: RootState) => state.dataRequest
+  );
 
   const reqIzin = ({alasan, photo, jenis_izin}: any) => {
     getData('user').then((res: any) => {
@@ -52,6 +54,7 @@ const PermintaanIzin = ({handleCloseSheet}: any) => {
       dispatch(setNotif(res.uid, dataNotif, bodyId));
 
       const dataReq = {
+        uid: bodyId,
         id_user: res.uid,
         fullname: res.fullname,
         alasan,
@@ -62,7 +65,7 @@ const PermintaanIzin = ({handleCloseSheet}: any) => {
         status: 'pending',
       };
 
-      // dispatch(setRequest(res.uid, dataReq));
+      dispatch(setRequest(res.uid, dataReq, bodyId));
       handleCloseSheet();
     });
   };
@@ -74,7 +77,10 @@ const PermintaanIzin = ({handleCloseSheet}: any) => {
           photo: '',
           jenis_izin: '',
         }}
-        onSubmit={values => reqIzin(values)}
+        onSubmit={(values, {resetForm}) => {
+          reqIzin(values);
+          resetForm();
+        }}
         validationSchema={requestSchema}>
         {({
           handleChange,
@@ -156,4 +162,4 @@ const PermintaanIzin = ({handleCloseSheet}: any) => {
   );
 };
 
-export default PermintaanIzin;
+export default memo(PermintaanIzin);

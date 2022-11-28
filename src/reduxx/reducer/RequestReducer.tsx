@@ -1,4 +1,7 @@
 import {
+  GET_REQUEST_ERROR,
+  GET_REQUEST_LOADING,
+  GET_REQUEST_SUCCESS,
   SET_REQUEST_ERROR,
   SET_REQUEST_LOADING,
   SET_REQUEST_SUCCESS,
@@ -32,9 +35,27 @@ export const RequestReducer = (state = initialRequest, action: any) => {
     case SET_REQUEST_SUCCESS:
       return {
         ...state,
-        dataRequest: action.data,
         loading: false,
       };
+
+    case GET_REQUEST_LOADING:
+      return {
+        ...state,
+        loading: action.loading,
+      };
+    case GET_REQUEST_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
+    case GET_REQUEST_SUCCESS:
+      return {
+        ...state,
+        dataRequest: action.success,
+        loading: false,
+      };
+
     default:
       return state;
   }

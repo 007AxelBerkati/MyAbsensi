@@ -1,7 +1,15 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Chat, Dashboard, Notif, Profile, Riwayat} from '../pages';
+import {
+  Chat,
+  Dashboard,
+  DashboardAdmin,
+  Notif,
+  NotifAdmin,
+  Profile,
+  Riwayat,
+} from '../pages';
 import {RootState, useAppSelector} from '../reduxx';
 import {COLORS, FONTS} from '../theme';
 
@@ -94,12 +102,27 @@ const MainApp = ({navigation}: any) => {
         <>
           <Tab.Screen
             name="Beranda"
-            component={Dashboard}
+            component={DashboardAdmin}
             options={{
               tabBarLabel: 'Beranda',
               tabBarIcon: ({color, focused}) => (
                 <Icon
                   name={focused ? 'home' : 'home-outline'}
+                  color={color}
+                  size={24}
+                />
+              ),
+            }}
+          />
+
+          <Tab.Screen
+            name="Notifikasi"
+            component={NotifAdmin}
+            options={{
+              tabBarLabel: 'Notifikasi',
+              tabBarIcon: ({color, focused}) => (
+                <Icon
+                  name={focused ? 'notifications' : 'notifications-outline'}
                   color={color}
                   size={24}
                 />
