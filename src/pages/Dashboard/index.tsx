@@ -36,7 +36,7 @@ const Dashboard = ({navigation}: any) => {
 
   // bottomSheet
   const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ['1%', '70%'], []);
+  const snapPoints = useMemo(() => ['1%', '80%'], []);
 
   const handleOpenPress = (index: any) =>
     bottomSheetRef.current?.snapToIndex(index);
@@ -53,7 +53,9 @@ const Dashboard = ({navigation}: any) => {
         <View style={styles.cardAbsen}>
           <Gap height={30} />
           <Text style={styles.hourMinutes}>{currTime.format('hh:mm:ss')}</Text>
-          <Text style={styles.date}>{currTime.format('dddd, d MMM YYYY')}</Text>
+          <Text style={styles.date}>
+            {currTime.format('dddd, DD MMM YYYY')}
+          </Text>
           <Gap height={30} />
           <CardCircle
             icon="fingerprint"
@@ -90,7 +92,7 @@ const Dashboard = ({navigation}: any) => {
         index={0}
         snapPoints={snapPoints}
         backdropComponent={BackDropComponent}>
-        <PermintaanIzin handleClosePress={handleClosePress} />
+        <PermintaanIzin handleCloseSheet={() => handleClosePress()} />
       </BottomSheet>
     </GestureHandlerRootView>
   );

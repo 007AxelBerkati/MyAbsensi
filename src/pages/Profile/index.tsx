@@ -1,9 +1,8 @@
+import {useIsFocused} from '@react-navigation/native';
 import React, {useEffect} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {Fade, Placeholder, PlaceholderMedia} from 'rn-placeholder';
-
 import {version} from '../../../package.json';
-import {ILNullPhoto} from '../../assets';
 import {CardList, Headers, Profile} from '../../components';
 import {getData} from '../../plugins';
 import {
@@ -25,15 +24,30 @@ import {
 
 function AkunScreen({navigation}: any) {
   const dispatch = useAppDispatch();
+
+  const isFocused = useIsFocused();
   const {loading, data} = useAppSelector((state: RootState) => state.dataAkun);
   useEffect(() => {
-    getData('user').then((res: any) => {
-      dispatch(getAkun(res.uid));
-    });
-  }, []);
+    if (isFocused) {
+      getData('user').then((res: any) => {
+        dispatch(getAkun(res.uid));
+      });
+    }
+  }, [isFocused]);
 
   const onLogout = () => {
     dispatch(signOutUser(navigation));
+  };
+
+  const checkIsLoading = () => {
+    if (loading) {
+      return (
+        <Placeholder Animation={Fade} style={styles.photoSection}>
+          <PlaceholderMedia style={styles.placeholder} />
+        </Placeholder>
+      );
+    }
+    return <Profile source={{uri: data?.photo}} />;
   };
 
   return (
@@ -41,13 +55,7 @@ function AkunScreen({navigation}: any) {
       <Headers title="Akun Saya" />
 
       <ScrollView>
-        {loading ? (
-          <Placeholder Animation={Fade} style={styles.photoSection}>
-            <PlaceholderMedia style={styles.placeholder} />
-          </Placeholder>
-        ) : (
-          <Profile source={{uri: data?.photo}} />
-        )}
+        {checkIsLoading()}
         <CardList
           type="akun"
           name="edit"
@@ -55,7 +63,22 @@ function AkunScreen({navigation}: any) {
           onPress={() => navigation.navigate('EditProfile')}
         />
         <CardList type="akun" name="setting" title="Pengaturan Akun" />
-        <CardList type="akun" name="logout" title="Keluar" onPress={onLogout} />
+        <CardList
+          type="akun"
+          name="logout"
+          title="Keluar"
+          onPress={() => {
+            Alert.alert(
+              'Keluar',
+              'Apakah anda yakin ingin keluar?',
+              [
+                {text: 'Tidak', style: 'cancel'},
+                {text: 'Ya', onPress: () => onLogout()},
+              ],
+              {cancelable: false}
+            );
+          }}
+        />
         <Text style={styles.version}>Version {version}</Text>
       </ScrollView>
     </View>

@@ -19,11 +19,19 @@ import {
   UploadPhoto,
 } from '../../components';
 import moment from 'moment';
-import {setNotif, setRequest, useAppDispatch} from '../../reduxx';
+import {
+  RootState,
+  setNotif,
+  setRequest,
+  useAppDispatch,
+  useAppSelector,
+} from '../../reduxx';
 import uuid from 'react-native-uuid';
 
-const PermintaanIzin = (handleClosePress: any) => {
+const PermintaanIzin = ({handleCloseSheet}: any) => {
   const dispatch = useAppDispatch();
+
+  const {loading} = useAppSelector((state: RootState) => state.dataNotif);
 
   const reqIzin = ({alasan, photo, jenis_izin}: any) => {
     getData('user').then((res: any) => {
@@ -55,7 +63,7 @@ const PermintaanIzin = (handleClosePress: any) => {
       };
 
       // dispatch(setRequest(res.uid, dataReq));
-      handleClosePress;
+      handleCloseSheet();
     });
   };
   return (
@@ -85,8 +93,9 @@ const PermintaanIzin = (handleClosePress: any) => {
                 color: COLORS.text.primary,
                 fontFamily: FONTS.primary[600],
                 fontSize: SIZE.font20,
+                marginBottom: 16,
               }}>
-              Masukan Harga Tawarmu
+              Masukan Form Izin
             </Text>
             <Select2
               data={[
@@ -130,14 +139,13 @@ const PermintaanIzin = (handleClosePress: any) => {
             />
 
             <Gap height={windowHeight * 0.05} />
-
             <View
               style={{position: 'absolute', bottom: 0, left: 16, right: 16}}>
               <CustomButton
                 title="Simpan"
                 onPress={handleSubmit}
-                // disable={!isValid || loading}
-                disable={!isValid || !dirty}
+                disable={!isValid || !dirty || loading}
+                // disable={!isValid || !dirty}
               />
             </View>
             <Gap height={windowHeight * 0.05} />

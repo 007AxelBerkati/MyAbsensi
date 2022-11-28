@@ -45,9 +45,9 @@ const styles = StyleSheet.create({
   },
 
   circleButton: {
-    width: windowWidth / 1.9,
-    height: windowHeight / 3.5,
-    borderRadius: windowWidth / 1.5,
+    width: windowWidth * 0.5,
+    height: windowWidth * 0.5,
+    borderRadius: (windowWidth * 0.5) / 2,
     backgroundColor: COLORS.background.tertiary,
     alignItems: 'center',
     justifyContent: 'center',

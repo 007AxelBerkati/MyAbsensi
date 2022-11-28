@@ -1,6 +1,6 @@
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import moment from 'moment';
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {IconSellNull, ILNullPhoto} from '../../assets';
 import {CardNotif, EmptySkeletonNotif, Headers} from '../../components';
@@ -33,11 +33,9 @@ const Notif = ({navigation}: any) => {
     </View>
   );
 
-  useFocusEffect(
-    useCallback(() => {
-      dispatch(getNotif(data?.uid));
-    }, [])
-  );
+  useEffect(() => {
+    isFocused && dispatch(getNotif(data?.uid));
+  }, [isFocused]);
 
   const renderItem = ({item}: any) =>
     loading ? (

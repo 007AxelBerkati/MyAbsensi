@@ -28,7 +28,21 @@ const CardNotif = ({
   const titleNotif = () => {
     switch (status) {
       case 'pending':
-        return 'Berhasil Mengirimkan Permintaan';
+        return 'Permintaan Anda Sedang Diproses';
+      case 'accepted':
+        return 'Permintaan Anda Diterima';
+      case 'declined':
+        return 'Permintaan Anda Ditolak';
+    }
+  };
+  const statusReq = () => {
+    switch (status) {
+      case 'pending':
+        return (
+          <View style={styles.badgeStatus}>
+            <Text style={styles.labelStatus}>Pending</Text>
+          </View>
+        );
       case 'accepted':
         return 'Permintaan Anda Diterima';
       case 'declined':
@@ -39,41 +53,10 @@ const CardNotif = ({
     <TouchableOpacity onPress={onPress} style={styles.containerNotif}>
       <FastImage source={photo} style={styles.photoProfile} />
       <View style={styles.descNotif}>
-        <View
-          style={{
-            flexDirection: 'row',
-          }}>
-          <Text style={styles.name}>
-            {name} {``}
-          </Text>
-          {request === 'Izin' && (
-            <Text style={styles.request}>
-              {titleNotif()} {``}
-            </Text>
-          )}
-          <Text style={styles.reqTitle}>{request}</Text>
-        </View>
-
+        <Text style={styles.title}>{titleNotif()}</Text>
+        <Text style={styles.request}>{request}</Text>
         <Text style={styles.time}>{time}</Text>
-        <View style={styles.buttonWrapper}>
-          <CustomButton
-            title="Hallo"
-            style={{
-              padding: 16,
-              marginRight: 16,
-              backgroundColor: COLORS.success,
-              borderColor: COLORS.success,
-            }}
-          />
-          <CustomButton
-            title="test"
-            style={{
-              padding: 16,
-              backgroundColor: COLORS.warning,
-              borderColor: COLORS.warning,
-            }}
-          />
-        </View>
+        {statusReq()}
       </View>
       {read === false && (
         <Icon
@@ -114,9 +97,9 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: SIZE.font16,
+    fontSize: SIZE.font12,
     fontFamily: FONTS.primary[600],
-    color: COLORS.text.primary,
+    color: COLORS.text.subtitle,
   },
   name: {
     fontSize: SIZE.font16,
@@ -137,6 +120,22 @@ const styles = StyleSheet.create({
     fontSize: SIZE.font12,
     fontFamily: FONTS.primary[400],
     color: COLORS.text.subtitle,
-    paddingTop: 6,
+    paddingTop: 4,
+    paddingBottom: 4,
+  },
+
+  badgeStatus: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: RADIUS.small,
+    backgroundColor: COLORS.background.tertiary,
+    width: 80,
+  },
+
+  labelStatus: {
+    fontSize: SIZE.font12,
+    fontFamily: FONTS.primary[600],
+    color: COLORS.text.secondary,
+    textAlign: 'center',
   },
 });
