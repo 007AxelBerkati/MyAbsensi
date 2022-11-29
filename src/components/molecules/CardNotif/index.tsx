@@ -5,6 +5,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {COLORS, FONTS, RADIUS, SIZE} from '../../../theme';
 import {CustomButton} from '../../atoms';
+import BadgeStatus from '../BadgeStatus';
 
 type Props = {
   name: string;
@@ -45,6 +46,7 @@ const CardNotif = ({
       }
     }
   };
+
   const statusReq = () => {
     if (role === 'admin') {
       return (
@@ -79,23 +81,11 @@ const CardNotif = ({
     } else {
       switch (status) {
         case 'pending':
-          return (
-            <View style={styles.badgeStatus}>
-              <Text style={styles.labelStatus}>Pending</Text>
-            </View>
-          );
+          return <BadgeStatus type="pending" text="Pending" />;
         case 'accepted':
-          return (
-            <View style={styles.badgeStatusAccepted}>
-              <Text style={styles.labelStatus}>Accepted</Text>
-            </View>
-          );
+          return <BadgeStatus type="accepted" text="Accepted" />;
         case 'declined':
-          return (
-            <View style={styles.badgeStatusDeclined}>
-              <Text style={styles.labelStatus}>Declined</Text>
-            </View>
-          );
+          return <BadgeStatus type="declined" text="Declined" />;
       }
     }
   };

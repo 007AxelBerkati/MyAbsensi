@@ -1,12 +1,12 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import {COLORS, FONTS, RADIUS, SIZE, windowWidth} from '../../../theme';
+import {StyleSheet, Text, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {COLORS, FONTS, RADIUS, SIZE} from '../../../theme';
 
 type Props = {
   title: string;
   name: string;
-  photo: string;
+  photo: any;
 };
 
 const CardProfile = ({title, name, photo}: Props) => {

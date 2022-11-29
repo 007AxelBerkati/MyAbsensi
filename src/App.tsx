@@ -1,7 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import {StatusBar, View} from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
+import React, {useEffect} from 'react';
+import {StatusBar} from 'react-native';
 import CodePush from 'react-native-code-push';
 import FlashMessage from 'react-native-flash-message';
+import 'react-native-gesture-handler';
 import {Provider, useSelector} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {Loading, NoInternet} from './components';
@@ -14,8 +16,6 @@ import {
   useAppDispatch,
 } from './reduxx';
 import {COLORS, RADIUS, windowHeight, windowWidth} from './theme';
-import NetInfo from '@react-native-community/netinfo';
-import 'react-native-gesture-handler';
 
 const codePushOptions = {
   checkFrequency: CodePush.CheckFrequency.ON_APP_START,
@@ -41,7 +41,7 @@ const MainApp = () => {
   return (
     <>
       <StatusBar
-        backgroundColor={COLORS.background.secondary}
+        backgroundColor={COLORS.background.tertiary}
         barStyle="default"
       />
       <Navigation />

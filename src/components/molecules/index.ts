@@ -13,6 +13,8 @@ import CardNotif from './CardNotif';
 import CardRiwayat from './CardRiwayat';
 import UploadPhoto from './UploadPhoto';
 import EmptySkeletonNotif from './EmptySkeletonNotif';
+import CardDetailNotif from './CardDetailNotif';
+import BadgeStatus from './BadgeStatus';
 
 export {
   CardList,
@@ -30,4 +32,6 @@ export {
   CardRiwayat,
   UploadPhoto,
   EmptySkeletonNotif,
+  CardDetailNotif,
+  BadgeStatus,
 };

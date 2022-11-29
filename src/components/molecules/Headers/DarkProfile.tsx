@@ -1,6 +1,7 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {COLORS, FONTS} from '../../../theme';
+import {StyleSheet, Text, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import {COLORS, FONTS, windowHeight} from '../../../theme';
 import {CustomButton} from '../../atoms';
 
 type DarkProfileProps = {
@@ -23,7 +24,7 @@ export default function DarkProfile({
         <Text style={styles.name}>{title}</Text>
         <Text style={styles.desc}>{desc}</Text>
       </View>
-      <Image source={photo} style={styles.avatar} />
+      <FastImage source={photo} style={styles.avatar} />
     </View>
   );
 }
@@ -44,9 +45,9 @@ const styles = StyleSheet.create({
   },
 
   avatar: {
-    height: 46,
-    width: 46,
-    borderRadius: 46 / 2,
+    height: windowHeight * 0.08,
+    width: windowHeight * 0.08,
+    borderRadius: (windowHeight * 0.08) / 4,
   },
 
   name: {

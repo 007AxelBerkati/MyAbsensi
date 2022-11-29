@@ -1,6 +1,7 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import {COLORS, FONTS, SIZE} from '../../../theme';
+import {StyleSheet, Text, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import {COLORS, FONTS, SIZE, windowHeight} from '../../../theme';
 
 type OtherProps = {
   text: string;
@@ -11,7 +12,7 @@ type OtherProps = {
 export default function Other({text, date, photo}: OtherProps) {
   return (
     <View style={styles.container}>
-      <Image source={photo} style={styles.avatar} />
+      <FastImage source={photo} style={styles.avatar} />
       <View>
         <View style={styles.chatContent}>
           <Text style={styles.text}>{text}</Text>
@@ -30,9 +31,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   avatar: {
-    height: 30,
-    width: 30,
-    borderRadius: 30,
+    height: windowHeight * 0.05,
+    width: windowHeight * 0.05,
+    borderRadius: (windowHeight * 0.05) / 4,
     marginRight: 12,
   },
   chatContent: {
