@@ -31,7 +31,7 @@ export const COLORS = {
   secondary: mainColors.blue2,
   background: {
     primary: 'white',
-    secondary: mainColors.blue2,
+    secondary: mainColors.blue3,
     tertiary: mainColors.blue2,
     black: mainColors.black1,
     grey: mainColors.grey7,
