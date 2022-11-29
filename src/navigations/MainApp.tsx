@@ -8,15 +8,16 @@ import {
   Notif,
   NotifAdmin,
   Profile,
-  Riwayat,
 } from '../pages';
 import {RootState, useAppSelector} from '../reduxx';
-import {COLORS, FONTS} from '../theme';
+import {COLORS, FONTS, SIZE} from '../theme';
 
 const Tab = createBottomTabNavigator();
 
 const MainApp = ({navigation}: any) => {
   const {role} = useAppSelector((state: RootState) => state.dataAuth);
+
+  const {totalNotif} = useAppSelector((state: RootState) => state.dataNotif);
 
   return (
     <Tab.Navigator
@@ -53,6 +54,15 @@ const MainApp = ({navigation}: any) => {
             component={Notif}
             options={{
               tabBarLabel: 'Notifikasi',
+              tabBarBadge: totalNotif > 0 ? totalNotif : null,
+              tabBarBadgeStyle: {
+                backgroundColor: COLORS.warning,
+                paddingHorizontal: 2,
+                paddingVertical: 2,
+                fontFamily: FONTS.primary[400],
+                fontSize: SIZE.font10,
+                color: COLORS.text.primary,
+              },
               tabBarIcon: ({color, focused}) => (
                 <Icon
                   name={focused ? 'notifications' : 'notifications-outline'}

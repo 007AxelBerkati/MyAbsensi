@@ -5,6 +5,7 @@ import {
   SET_GETNOTIF_ERROR,
   SET_GETNOTIF_LOADING,
   SET_GETNOTIF_SUCCESS,
+  SET_NOTIFICATION_TOTAL,
   UPDATE_NOTIF_ERROR,
   UPDATE_NOTIF_LOADING,
   UPDATE_NOTIF_SUCCESS,
@@ -25,6 +26,11 @@ export const getNotifError = (error: any) => ({
   error,
 });
 
+export const countNotification = (total: any) => ({
+  type: SET_NOTIFICATION_TOTAL,
+  total,
+});
+
 export const getNotif = (uid: any) => {
   return (dispatch: any) => {
     dispatch(getNotifLoading(true));
@@ -41,6 +47,13 @@ export const getNotif = (uid: any) => {
                 ...oldData[key],
               });
             });
+            let total = 0;
+            data.map((item: any) => {
+              if (item?.isRead === false) {
+                total++;
+              }
+            });
+            dispatch(countNotification(total));
             dispatch(getNotifSuccess(data));
           } else {
             dispatch(getNotifSuccess([]));

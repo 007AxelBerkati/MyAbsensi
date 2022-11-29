@@ -19,7 +19,7 @@ const Stack = createNativeStackNavigator();
 function Router() {
   return (
     <Stack.Navigator
-      initialRouteName="Dashboard"
+      initialRouteName="Login"
       screenOptions={{
         headerShown: false,
       }}>

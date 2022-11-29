@@ -14,6 +14,7 @@ import {
 import {getData} from '../../plugins';
 import {
   getAkun,
+  getNotif,
   getRequest,
   RootState,
   useAppDispatch,
@@ -41,6 +42,7 @@ const Dashboard = ({navigation}: any) => {
     getData('user').then((res: any) => {
       dispatch(getAkun(res.uid));
       dispatch(getRequest(res.uid));
+      dispatch(getNotif(res.uid));
     });
   }, []);
 

@@ -2,6 +2,7 @@ import {
   SET_GETNOTIF_ERROR,
   SET_GETNOTIF_LOADING,
   SET_GETNOTIF_SUCCESS,
+  SET_NOTIFICATION_TOTAL,
   SET_SETNOTIF_ERROR,
   SET_SETNOTIF_LOADING,
   SET_SETNOTIF_SUCCESS,
@@ -15,12 +16,14 @@ type initialNotifProps = {
   loading: boolean;
   error: any;
   dataNotif: any;
+  totalNotif: number;
 };
 
 const initialNotif: initialNotifProps = {
   loading: false,
   error: null,
   dataNotif: null,
+  totalNotif: 0,
 };
 
 export const NotificationReducer = (state = initialNotif, action: any) => {
@@ -77,6 +80,12 @@ export const NotificationReducer = (state = initialNotif, action: any) => {
       return {
         ...state,
         loading: false,
+      };
+
+    case SET_NOTIFICATION_TOTAL:
+      return {
+        ...state,
+        totalNotif: action.total,
       };
 
     case SET_SIGNOUT_SUCCESS:

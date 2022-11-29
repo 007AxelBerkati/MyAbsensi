@@ -1,11 +1,19 @@
 import moment from 'moment';
-import React from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import React, {useState} from 'react';
+import {Modal, ScrollView, StyleSheet, View} from 'react-native';
 import {BadgeStatus, CardDetailNotif, Headers} from '../../components';
 import {COLORS} from '../../theme';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 const DetailNotif = ({navigation, route}: any) => {
+  const [isVisible, setIsVisible] = useState(false);
   const {item} = route.params;
+
+  const images = [
+    {
+      url: item?.photo,
+    },
+  ];
 
   return (
     <View style={styles.page}>
@@ -14,6 +22,15 @@ const DetailNotif = ({navigation, route}: any) => {
         type="back-title"
         onPress={() => navigation.goBack()}
       />
+      <Modal
+        visible={isVisible}
+        transparent={true}
+        onRequestClose={() => setIsVisible(false)}>
+        <ImageViewer
+          imageUrls={images}
+          onDoubleClick={() => setIsVisible(false)}
+        />
+      </Modal>
       <ScrollView style={styles.container}>
         <CardDetailNotif title="Nama" text={item?.fullname} source={null} />
         <CardDetailNotif
@@ -22,7 +39,11 @@ const DetailNotif = ({navigation, route}: any) => {
           source={null}
         />
         <CardDetailNotif title="Alasan" text={item?.alasan} source={null} />
-        <CardDetailNotif title="Bukti photo" source={{uri: item?.photo}} />
+        <CardDetailNotif
+          title="Bukti photo"
+          source={{uri: item?.photo}}
+          onPress={() => setIsVisible(true)}
+        />
         <CardDetailNotif
           title="Durasi"
           text={moment(item?.created_at).format('DD MMMM YYYY')}

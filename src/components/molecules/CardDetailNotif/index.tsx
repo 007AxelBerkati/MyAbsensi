@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import FastImage from 'react-native-fast-image';
 import {COLORS, FONTS, SIZE, windowHeight, windowWidth} from '../../../theme';
@@ -7,9 +7,10 @@ type Props = {
   title: string;
   text: string;
   source: any;
+  onPress?: () => void;
 };
 
-const CardDetailNotif = ({title, text, source}: Props) => {
+const CardDetailNotif = ({title, text, source, onPress}: Props) => {
   if (source !== null) {
     return (
       <View
@@ -20,7 +21,9 @@ const CardDetailNotif = ({title, text, source}: Props) => {
           marginBottom: 16,
         }}>
         <Text style={styles.title}>{title}</Text>
-        <FastImage source={source} style={styles.image} />
+        <TouchableOpacity onPress={onPress}>
+          <FastImage source={source} style={styles.image} />
+        </TouchableOpacity>
       </View>
     );
   }
