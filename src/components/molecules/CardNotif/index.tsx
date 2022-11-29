@@ -9,7 +9,7 @@ import BadgeStatus from '../BadgeStatus';
 
 type Props = {
   name: string;
-  photo: string;
+  photo: any;
   request: string;
   time: string;
   onPress: () => void;

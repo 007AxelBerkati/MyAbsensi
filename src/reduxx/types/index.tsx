@@ -66,6 +66,10 @@ export const DELETE_REQUEST_SUCCESS = '@DELETE_REQUEST_SUCCESS';
 // setIsRequestPending
 export const SET_IS_REQUEST_PENDING = '@SET_IS_REQUEST_PENDING';
 
+// Request countRequestNotif
+
+export const SET_COUNT_REQUESt = '@SET_COUNT_REQUESt';
+
 //Notif getNotif
 export const SET_GETNOTIF_LOADING = '@SET_GETNOTIF_LOADING';
 export const SET_GETNOTIF_ERROR = '@SET_GETNOTIF_ERROR';

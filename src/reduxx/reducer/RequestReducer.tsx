@@ -2,6 +2,7 @@ import {
   GET_REQUEST_ERROR,
   GET_REQUEST_LOADING,
   GET_REQUEST_SUCCESS,
+  SET_COUNT_REQUESt,
   SET_IS_REQUEST_PENDING,
   SET_REQUEST_ERROR,
   SET_REQUEST_LOADING,
@@ -14,6 +15,7 @@ type initialRequestProps = {
   error: any;
   dataRequest: any;
   isRequestPending: boolean;
+  totalRequestNotif: number;
 };
 
 const initialRequest: initialRequestProps = {
@@ -21,6 +23,7 @@ const initialRequest: initialRequestProps = {
   error: null,
   dataRequest: null,
   isRequestPending: false,
+  totalRequestNotif: 0,
 };
 
 export const RequestReducer = (state = initialRequest, action: any) => {
@@ -64,6 +67,12 @@ export const RequestReducer = (state = initialRequest, action: any) => {
       return {
         ...state,
         isRequestPending: action.pending,
+      };
+
+    case SET_COUNT_REQUESt:
+      return {
+        ...state,
+        totalRequestNotif: action.total,
       };
 
     case SET_SIGNOUT_SUCCESS:

@@ -20,7 +20,13 @@ const Notif = ({navigation}: any) => {
   const {data} = useAppSelector((state: RootState) => state.dataAuth);
 
   const onClickCardNotif = (item: any) => {
-    dispatch(updateNotif(item.id_user, item, item.uid));
+    dispatch(
+      updateNotif(
+        item.id_user,
+        {...item, isRead: true, updatedAt: moment().format('')},
+        item.uid
+      )
+    );
     dispatch(getNotif(item.id_user));
     navigation.navigate('DetailNotif', {item});
   };

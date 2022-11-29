@@ -86,11 +86,7 @@ export const updateNotif = (uid: any, data: any, bodyId: any) => {
     dispatch(updateNotifLoading(true));
     databaseRef()
       .ref(`notifications/${uid}/${bodyId}`)
-      .update({
-        ...data,
-        isRead: true,
-        updatedAt: moment().format(''),
-      })
+      .update(data)
       .then(() => {
         dispatch(updateNotifSuccess());
       })

@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React from 'react';
-import {COLORS, FONTS, RADIUS, SIZE} from '../../../theme';
+import {COLORS, FONTS, RADIUS, SIZE, windowWidth} from '../../../theme';
 
 type Props = {
   type: string;
@@ -29,7 +29,7 @@ const badgeStatus = (type: string): ViewStyle => ({
       : type === 'declined'
       ? COLORS.warning
       : COLORS.background.tertiary,
-  width: 80,
+  width: windowWidth * 0.3,
 });
 
 const styles = StyleSheet.create({

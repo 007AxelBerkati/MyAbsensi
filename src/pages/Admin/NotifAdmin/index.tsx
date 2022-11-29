@@ -22,8 +22,8 @@ const Notif = ({navigation}: any) => {
   const {data} = useAppSelector((state: RootState) => state.dataAuth);
 
   const onClickCardNotif = (item: any) => {
-    dispatch(updateRequest(item.id, {status: 'read'}));
-    dispatch(getRequest());
+    dispatch(updateRequest(item.id_user, {isRead: true}));
+    dispatch(getRequest(null));
   };
 
   const emptyComponent = () => (
@@ -34,7 +34,7 @@ const Notif = ({navigation}: any) => {
   );
 
   useEffect(() => {
-    dispatch(getRequest());
+    dispatch(getRequest(null));
   }, []);
 
   const renderItem = ({item}: any) =>
@@ -66,12 +66,17 @@ const Notif = ({navigation}: any) => {
                   dispatch(
                     updateNotif(
                       item.id_user,
-                      {...item, status: 'accepted'},
+                      {
+                        ...item,
+                        status: 'accepted',
+                        isRead: false,
+                        updatedAt: moment().format(''),
+                      },
                       item.uid
                     )
                   );
                   dispatch(deleteRequest(item.id_user));
-                  dispatch(getRequest());
+                  dispatch(getRequest(null));
                 },
               },
             ]
@@ -93,12 +98,17 @@ const Notif = ({navigation}: any) => {
                   dispatch(
                     updateNotif(
                       item.id_user,
-                      {...item, status: 'declined'},
+                      {
+                        ...item,
+                        status: 'declined',
+                        isRead: false,
+                        updatedAt: moment().format(''),
+                      },
                       item.uid
                     )
                   );
                   dispatch(deleteRequest(item?.id_user));
-                  dispatch(getRequest());
+                  dispatch(getRequest(null));
                 },
               },
             ]

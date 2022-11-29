@@ -19,6 +19,10 @@ const MainApp = ({navigation}: any) => {
 
   const {totalNotif} = useAppSelector((state: RootState) => state.dataNotif);
 
+  const {totalRequestNotif} = useAppSelector(
+    (state: RootState) => state.dataRequest
+  );
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -130,6 +134,16 @@ const MainApp = ({navigation}: any) => {
             component={NotifAdmin}
             options={{
               tabBarLabel: 'Notifikasi',
+              tabBarBadge: totalRequestNotif > 0 ? totalRequestNotif : null,
+              tabBarBadgeStyle: {
+                backgroundColor: COLORS.warning,
+                paddingHorizontal: 2,
+                paddingVertical: 2,
+                fontFamily: FONTS.primary[400],
+                fontSize: SIZE.font10,
+                color: COLORS.text.primary,
+              },
+
               tabBarIcon: ({color, focused}) => (
                 <Icon
                   name={focused ? 'notifications' : 'notifications-outline'}

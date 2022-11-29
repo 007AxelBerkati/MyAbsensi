@@ -7,6 +7,7 @@ import {
   GET_REQUEST_ERROR,
   GET_REQUEST_LOADING,
   GET_REQUEST_SUCCESS,
+  SET_COUNT_REQUESt,
   SET_IS_REQUEST_PENDING,
   SET_REQUEST_ERROR,
   SET_REQUEST_LOADING,
@@ -62,6 +63,11 @@ export const isDataRequestPending = (pending: any) => ({
   pending,
 });
 
+export const countRequest = (total: any) => ({
+  type: SET_COUNT_REQUESt,
+  total,
+});
+
 export const getRequest = (id: any) => async (dispatch: any) => {
   dispatch(getRequestLoading(true));
   try {
@@ -77,17 +83,31 @@ export const getRequest = (id: any) => async (dispatch: any) => {
               ...oldData[key],
             });
           });
+
           dispatch(getRequestSuccess(data));
+
+          let count = 0;
+          data.map((item: any) => {
+            if (item.isRead === false) {
+              count++;
+            }
+          });
+
+          dispatch(countRequest(count));
+
+          let isPending = false;
 
           if (data !== null && data.length > 0) {
             data?.forEach((element: any) => {
               if (element.id_user === id && element.status === 'pending') {
-                dispatch(isDataRequestPending(true));
+                isPending = true;
                 return;
               }
-              dispatch(isDataRequestPending(false));
+              isPending = false;
             });
           }
+
+          dispatch(isDataRequestPending(isPending));
         } else {
           dispatch(getRequestSuccess([]));
           dispatch(getRequestLoading(false));
