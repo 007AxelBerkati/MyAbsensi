@@ -3,6 +3,7 @@ import React from 'react';
 import {
   AllUser,
   Chatting,
+  DetailNotif,
   DetailRiwayat,
   EditProfile,
   ForgetPass,
@@ -18,7 +19,7 @@ const Stack = createNativeStackNavigator();
 function Router() {
   return (
     <Stack.Navigator
-      initialRouteName="Login"
+      initialRouteName="Dashboard"
       screenOptions={{
         headerShown: false,
       }}>
@@ -32,7 +33,7 @@ function Router() {
       <Stack.Screen name="Chatting" component={Chatting} />
       <Stack.Screen name="Riwayat" component={Riwayat} />
       <Stack.Screen name="DetailRiwayat" component={DetailRiwayat} />
-      {/* <Stack.Screen name="Geo" component={Geo} /> */}
+      <Stack.Screen name="DetailNotif" component={DetailNotif} />
     </Stack.Navigator>
   );
 }

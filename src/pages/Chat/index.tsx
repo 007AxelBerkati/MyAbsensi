@@ -56,7 +56,6 @@ const Chat = ({navigation}: any) => {
           });
 
           setallUser(dataMsgNotNull);
-          console.log('dataMsgNotNull', dataMsgNotNull);
         }
       });
   };

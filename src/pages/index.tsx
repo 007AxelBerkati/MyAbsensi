@@ -9,13 +9,13 @@ import Profile from './Profile';
 import InformasiProfile from './InformasiProfile';
 import EditProfile from './EditProfile';
 import AllUser from './AllUser';
-
 import Chatting from './Chatting';
 import Notif from './Notif';
 import DetailRiwayat from './DetailRiwayat';
 import DashboardAdmin from './Admin/DashboardAdmin';
 import TrackingAdmin from './Admin/TrackingAdmin';
 import NotifAdmin from './Admin/NotifAdmin';
+import DetailNotif from './DetailNotif';
 
 export {
   Login,
@@ -34,4 +34,5 @@ export {
   DashboardAdmin,
   TrackingAdmin,
   NotifAdmin,
+  DetailNotif,
 };

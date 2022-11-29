@@ -1,14 +1,6 @@
 import React from 'react';
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  StyleProp,
-  ViewStyle,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {
   IconEditProfile,
   IconHelp,
@@ -16,7 +8,7 @@ import {
   IconNext,
   IconRate,
 } from '../../../assets';
-import {COLORS, FONTS, SIZE} from '../../../theme';
+import {COLORS, FONTS, SIZE, windowHeight} from '../../../theme';
 
 type ListProps = {
   profile: any;
@@ -58,11 +50,14 @@ export default function List({
   };
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      {icon ? <Icon /> : <Image source={profile} style={styles.imageStyle} />}
+      {icon ? (
+        <Icon />
+      ) : (
+        <FastImage source={profile} style={styles.imageStyle} />
+      )}
       <View style={styles.titleWrapper}>
         <Text style={styles.names}>{name}</Text>
         <Text style={styles.chat}>{chat}</Text>
-        <Text style={styles.chat}>{desc}</Text>
       </View>
       {type === 'next' && <IconNext />}
       <View
@@ -93,9 +88,9 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   imageStyle: {
-    width: 46,
-    height: 46,
-    borderRadius: 46 / 2,
+    width: windowHeight * 0.07,
+    height: windowHeight * 0.07,
+    borderRadius: (windowHeight * 0.07) / 4,
     marginRight: 12,
   },
 

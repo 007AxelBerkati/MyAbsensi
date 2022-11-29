@@ -30,6 +30,7 @@ const Chatting = ({navigation, route}: any) => {
     const newReference = databaseRef()
       .ref(`/messages/${receiverData.roomId}`)
       .push();
+
     msgData.uid = newReference.key;
     newReference.set(msgData).then(() => {
       const chatListupdate = {

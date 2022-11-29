@@ -25,9 +25,10 @@ import PermintaanIzin from './PermintaanIzin';
 const Dashboard = ({navigation}: any) => {
   const dispatch = useAppDispatch();
   const [currTime, setCurrTime] = useState(moment());
-  const [isRequestPending, setIsRequestPending] = useState(false);
   const {data} = useAppSelector((state: RootState) => state.dataAkun);
-  const {dataRequest} = useAppSelector((state: RootState) => state.dataRequest);
+  const {isRequestPending} = useAppSelector(
+    (state: RootState) => state.dataRequest
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,16 +40,7 @@ const Dashboard = ({navigation}: any) => {
   useEffect(() => {
     getData('user').then((res: any) => {
       dispatch(getAkun(res.uid));
-      dispatch(getRequest());
-      if (dataRequest !== null && dataRequest.length > 0) {
-        dataRequest?.forEach((element: any) => {
-          if (element.id_user === res.uid && element.status === 'pending') {
-            setIsRequestPending(true);
-            return;
-          }
-          setIsRequestPending(false);
-        });
-      }
+      dispatch(getRequest(res.uid));
     });
   }, []);
 
@@ -57,7 +49,7 @@ const Dashboard = ({navigation}: any) => {
   const snapPoints = useMemo(() => ['1%', '80%'], []);
 
   const handleOpenPress = (index: any) =>
-    bottomSheetRef.current?.snapToIndex(index);
+    bottomSheetRef?.current?.snapToIndex(index);
   const handleClosePress = () => bottomSheetRef.current?.close();
 
   return (
@@ -70,7 +62,7 @@ const Dashboard = ({navigation}: any) => {
         />
         <View style={styles.cardAbsen}>
           <Gap height={30} />
-          <Text style={styles.hourMinutes}>{currTime.format('hh:mm:ss')}</Text>
+          <Text style={styles.hourMinutes}>{currTime.format('HH:mm:ss')}</Text>
           <Text style={styles.date}>
             {currTime.format('dddd, DD MMM YYYY')}
           </Text>
