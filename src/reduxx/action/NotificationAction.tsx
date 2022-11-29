@@ -1,4 +1,5 @@
-import {databaseRef, showError, showSuccess} from '../../plugins';
+import moment from 'moment';
+import {databaseRef, showError} from '../../plugins';
 
 import {
   SET_GETNOTIF_ERROR,
@@ -72,7 +73,11 @@ export const updateNotif = (uid: any, data: any, bodyId: any) => {
     dispatch(updateNotifLoading(true));
     databaseRef()
       .ref(`notifications/${uid}/${bodyId}`)
-      .update({...data, isRead: true})
+      .update({
+        ...data,
+        isRead: true,
+        updatedAt: moment().format(''),
+      })
       .then(() => {
         dispatch(updateNotifSuccess());
       })

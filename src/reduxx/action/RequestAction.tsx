@@ -1,4 +1,5 @@
-import {databaseRef, showError, showSuccess} from '../../plugins';
+import moment from 'moment';
+import {databaseRef, getData, showError, showSuccess} from '../../plugins';
 import {
   DELETE_REQUEST_ERROR,
   DELETE_REQUEST_LOADING,
@@ -6,6 +7,7 @@ import {
   GET_REQUEST_ERROR,
   GET_REQUEST_LOADING,
   GET_REQUEST_SUCCESS,
+  SET_IS_REQUEST_PENDING,
   SET_REQUEST_ERROR,
   SET_REQUEST_LOADING,
   SET_REQUEST_SUCCESS,
@@ -55,7 +57,12 @@ export const getRequestSuccess = (success: any) => ({
   success,
 });
 
-export const getRequest = () => async (dispatch: any) => {
+export const isDataRequestPending = (pending: any) => ({
+  type: SET_IS_REQUEST_PENDING,
+  pending,
+});
+
+export const getRequest = (id: any) => async (dispatch: any) => {
   dispatch(getRequestLoading(true));
   try {
     databaseRef()
@@ -71,6 +78,16 @@ export const getRequest = () => async (dispatch: any) => {
             });
           });
           dispatch(getRequestSuccess(data));
+
+          if (data !== null && data.length > 0) {
+            data?.forEach((element: any) => {
+              if (element.id_user === id && element.status === 'pending') {
+                dispatch(isDataRequestPending(true));
+                return;
+              }
+              dispatch(isDataRequestPending(false));
+            });
+          }
         } else {
           dispatch(getRequestSuccess([]));
           dispatch(getRequestLoading(false));
@@ -98,7 +115,13 @@ export const updateRequestSuccess = () => ({
 export const updateRequest = (id: any, data: any) => async (dispatch: any) => {
   dispatch(updateRequestLoading(true));
   try {
-    databaseRef().ref(`requests/${id}`).update(data);
+    databaseRef()
+      .ref(`requests/${id}`)
+      .update({
+        ...data,
+        updatedAt: moment().format(''),
+        isRead: true,
+      });
     dispatch(updateRequestSuccess());
     showSuccess('Permintaan berhasil diupdate');
   } catch (error: any) {
