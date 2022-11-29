@@ -1,15 +1,14 @@
+import {Formik} from 'formik';
+import moment from 'moment';
+import React, {memo} from 'react';
 import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  Text,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import React, {memo} from 'react';
-import {Formik} from 'formik';
-import {COLORS, FONTS, SIZE, windowHeight} from '../../theme';
-import {databaseRef, getData, getImage, requestSchema} from '../../plugins';
+import uuid from 'react-native-uuid';
 import {
   CustomButton,
   Gap,
@@ -18,7 +17,7 @@ import {
   Select2,
   UploadPhoto,
 } from '../../components';
-import moment from 'moment';
+import {getData, getImage, requestSchema} from '../../plugins';
 import {
   getNotif,
   getRequest,
@@ -28,7 +27,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../reduxx';
-import uuid from 'react-native-uuid';
+import {COLORS, FONTS, SIZE, windowHeight} from '../../theme';
 
 const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
   const dispatch = useAppDispatch();
@@ -46,8 +45,8 @@ const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
         photoUser: res.photo,
         jenis_izin,
         status: 'pending',
-        createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
-        updatedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+        createdAt: moment().format(''),
+        updatedAt: moment().format(''),
         isRead: false,
       };
 
@@ -61,13 +60,14 @@ const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
         photo,
         photoUser: res.photo,
         jenis_izin,
-        createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
-        updatedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+        createdAt: moment().format(''),
+        updatedAt: moment().format(''),
         status: 'pending',
+        isRead: false,
       };
 
       dispatch(setRequest(res.uid, dataReq));
-      dispatch(getRequest());
+      dispatch(getRequest(res.uid));
       dispatch(getNotif(res.uid));
       handleCloseSheet();
     });

@@ -1,6 +1,5 @@
-import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import moment from 'moment';
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {IconSellNull, ILNullPhoto} from '../../assets';
 import {CardNotif, EmptySkeletonNotif, Headers} from '../../components';
@@ -15,7 +14,6 @@ import {COLORS, FONTS, SIZE, windowHeight, windowWidth} from '../../theme';
 
 const Notif = ({navigation}: any) => {
   const dispatch = useAppDispatch();
-  const isFocused = useIsFocused();
   const {dataNotif, loading} = useAppSelector(
     (state: RootState) => state.dataNotif
   );
@@ -24,6 +22,7 @@ const Notif = ({navigation}: any) => {
   const onClickCardNotif = (item: any) => {
     dispatch(updateNotif(item.id_user, item, item.uid));
     dispatch(getNotif(item.id_user));
+    navigation.navigate('DetailNotif', {item});
   };
 
   const emptyComponent = () => (
@@ -63,7 +62,6 @@ const Notif = ({navigation}: any) => {
         maxToRenderPerBatch={5}
         initialNumToRender={5}
         removeClippedSubviews
-        // ItemSeparatorComponent={() => <Gap height={10} />}
         ListEmptyComponent={emptyComponent}
       />
     </View>
