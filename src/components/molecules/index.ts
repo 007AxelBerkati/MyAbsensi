@@ -15,11 +15,13 @@ import UploadPhoto from './UploadPhoto';
 import EmptySkeletonNotif from './EmptySkeletonNotif';
 import CardDetailNotif from './CardDetailNotif';
 import BadgeStatus from './BadgeStatus';
+import CardDashboard from './CardDashboard';
 
 export {
   CardList,
   Headers,
   Loading,
+  CardDashboard,
   Profile,
   List,
   InputChat,

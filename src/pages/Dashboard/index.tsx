@@ -7,6 +7,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {
   BackDropComponent,
   CardCircle,
+  CardDashboard,
   CardProfile,
   CardService,
   Gap,
@@ -63,19 +64,29 @@ const Dashboard = ({navigation}: any) => {
           photo={{uri: data?.photo}}
         />
         <View style={styles.cardAbsen}>
-          <Gap height={30} />
+          <Gap height={10} />
           <Text style={styles.hourMinutes}>{currTime.format('HH:mm:ss')}</Text>
           <Text style={styles.date}>
             {currTime.format('dddd, DD MMM YYYY')}
           </Text>
-          <Gap height={30} />
+          <Gap height={10} />
+          <View style={styles.cardDashboard}>
+            <CardDashboard title="Jarak Sekolah" text="225.78 m" />
+            <CardDashboard
+              type="maps"
+              text="Buka Maps"
+              onPress={() => navigation.navigate('Location')}
+            />
+          </View>
+          <Gap height={20} />
           <CardCircle
             icon="fingerprint"
             title="Absen Masuk"
             onPress={() => {}}
           />
         </View>
-        <Gap height={40} />
+        <Gap height={20} />
+
         <View style={styles.service}>
           <CardService
             icon="article"
@@ -92,6 +103,7 @@ const Dashboard = ({navigation}: any) => {
             }}
           />
         </View>
+
         <Gap height={40} />
       </ScrollView>
       <BottomSheet
@@ -161,5 +173,11 @@ const styles = StyleSheet.create({
   service: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+  },
+
+  cardDashboard: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 20,
   },
 });
