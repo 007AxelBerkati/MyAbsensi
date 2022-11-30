@@ -16,6 +16,7 @@ import DashboardAdmin from './Admin/DashboardAdmin';
 import TrackingAdmin from './Admin/TrackingAdmin';
 import NotifAdmin from './Admin/NotifAdmin';
 import DetailNotif from './DetailNotif';
+import Location from './Location';
 
 export {
   Login,
@@ -35,4 +36,5 @@ export {
   TrackingAdmin,
   NotifAdmin,
   DetailNotif,
+  Location,
 };

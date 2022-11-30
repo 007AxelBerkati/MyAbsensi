@@ -8,6 +8,7 @@ import {
   EditProfile,
   ForgetPass,
   InformasiProfile,
+  Location,
   Login,
   Riwayat,
   SplashScreen,
@@ -34,6 +35,7 @@ function Router() {
       <Stack.Screen name="Riwayat" component={Riwayat} />
       <Stack.Screen name="DetailRiwayat" component={DetailRiwayat} />
       <Stack.Screen name="DetailNotif" component={DetailNotif} />
+      <Stack.Screen name="Location" component={Location} />
     </Stack.Navigator>
   );
 }

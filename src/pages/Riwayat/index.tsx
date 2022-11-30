@@ -6,7 +6,12 @@ import {CardRiwayat, Headers} from '../../components';
 const Riwayat = ({navigation}: any) => {
   return (
     <View style={styles.pages}>
-      <Headers title="Riwayat Absen" type="back-title" pressFilter={() => {}} />
+      <Headers
+        title="Riwayat Absen"
+        type="back-title"
+        pressFilter={() => {}}
+        onPress={() => navigation.goBack()}
+      />
       <CardRiwayat
         jamKeluar={moment().format('hh:mm:ss')}
         jamMasuk={moment().format('hh:mm:ss')}
