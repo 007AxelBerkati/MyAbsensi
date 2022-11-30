@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, {useEffect} from 'react';
+import React, {useEffect, useCallback} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {IconSellNull, ILNullPhoto} from '../../assets';
 import {CardNotif, EmptySkeletonNotif, Headers} from '../../components';
@@ -19,17 +19,13 @@ const Notif = ({navigation}: any) => {
   );
   const {data} = useAppSelector((state: RootState) => state.dataAuth);
 
-  const onClickCardNotif = (item: any) => {
-    dispatch(
-      updateNotif(
-        item.id_user,
-        {...item, isRead: true, updatedAt: moment().format('')},
-        item.uid
-      )
-    );
-    dispatch(getNotif(item.id_user));
+  const onClickCardNotif = useCallback((item: any) => {
+    if (item.isRead === false) {
+      dispatch(updateNotif(item.id_user, {isRead: true}, item.uid));
+      dispatch(getNotif(item.id_user));
+    }
     navigation.navigate('DetailNotif', {item});
-  };
+  }, []);
 
   const emptyComponent = () => (
     <View style={styles.empty}>
@@ -47,13 +43,12 @@ const Notif = ({navigation}: any) => {
       <EmptySkeletonNotif />
     ) : (
       <CardNotif
-        name={item?.fullname}
         request={item?.jenis_izin}
         status={item?.status}
         photo={data?.photo ? {uri: data?.photo} : ILNullPhoto}
         onPress={() => onClickCardNotif(item)}
         read={item?.isRead}
-        time={moment(item?.created_at).format('DD MMMM YYYY')}
+        time={moment(item?.createdAt).format('DD MMMM YYYY, HH:mm')}
       />
     );
 

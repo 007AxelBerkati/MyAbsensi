@@ -73,8 +73,8 @@ export const getRequest = (id: any) => async (dispatch: any) => {
   try {
     databaseRef()
       .ref(`requests`)
-      .once('value')
-      .then((snapshot: any) => {
+      .orderByChild('updatedAt')
+      .on('value', (snapshot: any) => {
         if (snapshot.val()) {
           const oldData = snapshot.val();
           const data: any = [];
@@ -87,16 +87,15 @@ export const getRequest = (id: any) => async (dispatch: any) => {
           dispatch(getRequestSuccess(data));
 
           let count = 0;
-          data.map((item: any) => {
-            if (item.isRead === false) {
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].isRead === false) {
               count++;
             }
-          });
+          }
 
           dispatch(countRequest(count));
 
           let isPending = false;
-
           if (data !== null && data.length > 0) {
             data?.forEach((element: any) => {
               if (element.id_user === id && element.status === 'pending') {
@@ -143,7 +142,6 @@ export const updateRequest = (id: any, data: any) => async (dispatch: any) => {
         isRead: true,
       });
     dispatch(updateRequestSuccess());
-    showSuccess('Permintaan berhasil diupdate');
   } catch (error: any) {
     dispatch(updateRequestError(error));
     showError(error.message);

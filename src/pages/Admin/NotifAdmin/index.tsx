@@ -22,8 +22,11 @@ const Notif = ({navigation}: any) => {
   const {data} = useAppSelector((state: RootState) => state.dataAuth);
 
   const onClickCardNotif = (item: any) => {
-    dispatch(updateRequest(item.id_user, {isRead: true}));
-    dispatch(getRequest(null));
+    if (item.isRead === false) {
+      dispatch(updateRequest(item.id_user, {isRead: true}));
+      dispatch(getRequest(null));
+    }
+    navigation.navigate('DetailNotif', {item});
   };
 
   const emptyComponent = () => (
@@ -42,13 +45,12 @@ const Notif = ({navigation}: any) => {
       <EmptySkeletonNotif />
     ) : (
       <CardNotif
-        name={item?.fullname}
         request={item?.jenis_izin}
         status={item?.status}
         photo={item?.photoUser ? {uri: item?.photoUser} : ILNullPhoto}
         onPress={() => onClickCardNotif(item)}
         read={item?.isRead}
-        time={moment(item?.created_at).format('DD MMMM YYYY, HH:mm')}
+        time={moment(item?.createdAt).format('DD MMMM YYYY, HH:mm')}
         role={data?.role}
         onPressTerima={() => {
           Alert.alert(

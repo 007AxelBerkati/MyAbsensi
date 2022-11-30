@@ -1,27 +1,24 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {COLORS, FONTS, RADIUS, SIZE} from '../../../theme';
 import {CustomButton} from '../../atoms';
 import BadgeStatus from '../BadgeStatus';
 
 type Props = {
-  name: string;
   photo: any;
   request: string;
   time: string;
   onPress: () => void;
   read: boolean;
   status: string;
-  role: string;
-  onPressTerima: () => void;
-  onPressTolak: () => void;
+  role?: string;
+  onPressTerima?: () => void;
+  onPressTolak?: () => void;
 };
 
 const CardNotif = ({
-  name,
   photo,
   request,
   time,

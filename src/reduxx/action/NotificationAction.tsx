@@ -36,8 +36,9 @@ export const getNotif = (uid: any) => {
     dispatch(getNotifLoading(true));
     databaseRef()
       .ref(`notifications/${uid}`)
-      .once('value')
-      .then(
+      .orderByChild('updatedAt')
+      .on(
+        'value',
         (snapshot: any) => {
           if (snapshot.val()) {
             const oldData = snapshot.val();
@@ -47,12 +48,14 @@ export const getNotif = (uid: any) => {
                 ...oldData[key],
               });
             });
+
             let total = 0;
-            data.map((item: any) => {
-              if (item?.isRead === false) {
+            for (let i = 0; i < data.length; i++) {
+              if (data[i].isRead === false) {
                 total++;
               }
-            });
+            }
+
             dispatch(countNotification(total));
             dispatch(getNotifSuccess(data));
           } else {
