@@ -27,10 +27,13 @@ import PermintaanIzin from './PermintaanIzin';
 const Dashboard = ({navigation}: any) => {
   const dispatch = useAppDispatch();
   const [currTime, setCurrTime] = useState(moment());
-  const {data} = useAppSelector((state: RootState) => state.dataAkun);
   const {isRequestPending} = useAppSelector(
     (state: RootState) => state.dataRequest
   );
+  const [dataUser, setDataUser] = useState({
+    fullname: '',
+    photo: '',
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -41,7 +44,11 @@ const Dashboard = ({navigation}: any) => {
 
   useEffect(() => {
     getData('user').then((res: any) => {
-      dispatch(getAkun(res.uid));
+      setDataUser({
+        fullname: res.fullname,
+        photo: res.photo,
+      });
+
       dispatch(getRequest(res.uid));
       dispatch(getNotif(res.uid));
     });
@@ -59,9 +66,9 @@ const Dashboard = ({navigation}: any) => {
     <GestureHandlerRootView style={styles.page}>
       <ScrollView style={{paddingHorizontal: 16}}>
         <CardProfile
-          name={data?.fullname}
+          name={dataUser?.fullname}
           title="Selamat Datang, "
-          photo={{uri: data?.photo}}
+          photo={{uri: dataUser?.photo}}
         />
         <View style={styles.cardAbsen}>
           <Gap height={10} />

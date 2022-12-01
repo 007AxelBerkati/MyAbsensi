@@ -1,13 +1,45 @@
 import LottieView from 'lottie-react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StatusBar, StyleSheet, Text, View} from 'react-native';
 import {Splash} from '../../assets';
 import {COLORS, FONTS, SIZE, windowHeight, windowWidth} from '../../theme';
+import auth from '@react-native-firebase/auth';
+import {getDataSecure} from '../../plugins';
 
 function SplashScreen({navigation}: any) {
+  // const [initializing, setInitializing] = useState(true);
+  // const [user, setUser] = useState();
+
+  // function onAuthStateChanged(user: any) {
+  //   setUser(user);
+  //   if (initializing) setInitializing(false);
+  // }
+  // useEffect(() => {
+  //   const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+  //   return subscriber; // unsubscribe on unmount
+  // }, []);
+
+  // if (initializing) return null;
+
+  // setTimeout(() => {
+  //   if (user) {
+  //     navigation.replace('Dashboard');
+  //   } else {
+  //     navigation.replace('Login');
+  //   }
+  // }, 3000);
+
   useEffect(() => {
     setTimeout(() => {
-      navigation.replace('Login');
+      getDataSecure('userLogin').then(user => {
+        console.log('user', user);
+
+        if (user) {
+          navigation.replace('Dashboard');
+        } else {
+          navigation.replace('Login');
+        }
+      });
     }, 3000);
   }, []);
 

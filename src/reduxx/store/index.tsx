@@ -11,14 +11,8 @@ import {RequestReducer} from '../reducer/RequestReducer';
 
 const persistConfig = {
   key: 'root',
-  blacklist: [
-    'dataGlobal',
-    'dataAkun',
-    'dataAuth',
-    'dataChat',
-    'dataNotif',
-    'dataRequest',
-  ],
+  blacklist: ['dataGlobal', 'dataAkun'],
+  whitelist: ['dataAuth', 'dataChat', 'dataNotification', 'dataRequest'],
   storage: AsyncStorage,
 };
 
