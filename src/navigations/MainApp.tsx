@@ -23,174 +23,186 @@ const MainApp = ({navigation}: any) => {
     (state: RootState) => state.dataRequest
   );
 
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarActiveTintColor: COLORS.secondary,
-        headerShown: false,
-        tabBarStyle: {
-          height: 60,
-          paddingTop: 10,
-          paddingBottom: 6,
-        },
-        tabBarLabelStyle: {
-          fontFamily: FONTS.primary[400],
-        },
-      }}>
-      {role === 'user' && (
-        <>
-          <Tab.Screen
-            name="Beranda"
-            component={Dashboard}
-            options={{
-              tabBarLabel: 'Beranda',
-              tabBarIcon: ({color, focused}) => (
-                <Icon
-                  name={focused ? 'home' : 'home-outline'}
-                  color={color}
-                  size={24}
-                />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Notifikasi"
-            component={Notif}
-            options={{
-              tabBarLabel: 'Notifikasi',
-              tabBarBadge: totalNotif > 0 ? totalNotif : null,
-              tabBarBadgeStyle: {
-                backgroundColor: COLORS.warning,
-                paddingHorizontal: 2,
-                paddingVertical: 2,
-                fontFamily: FONTS.primary[400],
-                fontSize: SIZE.font10,
-                color: COLORS.text.primary,
-              },
-              tabBarIcon: ({color, focused}) => (
-                <Icon
-                  name={focused ? 'notifications' : 'notifications-outline'}
-                  color={color}
-                  size={24}
-                />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Chat"
-            component={Chat}
-            options={{
-              tabBarLabel: 'Chat',
-              tabBarIcon: ({color, focused}) => (
-                <Icon
-                  name={
-                    focused
-                      ? 'chatbubble-ellipses'
-                      : 'chatbubble-ellipses-outline'
-                  }
-                  color={color}
-                  size={24}
-                />
-              ),
-            }}
-          />
+  if (role === 'user') {
+    return (
+      <Tab.Navigator
+        screenOptions={{
+          tabBarActiveTintColor: COLORS.secondary,
+          headerShown: false,
+          tabBarStyle: {
+            height: 60,
+            paddingTop: 10,
+            paddingBottom: 6,
+          },
+          tabBarLabelStyle: {
+            fontFamily: FONTS.primary[400],
+          },
+        }}>
+        <Tab.Screen
+          name="Beranda"
+          component={Dashboard}
+          options={{
+            tabBarLabel: 'Beranda',
+            tabBarIcon: ({color, focused}) => (
+              <Icon
+                name={focused ? 'home' : 'home-outline'}
+                color={color}
+                size={24}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Notifikasi"
+          component={Notif}
+          options={{
+            tabBarLabel: 'Notifikasi',
+            tabBarBadge: totalNotif > 0 ? totalNotif : null,
+            tabBarBadgeStyle: {
+              backgroundColor: COLORS.warning,
+              paddingHorizontal: 2,
+              paddingVertical: 2,
+              fontFamily: FONTS.primary[400],
+              fontSize: SIZE.font10,
+              color: COLORS.text.primary,
+            },
+            tabBarIcon: ({color, focused}) => (
+              <Icon
+                name={focused ? 'notifications' : 'notifications-outline'}
+                color={color}
+                size={24}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Chat"
+          component={Chat}
+          options={{
+            tabBarLabel: 'Chat',
+            tabBarIcon: ({color, focused}) => (
+              <Icon
+                name={
+                  focused
+                    ? 'chatbubble-ellipses'
+                    : 'chatbubble-ellipses-outline'
+                }
+                color={color}
+                size={24}
+              />
+            ),
+          }}
+        />
 
-          <Tab.Screen
-            name="Profile"
-            component={Profile}
-            options={{
-              tabBarLabel: 'Profile',
-              tabBarIcon: ({color, focused}) => (
-                <Icon
-                  name={focused ? 'person' : 'person-outline'}
-                  color={color}
-                  size={24}
-                />
-              ),
-            }}
-          />
-        </>
-      )}
+        <Tab.Screen
+          name="Profile"
+          component={Profile}
+          options={{
+            tabBarLabel: 'Profile',
+            tabBarIcon: ({color, focused}) => (
+              <Icon
+                name={focused ? 'person' : 'person-outline'}
+                color={color}
+                size={24}
+              />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    );
+  }
 
-      {role === 'admin' && (
-        <>
-          <Tab.Screen
-            name="Beranda"
-            component={DashboardAdmin}
-            options={{
-              tabBarLabel: 'Beranda',
-              tabBarIcon: ({color, focused}) => (
-                <Icon
-                  name={focused ? 'home' : 'home-outline'}
-                  color={color}
-                  size={24}
-                />
-              ),
-            }}
-          />
+  if (role === 'admin') {
+    return (
+      <Tab.Navigator
+        screenOptions={{
+          tabBarActiveTintColor: COLORS.secondary,
+          headerShown: false,
+          tabBarStyle: {
+            height: 60,
+            paddingTop: 10,
+            paddingBottom: 6,
+          },
+          tabBarLabelStyle: {
+            fontFamily: FONTS.primary[400],
+          },
+        }}>
+        <Tab.Screen
+          name="Beranda"
+          component={DashboardAdmin}
+          options={{
+            tabBarLabel: 'Beranda',
+            tabBarIcon: ({color, focused}) => (
+              <Icon
+                name={focused ? 'home' : 'home-outline'}
+                color={color}
+                size={24}
+              />
+            ),
+          }}
+        />
 
-          <Tab.Screen
-            name="Notifikasi"
-            component={NotifAdmin}
-            options={{
-              tabBarLabel: 'Notifikasi',
-              tabBarBadge: totalRequestNotif > 0 ? totalRequestNotif : null,
-              tabBarBadgeStyle: {
-                backgroundColor: COLORS.warning,
-                paddingHorizontal: 2,
-                paddingVertical: 2,
-                fontFamily: FONTS.primary[400],
-                fontSize: SIZE.font10,
-                color: COLORS.text.primary,
-              },
+        <Tab.Screen
+          name="Notifikasi"
+          component={NotifAdmin}
+          options={{
+            tabBarLabel: 'Notifikasi',
+            tabBarBadge: totalRequestNotif > 0 ? totalRequestNotif : null,
+            tabBarBadgeStyle: {
+              backgroundColor: COLORS.warning,
+              paddingHorizontal: 2,
+              paddingVertical: 2,
+              fontFamily: FONTS.primary[400],
+              fontSize: SIZE.font10,
+              color: COLORS.text.primary,
+            },
 
-              tabBarIcon: ({color, focused}) => (
-                <Icon
-                  name={focused ? 'notifications' : 'notifications-outline'}
-                  color={color}
-                  size={24}
-                />
-              ),
-            }}
-          />
+            tabBarIcon: ({color, focused}) => (
+              <Icon
+                name={focused ? 'notifications' : 'notifications-outline'}
+                color={color}
+                size={24}
+              />
+            ),
+          }}
+        />
 
-          <Tab.Screen
-            name="Chat"
-            component={Chat}
-            options={{
-              tabBarLabel: 'Chat',
-              tabBarIcon: ({color, focused}) => (
-                <Icon
-                  name={
-                    focused
-                      ? 'chatbubble-ellipses'
-                      : 'chatbubble-ellipses-outline'
-                  }
-                  color={color}
-                  size={24}
-                />
-              ),
-            }}
-          />
+        <Tab.Screen
+          name="Chat"
+          component={Chat}
+          options={{
+            tabBarLabel: 'Chat',
+            tabBarIcon: ({color, focused}) => (
+              <Icon
+                name={
+                  focused
+                    ? 'chatbubble-ellipses'
+                    : 'chatbubble-ellipses-outline'
+                }
+                color={color}
+                size={24}
+              />
+            ),
+          }}
+        />
 
-          <Tab.Screen
-            name="Profile"
-            component={Profile}
-            options={{
-              tabBarLabel: 'Profile',
-              tabBarIcon: ({color, focused}) => (
-                <Icon
-                  name={focused ? 'person' : 'person-outline'}
-                  color={color}
-                  size={24}
-                />
-              ),
-            }}
-          />
-        </>
-      )}
-    </Tab.Navigator>
-  );
+        <Tab.Screen
+          name="Profile"
+          component={Profile}
+          options={{
+            tabBarLabel: 'Profile',
+            tabBarIcon: ({color, focused}) => (
+              <Icon
+                name={focused ? 'person' : 'person-outline'}
+                color={color}
+                size={24}
+              />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    );
+  }
 };
 
 export default MainApp;
