@@ -1,6 +1,6 @@
 import NetInfo from '@react-native-community/netinfo';
 import React, {useEffect} from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, Alert, BackHandler} from 'react-native';
 import CodePush from 'react-native-code-push';
 import FlashMessage from 'react-native-flash-message';
 import 'react-native-gesture-handler';
@@ -16,6 +16,11 @@ import {
   useAppDispatch,
 } from './reduxx';
 import {COLORS, RADIUS, windowHeight, windowWidth} from './theme';
+import {
+  isMockingLocation,
+  MockLocationDetectorError,
+  MockLocationDetectorErrorCode,
+} from 'react-native-turbo-mock-location-detector';
 
 const codePushOptions = {
   checkFrequency: CodePush.CheckFrequency.ON_APP_START,
@@ -36,6 +41,46 @@ const MainApp = () => {
     return () => {
       removeNetInfo();
     };
+  }, []);
+
+  useEffect(() => {
+    isMockingLocation()
+      .then(({isLocationMocked}) => {
+        if (isLocationMocked) {
+          Alert.alert(
+            'Pemalsuan Lokasi Terdeteksi',
+            'Tolong matikan fitur pemalsuan lokasi',
+            [
+              {
+                text: 'OK',
+                onPress: () => BackHandler.exitApp(),
+              },
+            ],
+            {cancelable: false}
+          );
+        }
+      })
+      .catch((error: MockLocationDetectorError) => {
+        switch (error.code) {
+          case MockLocationDetectorErrorCode.GPSNotEnabled: {
+            Alert.alert('GPS Not Enabled', 'Please enable GPS');
+            return;
+          }
+          case MockLocationDetectorErrorCode.NoLocationPermissionEnabled: {
+            Alert.alert(
+              'No Location Permission',
+              'Please enable location permission'
+            );
+            return;
+          }
+          case MockLocationDetectorErrorCode.CantDetermine: {
+            Alert.alert(
+              'Can not determine if mock location is enabled',
+              'Please try again'
+            );
+          }
+        }
+      });
   }, []);
 
   return (
