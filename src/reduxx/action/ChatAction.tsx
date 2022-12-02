@@ -1,5 +1,11 @@
 import {databaseRef, showError} from '../../plugins';
 import {
+  CREATE_CHAT_LIST_ERROR,
+  CREATE_CHAT_LIST_LOADING,
+  CREATE_CHAT_LIST_SUCCESS,
+  GET_CHAT_LIST_ERROR,
+  GET_CHAT_LIST_LOADING,
+  GET_CHAT_LIST_SUCCESS,
   SET_GETALLUSER_ERROR,
   SET_GETALLUSER_LOADING,
   SET_GETALLUSER_SUCCESS,
@@ -10,6 +16,7 @@ import {
   SET_SEARCHUSER_LOADING,
   SET_SEARCHUSER_SUCCESS,
 } from '../types';
+import uuid from 'react-native-uuid';
 
 export const getAllUserLoadin = (loading: any) => ({
   type: SET_GETALLUSER_LOADING,
@@ -122,6 +129,122 @@ export const getSearchUser = (uid: any, text: any) => async (dispatch: any) => {
       });
   } catch (error: any) {
     dispatch(getSearchUserError(error));
+    showError(error.message);
+  }
+};
+
+export const createChatListLoading = (loading: any) => ({
+  type: CREATE_CHAT_LIST_LOADING,
+  loading,
+});
+
+export const createChatListError = (error: any) => ({
+  type: CREATE_CHAT_LIST_ERROR,
+  error,
+});
+
+export const createChatListSuccess = () => ({
+  type: CREATE_CHAT_LIST_SUCCESS,
+});
+
+export const createChat =
+  (profile: any, data: any, navigation: any) => async (dispatch: any) => {
+    dispatch(createChatListLoading(true));
+    try {
+      databaseRef()
+        .ref(`/chatlist/${profile.uid}/${data.uid}`)
+        .once('value')
+        .then(snapshot => {
+          if (snapshot.val() == null) {
+            const roomId = uuid.v4();
+            const myData = {
+              roomId,
+              uid: profile.uid,
+              fullname: profile.fullname,
+              photo: profile.photo.uri ? profile.photo.uri : profile.photo,
+              role: profile.role,
+              lastMsg: '',
+            };
+            databaseRef()
+              .ref(`/chatlist/${data.uid}/${profile.uid}`)
+              .update(myData);
+
+            data.lastMsg = '';
+            data.roomId = roomId;
+            databaseRef()
+              .ref(`/chatlist/${profile.uid}/${data.uid}`)
+              .update(data);
+
+            navigation.navigate('Chatting', {receiverData: data, profile});
+            dispatch(createChatListSuccess());
+          } else {
+            databaseRef()
+              .ref(`/chatlist/${profile.uid}/${data.uid}`)
+              .update({
+                ...snapshot.val(),
+                photo: data.photo.uri ? data.photo.uri : data.photo,
+                fullname: data.fullname,
+                role: data.role,
+              });
+            navigation.navigate('Chatting', {
+              receiverData: {
+                ...snapshot.val(),
+                photo: data.photo.uri ? data.photo.uri : data.photo,
+                fullname: data.fullname,
+                role: data.role,
+              },
+              profile,
+            });
+            dispatch(createChatListSuccess());
+          }
+        });
+    } catch (error: any) {
+      dispatch(createChatListError(error));
+      showError(error.message);
+    }
+  };
+
+export const getChatListLoading = (loading: any) => ({
+  type: GET_CHAT_LIST_LOADING,
+  loading,
+});
+
+export const getChatListError = (error: any) => ({
+  type: GET_CHAT_LIST_ERROR,
+  error,
+});
+
+export const getChatListSuccess = (success: any) => ({
+  type: GET_CHAT_LIST_SUCCESS,
+  success,
+});
+
+export const getListChat = (uid: any) => async (dispatch: any) => {
+  dispatch(getChatListLoading(true));
+  try {
+    databaseRef()
+      .ref(`chatlist/${uid}/`)
+      .on('value', snapshot => {
+        if (snapshot.val()) {
+          const array = Object.values(snapshot.val());
+          const sortedArray = array.sort(
+            (a: any, b: any) =>
+              new Date(b.sendTime).getTime() - new Date(a.sendTime).getTime()
+          );
+
+          const dataMsgNotNull: any = [];
+
+          sortedArray.forEach((it: any) => {
+            if (it.lastMsg !== '') {
+              dataMsgNotNull.push(it);
+            }
+          });
+
+          dispatch(getChatListSuccess(dataMsgNotNull));
+        }
+      });
+  } catch (error: any) {
+    dispatch(getChatListError(error));
     showError(error.message);
   }
 };

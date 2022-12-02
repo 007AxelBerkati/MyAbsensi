@@ -11,6 +11,7 @@ import {
   CardProfile,
   CardService,
   Gap,
+  Loading,
 } from '../../components';
 import {getData} from '../../plugins';
 import {
@@ -18,6 +19,7 @@ import {
   getNotif,
   getRequest,
   RootState,
+  setLoading,
   useAppDispatch,
   useAppSelector,
 } from '../../reduxx';
@@ -27,7 +29,7 @@ import PermintaanIzin from './PermintaanIzin';
 const Dashboard = ({navigation}: any) => {
   const dispatch = useAppDispatch();
   const [currTime, setCurrTime] = useState(moment());
-  const {isRequestPending} = useAppSelector(
+  const {isRequestPending, loading} = useAppSelector(
     (state: RootState) => state.dataRequest
   );
   const [dataUser, setDataUser] = useState({
@@ -61,6 +63,10 @@ const Dashboard = ({navigation}: any) => {
   const handleOpenPress = (index: any) =>
     bottomSheetRef?.current?.snapToIndex(index);
   const handleClosePress = () => bottomSheetRef.current?.close();
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <GestureHandlerRootView style={styles.page}>

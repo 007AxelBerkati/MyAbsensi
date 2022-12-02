@@ -10,9 +10,16 @@ import {
 } from 'react-native';
 import uuid from 'react-native-uuid';
 import {IconSellNull} from '../../assets';
-import {CustomButton, Headers, List} from '../../components';
+import {
+  CustomButton,
+  EmptySkeletonNotif,
+  Headers,
+  List,
+} from '../../components';
 import {databaseRef, getData} from '../../plugins';
 import {
+  createChat,
+  getListChat,
   refreshing,
   RootState,
   useAppDispatch,
@@ -30,40 +37,18 @@ const Chat = ({navigation}: any) => {
     uid: '',
   });
 
-  const [allUser, setallUser] = useState([]);
-
   const dispatch = useAppDispatch();
 
   const {isRefreshing} = useAppSelector((state: RootState) => state.dataGlobal);
 
-  const getChatList = (uid: any) => {
-    databaseRef()
-      .ref(`chatlist/${uid}/`)
-      .on('value', snapshot => {
-        if (snapshot.val()) {
-          const array = Object.values(snapshot.val());
-          const sortedArray = array.sort(
-            (a: any, b: any) =>
-              new Date(b.sendTime).getTime() - new Date(a.sendTime).getTime()
-          );
-
-          const dataMsgNotNull: any = [];
-
-          sortedArray.forEach((it: any) => {
-            if (it.lastMsg !== '') {
-              dataMsgNotNull.push(it);
-            }
-          });
-
-          setallUser(dataMsgNotNull);
-        }
-      });
-  };
+  const {dataChatList, loading} = useAppSelector(
+    (state: RootState) => state.dataChat
+  );
 
   const getUserData = () => {
     getData('user').then(res => {
       setProfile(res);
-      getChatList(res.uid);
+      dispatch(getListChat(res.uid));
     });
   };
 
@@ -78,52 +63,24 @@ const Chat = ({navigation}: any) => {
     </View>
   );
 
+  const renderItem = ({item}: any) =>
+    loading ? (
+      <EmptySkeletonNotif />
+    ) : (
+      <List
+        name={item.fullname}
+        chat={item.lastMsg}
+        profile={{
+          uri: item.photo.uri ? item.photo?.uri : item.photo,
+        }}
+        date={moment(item.sendTime).format('YYYY/MM/DD')}
+        time={moment(item.sendTime).format('h:mm a')}
+        onPress={() => createChatList(item)}
+      />
+    );
+
   const createChatList = (data: any) => {
-    databaseRef()
-      .ref(`/chatlist/${profile.uid}/${data.uid}`)
-      .once('value')
-      .then(snapshot => {
-        if (snapshot.val() == null) {
-          const roomId = uuid.v4();
-          const myData = {
-            roomId,
-            uid: profile.uid,
-            fullname: profile.fullname,
-            photo: profile.photo.uri ? profile.photo.uri : profile.photo,
-            role: profile.role,
-            lastMsg: '',
-          };
-          databaseRef()
-            .ref(`/chatlist/${data.uid}/${profile.uid}`)
-            .update(myData);
-
-          data.lastMsg = '';
-          data.roomId = roomId;
-          databaseRef()
-            .ref(`/chatlist/${profile.uid}/${data.uid}`)
-            .update(data);
-
-          navigation.navigate('Chatting', {receiverData: data, profile});
-        } else {
-          databaseRef()
-            .ref(`/chatlist/${profile.uid}/${data.uid}`)
-            .update({
-              ...snapshot.val(),
-              photo: data.photo.uri ? data.photo.uri : data.photo,
-              fullname: data.fullname,
-              role: data.role,
-            });
-          navigation.navigate('Chatting', {
-            receiverData: {
-              ...snapshot.val(),
-              photo: data.photo.uri ? data.photo.uri : data.photo,
-              fullname: data.fullname,
-              role: data.role,
-            },
-            profile,
-          });
-        }
-      });
+    dispatch(createChat(profile, data, navigation));
   };
 
   return (
@@ -141,19 +98,8 @@ const Chat = ({navigation}: any) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         keyExtractor={(Item, index) => index.toString()}
-        data={allUser}
-        renderItem={({item}: any) => (
-          <List
-            name={item.fullname}
-            chat={item.lastMsg}
-            profile={{
-              uri: item.photo.uri ? item.photo?.uri : item.photo,
-            }}
-            date={moment(item.sendTime).format('YYYY/MM/DD')}
-            time={moment(item.sendTime).format('h:mm a')}
-            onPress={() => createChatList(item)}
-          />
-        )}
+        data={dataChatList}
+        renderItem={renderItem}
         ListEmptyComponent={emptyComponent}
       />
 

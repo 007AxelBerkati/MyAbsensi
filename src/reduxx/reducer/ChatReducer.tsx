@@ -1,4 +1,10 @@
 import {
+  CREATE_CHAT_LIST_ERROR,
+  CREATE_CHAT_LIST_LOADING,
+  CREATE_CHAT_LIST_SUCCESS,
+  GET_CHAT_LIST_ERROR,
+  GET_CHAT_LIST_LOADING,
+  GET_CHAT_LIST_SUCCESS,
   SET_GETALLUSER_ERROR,
   SET_GETALLUSER_LOADING,
   SET_GETALLUSER_SUCCESS,
@@ -15,6 +21,7 @@ type initialChatProps = {
   error: any;
   data: any;
   dataSearch: any;
+  dataChatList: any;
 };
 
 const initialChat: initialChatProps = {
@@ -22,6 +29,7 @@ const initialChat: initialChatProps = {
   error: null,
   data: null,
   dataSearch: null,
+  dataChatList: null,
 };
 
 export const ChatReducer = (state = initialChat, action: any) => {
@@ -77,6 +85,44 @@ export const ChatReducer = (state = initialChat, action: any) => {
         ...state,
         dataSearch: action.success,
         loading: false,
+      };
+
+    case CREATE_CHAT_LIST_LOADING:
+      return {
+        ...state,
+        loading: action.loading,
+      };
+
+    case CREATE_CHAT_LIST_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
+    case CREATE_CHAT_LIST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      };
+
+    case GET_CHAT_LIST_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
+
+    case GET_CHAT_LIST_SUCCESS:
+      return {
+        ...state,
+        dataChatList: action.success,
+        loading: false,
+      };
+
+    case GET_CHAT_LIST_LOADING:
+      return {
+        ...state,
+        loading: action.loading,
       };
 
     default:

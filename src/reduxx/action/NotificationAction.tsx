@@ -10,6 +10,7 @@ import {
   UPDATE_NOTIF_LOADING,
   UPDATE_NOTIF_SUCCESS,
 } from '../types';
+import {setLoading} from './GlobalAction';
 
 export const getNotifLoading = (loading: any) => ({
   type: SET_GETNOTIF_LOADING,
@@ -65,6 +66,7 @@ export const getNotif = (uid: any) => {
         },
         (error: any) => {
           dispatch(getNotifError(error));
+          dispatch(setLoading(false));
         }
       );
   };

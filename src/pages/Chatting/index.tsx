@@ -5,6 +5,7 @@ import {databaseRef} from '../../plugins';
 import {BackgroundChat} from '../../assets';
 import {ChatItem, Headers, InputChat} from '../../components';
 import {COLORS, FONTS} from '../../theme';
+import {setLoading, useAppDispatch} from '../../reduxx';
 
 const Chatting = ({navigation, route}: any) => {
   const {params} = route;
@@ -13,6 +14,7 @@ const Chatting = ({navigation, route}: any) => {
 
   const [msg, setMsg] = useState('');
   const [allChat, setallChat] = useState([]);
+  const dispatch = useAppDispatch();
 
   const sendMsg = () => {
     const msgData = {
@@ -49,12 +51,13 @@ const Chatting = ({navigation, route}: any) => {
   };
 
   useEffect(() => {
+    dispatch(setLoading(true));
     const onChildAdd = databaseRef()
       .ref(`/messages/${receiverData.roomId}`)
       .on('child_added', snapshot => {
-        // console.log('A new node has been added', snapshot.val());
         const data: any = (state: any) => [snapshot.val(), ...state];
         setallChat(data);
+        dispatch(setLoading(false));
       });
     // Stop listening for updates when no longer required
     return () => {
