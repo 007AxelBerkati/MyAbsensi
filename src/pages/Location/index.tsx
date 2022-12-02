@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
-import Geolocation from 'react-native-geolocation-service';
+import React, {useEffect} from 'react';
+import {StyleSheet, View} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {requestPermissions} from '../../plugins';
 import {
