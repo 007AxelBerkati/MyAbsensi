@@ -97,3 +97,8 @@ export const SET_SETNOTIF_SUCCESS = '@SET_SETNOTIF_SUCCESS';
 
 //Notif countNotification
 export const SET_NOTIFICATION_TOTAL = '@SET_NOTIFICATION_TOTAL';
+
+//Location getLocation
+export const GET_LOCATION_LOADING = '@GET_LOCATION_LOADING';
+export const GET_LOCATION_ERROR = '@GET_LOCATION_ERROR';
+export const GET_LOCATION_SUCCESS = '@GET_LOCATION_SUCCESS';

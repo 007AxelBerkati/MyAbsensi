@@ -3,7 +3,13 @@ import {applyMiddleware, combineReducers, createStore, AnyAction} from 'redux';
 import reduxLogger from 'redux-logger';
 import {persistReducer, persistStore} from 'redux-persist';
 import ReduxThunk, {ThunkDispatch} from 'redux-thunk';
-import {GlobalReducer, AkunReducer, AuthReducer, ChatReducer} from '../reducer';
+import {
+  GlobalReducer,
+  AkunReducer,
+  AuthReducer,
+  ChatReducer,
+  LocationReducer,
+} from '../reducer';
 
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 import {NotificationReducer} from '../reducer/NotificationReducer';
@@ -23,6 +29,7 @@ const rootReducer = {
   dataChat: ChatReducer,
   dataNotif: NotificationReducer,
   dataRequest: RequestReducer,
+  dataLocation: LocationReducer,
 };
 
 const rootReducers = combineReducers(rootReducer);

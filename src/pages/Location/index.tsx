@@ -3,40 +3,29 @@ import {Alert, StyleSheet, View} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {requestPermissions} from '../../plugins';
+import {
+  getLocation,
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+} from '../../reduxx';
 import {windowWidth} from '../../theme';
 
-const initialState = {
-  latitude: null,
-  longitude: null,
-  latitudeDelta: 0,
-  longitudeDelta: 0.05,
-};
-
 const Location = ({navigation}: any) => {
-  const [currentPosition, setCurrentPosition] = useState(initialState);
+  const dispatch = useAppDispatch();
+  const {location} = useAppSelector((state: RootState) => state.dataLocation);
 
   useEffect(() => {
-    Geolocation.getCurrentPosition(
-      position => {
-        const {latitude, longitude} = position.coords;
-        setCurrentPosition({
-          ...currentPosition,
-          latitude,
-          longitude,
-        });
-      },
-      error => Alert.alert(error.message),
-      {enableHighAccuracy: false, timeout: 20000, maximumAge: 1000}
-    );
+    dispatch(getLocation());
     requestPermissions();
   }, []);
 
-  return currentPosition.latitude ? (
+  return location.latitude ? (
     <View style={styles.pages}>
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.map}
-        initialRegion={currentPosition}
+        initialRegion={location}
         showsUserLocation
       />
     </View>
