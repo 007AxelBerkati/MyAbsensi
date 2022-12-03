@@ -109,6 +109,7 @@ const Chat = ({navigation}: any) => {
         color={COLORS.secondary}
         onPress={() => navigation.navigate('AllUser', {profile})}
       />
+      
       {/* </ScrollView> */}
     </View>
   );
