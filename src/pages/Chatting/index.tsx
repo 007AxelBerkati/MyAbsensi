@@ -70,7 +70,11 @@ const Chatting = ({navigation, route}: any) => {
       <Headers
         type="dark-profile"
         title={receiverData.fullname}
-        photo={receiverData?.photo ? receiverData?.photo : ILNullPhoto}
+        photo={
+          receiverData?.photo.length > 1
+            ? {uri: receiverData.photo}
+            : ILNullPhoto
+        }
         desc={receiverData?.role}
         onPress={() => navigation.goBack()}
       />
@@ -85,12 +89,12 @@ const Chatting = ({navigation, route}: any) => {
             <ChatItem
               isMe={item.from === profile.uid}
               text={item.message}
-              date={item.sendTime}
+              date={moment(item.sendTime).format('DD/MM/YYYY, HH:mm')}
               photo={
                 item.from === profile.uid
                   ? null
                   : item?.photo
-                  ? item.photo
+                  ? {uri: item.photo}
                   : ILNullPhoto
               }
             />

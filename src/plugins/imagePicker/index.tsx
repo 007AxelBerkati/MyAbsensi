@@ -4,9 +4,9 @@ import {showError} from '../showMessage';
 export const getImage = (setFieldValue: any) => {
   launchImageLibrary(
     {
-      quality: 1,
-      maxWidth: 1000,
-      maxHeight: 1000,
+      quality: 0.5,
+      maxWidth: 200,
+      maxHeight: 200,
       includeBase64: true,
       mediaType: 'photo',
     },
@@ -15,7 +15,9 @@ export const getImage = (setFieldValue: any) => {
         showError('Sepertinya anda tidak memilih fotonya');
       } else {
         const source = response?.assets[0];
-        setFieldValue('photo', source);
+        //convert image to base 64
+        const image = `data:${source.type};base64,${source.base64}`;
+        setFieldValue('photo', image);
       }
     }
   );

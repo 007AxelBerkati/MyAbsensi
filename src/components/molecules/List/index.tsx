@@ -57,7 +57,9 @@ export default function List({
       )}
       <View style={styles.titleWrapper}>
         <Text style={styles.names}>{name}</Text>
-        <Text style={styles.chat}>{chat}</Text>
+        <Text style={styles.chat} numberOfLines={1}>
+          {chat}
+        </Text>
       </View>
       {type === 'next' && <IconNext />}
       <View

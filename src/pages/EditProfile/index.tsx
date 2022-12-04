@@ -74,7 +74,7 @@ function EditProfile({navigation}: any) {
           birth_date: data?.birth_date,
           address: data?.address,
           phone_number: data?.phone_number,
-          photo: data?.photo ? data?.photo : ILNullPhoto,
+          photo: data?.photo,
           tempat_lahir: data?.tempat_lahir,
           email: data?.email,
           pekerjaan: data?.pekerjaan,
@@ -96,7 +96,7 @@ function EditProfile({navigation}: any) {
               <View>
                 <View style={styles.photo}>
                   <Profile
-                    source={values.photo}
+                    source={values?.photo ? {uri: values.photo} : ILNullPhoto}
                     isRemove
                     onPress={() => getImage(setFieldValue)}
                   />

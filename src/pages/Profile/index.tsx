@@ -44,7 +44,7 @@ function AkunScreen({navigation}: any) {
         </Placeholder>
       );
     }
-    return <Profile source={data?.photo ? data?.photo : ILNullPhoto} />;
+    return <Profile source={data?.photo ? {uri: data?.photo} : ILNullPhoto} />;
   };
 
   return (

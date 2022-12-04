@@ -50,7 +50,7 @@ const Dashboard = ({navigation}: any) => {
 
   useEffect(() => {
     getData('user').then((res: any) => {
-      getAkun(res.uid);
+      dispatch(getAkun(res.uid));
       dispatch(getRequest(res.uid));
       dispatch(getNotif(res.uid));
     });
@@ -95,7 +95,7 @@ const Dashboard = ({navigation}: any) => {
         <CardProfile
           name={data?.fullname}
           title="Selamat Datang, "
-          photo={data?.photo ? data?.photo : ILNullPhoto}
+          photo={data?.photo ? {uri: data?.photo} : ILNullPhoto}
         />
         <View style={styles.cardAbsen}>
           <Gap height={10} />

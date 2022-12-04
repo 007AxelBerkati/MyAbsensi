@@ -47,6 +47,7 @@ const Chat = ({navigation}: any) => {
     getData('user').then(res => {
       setProfile(res);
       dispatch(getListChat(res.uid));
+      console.log(dataChatList);
     });
   };
 
@@ -68,7 +69,7 @@ const Chat = ({navigation}: any) => {
       <List
         name={item.fullname}
         chat={item.lastMsg}
-        profile={item?.photo ? item?.photo : ILNullPhoto}
+        profile={item.photo.length > 1 ? {uri: item.photo} : ILNullPhoto}
         date={moment(item.sendTime).format('YYYY/MM/DD')}
         time={moment(item.sendTime).format('h:mm a')}
         onPress={() => createChatList(item)}

@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     paddingRight: 18,
     padding: 12,
-    maxWidth: '80%',
+    maxWidth: '70%',
     borderRadius: 10,
     borderBottomLeftRadius: 0,
   },

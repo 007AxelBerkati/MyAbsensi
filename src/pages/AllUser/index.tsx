@@ -117,7 +117,7 @@ const AllUser = ({navigation, route}: any) => {
             {console.log('item', item)}
             <List
               name={item.fullname}
-              profile={item?.photo ? item?.photo : ILNullPhoto}
+              profile={item?.photo ? {uri: item?.photo} : ILNullPhoto}
               chat={item?.role}
               type="next"
               onPress={() => createChatList(item)}

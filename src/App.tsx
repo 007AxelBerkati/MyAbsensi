@@ -49,36 +49,40 @@ const MainApp = () => {
   }, []);
 
   useEffect(() => {
-    isMockingLocation()
-      .then(({isLocationMocked}) => {
-        if (isLocationMocked) {
-          Alert.alert(
-            'Pemalsuan Lokasi Terdeteksi',
-            'Tolong matikan fitur pemalsuan lokasi',
-            [
-              {
-                text: 'OK',
-                onPress: () => BackHandler.exitApp(),
-              },
-            ],
-            {cancelable: false}
-          );
-        }
-      })
-      .catch((error: MockLocationDetectorError) => {
-        switch (error.code) {
-          case MockLocationDetectorErrorCode.GPSNotEnabled: {
-            Alert.alert('GPS Not Enabled', 'Please enable GPS');
-            return;
-          }
-          case MockLocationDetectorErrorCode.CantDetermine: {
+    const interval = setInterval(() => {
+      isMockingLocation()
+        .then(({isLocationMocked}) => {
+          if (isLocationMocked) {
             Alert.alert(
-              'Can not determine if mock location is enabled',
-              'Please try again'
+              'Pemalsuan Lokasi Terdeteksi',
+              'Tolong matikan fitur pemalsuan lokasi',
+              [
+                {
+                  text: 'OK',
+                  onPress: () => BackHandler.exitApp(),
+                },
+              ],
+              {cancelable: false}
             );
           }
-        }
-      });
+        })
+        .catch((error: MockLocationDetectorError) => {
+          switch (error.code) {
+            case MockLocationDetectorErrorCode.GPSNotEnabled: {
+              Alert.alert('GPS Not Enabled', 'Please enable GPS');
+              return;
+            }
+            case MockLocationDetectorErrorCode.CantDetermine: {
+              Alert.alert(
+                'Can not determine if mock location is enabled',
+                'Please try again'
+              );
+            }
+          }
+        });
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
