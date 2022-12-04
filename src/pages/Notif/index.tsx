@@ -45,7 +45,7 @@ const Notif = ({navigation}: any) => {
       <CardNotif
         request={item?.jenis_izin}
         status={item?.status}
-        photo={data?.photo ? {uri: data?.photo} : ILNullPhoto}
+        photo={data?.photo ? data?.photo : ILNullPhoto}
         onPress={() => onClickCardNotif(item)}
         read={item?.isRead}
         time={moment(item?.createdAt).format('DD MMMM YYYY, HH:mm')}

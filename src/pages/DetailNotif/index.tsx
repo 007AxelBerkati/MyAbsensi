@@ -4,6 +4,7 @@ import {Modal, ScrollView, StyleSheet, View} from 'react-native';
 import {BadgeStatus, CardDetailNotif, Headers} from '../../components';
 import {COLORS} from '../../theme';
 import ImageViewer from 'react-native-image-zoom-viewer';
+import {ILNullPhoto} from '../../assets';
 
 const DetailNotif = ({navigation, route}: any) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -41,7 +42,7 @@ const DetailNotif = ({navigation, route}: any) => {
         <CardDetailNotif title="Alasan" text={item?.alasan} source={null} />
         <CardDetailNotif
           title="Bukti photo"
-          source={{uri: item?.photo}}
+          source={item?.photo ? item?.photo : ILNullPhoto}
           onPress={() => setIsVisible(true)}
         />
         <CardDetailNotif

@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {Fade, Placeholder, PlaceholderMedia} from 'rn-placeholder';
 import {version} from '../../../package.json';
+import {ILNullPhoto} from '../../assets';
 import {CardList, Headers, Profile} from '../../components';
 import {getData} from '../../plugins';
 import {
@@ -43,7 +44,7 @@ function AkunScreen({navigation}: any) {
         </Placeholder>
       );
     }
-    return <Profile source={{uri: data?.photo}} />;
+    return <Profile source={data?.photo ? data?.photo : ILNullPhoto} />;
   };
 
   return (

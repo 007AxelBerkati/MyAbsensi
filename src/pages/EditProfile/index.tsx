@@ -31,6 +31,7 @@ import {
   windowWidth,
 } from '../../theme';
 import FastImage from 'react-native-fast-image';
+import {ILNullPhoto} from '../../assets';
 
 function EditProfile({navigation}: any) {
   const {data, loading} = useAppSelector(state => state.dataAkun);
@@ -52,8 +53,6 @@ function EditProfile({navigation}: any) {
   const onConfirmSingle = useCallback(
     (params: any, setFieldValue: any) => {
       setOpen(false);
-      console.log(params);
-
       setDate(params.date);
       setFieldValue('birth_date', moment(params.date).format('DD/MM/YYYY'));
     },
@@ -75,7 +74,7 @@ function EditProfile({navigation}: any) {
           birth_date: data?.birth_date,
           address: data?.address,
           phone_number: data?.phone_number,
-          photo: data?.photo,
+          photo: data?.photo ? data?.photo : ILNullPhoto,
           tempat_lahir: data?.tempat_lahir,
           email: data?.email,
           pekerjaan: data?.pekerjaan,
@@ -97,7 +96,7 @@ function EditProfile({navigation}: any) {
               <View>
                 <View style={styles.photo}>
                   <Profile
-                    source={{uri: values.photo}}
+                    source={values.photo}
                     isRemove
                     onPress={() => getImage(setFieldValue)}
                   />
@@ -113,25 +112,8 @@ function EditProfile({navigation}: any) {
                 ) : null}
                 <Gap height={15} />
 
-                <Select2
-                  data={[
-                    {label: 'Laki-laki', value: 'Laki-laki'},
-                    {label: 'Perempuan', value: 'Perempuan'},
-                  ]}
-                  setFieldValue={setFieldValue}
-                  value={values.pekerjaan}
-                  initialData={values.pekerjaan}
-                  schema={{
-                    label: 'label',
-                    value: 'value',
-                  }}
-                  mode="BADGE"
-                  name="pekerjaan"
-                  placeholder="Pilih Pekerjaan"
-                />
-                {errors.pekerjaan && touched.pekerjaan && (
-                  <HelperText text={errors.pekerjaan} />
-                )}
+                <Input2 label="Pekerjaan" value={values.pekerjaan} disabled />
+
                 <Gap height={15} />
 
                 <Input2
@@ -201,9 +183,7 @@ function EditProfile({navigation}: any) {
                 <Gap height={15} />
 
                 <Input2 label="Email" value={values.email} disabled />
-                {errors.email && touched.email && (
-                  <HelperText text={errors.email} />
-                )}
+
                 <Gap height={windowHeight * 0.05} />
 
                 <CustomButton

@@ -9,7 +9,7 @@ import {
   Text,
 } from 'react-native';
 import uuid from 'react-native-uuid';
-import {IconSellNull} from '../../assets';
+import {IconSellNull, ILNullPhoto} from '../../assets';
 import {
   CustomButton,
   EmptySkeletonNotif,
@@ -29,9 +29,7 @@ import {COLORS, FONTS, SIZE, windowHeight, windowWidth} from '../../theme';
 
 const Chat = ({navigation}: any) => {
   const [profile, setProfile] = useState({
-    photo: {
-      uri: '',
-    },
+    photo: '',
     fullname: '',
     role: '',
     uid: '',
@@ -70,9 +68,7 @@ const Chat = ({navigation}: any) => {
       <List
         name={item.fullname}
         chat={item.lastMsg}
-        profile={{
-          uri: item.photo.uri ? item.photo?.uri : item.photo,
-        }}
+        profile={item?.photo ? item?.photo : ILNullPhoto}
         date={moment(item.sendTime).format('YYYY/MM/DD')}
         time={moment(item.sendTime).format('h:mm a')}
         onPress={() => createChatList(item)}
@@ -109,7 +105,7 @@ const Chat = ({navigation}: any) => {
         color={COLORS.secondary}
         onPress={() => navigation.navigate('AllUser', {profile})}
       />
-      
+
       {/* </ScrollView> */}
     </View>
   );

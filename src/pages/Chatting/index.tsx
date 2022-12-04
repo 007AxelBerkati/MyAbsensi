@@ -2,7 +2,7 @@ import {FlatList, ImageBackground, StyleSheet, Text, View} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import moment from 'moment';
 import {databaseRef} from '../../plugins';
-import {BackgroundChat} from '../../assets';
+import {BackgroundChat, ILNullPhoto} from '../../assets';
 import {ChatItem, Headers, InputChat} from '../../components';
 import {COLORS, FONTS} from '../../theme';
 import {setLoading, useAppDispatch} from '../../reduxx';
@@ -51,21 +51,18 @@ const Chatting = ({navigation, route}: any) => {
   };
 
   useEffect(() => {
-    dispatch(setLoading(true));
-    // get data chat with high performance from firebase realitime database
     const onChildAdd = databaseRef()
       .ref(`/messages/${receiverData.roomId}`)
       .on('child_added', snapshot => {
         const data: any = (state: any) => [snapshot.val(), ...state];
         setallChat(data);
-        dispatch(setLoading(false));
       });
-    // Stop listening for updates when no longer required
     return () => {
       databaseRef()
         .ref(`/messages${receiverData.roomId}`)
         .off('child_added', onChildAdd);
     };
+    // Stop listening for updates when no longer required
   }, [receiverData.roomId]);
 
   return (
@@ -73,11 +70,7 @@ const Chatting = ({navigation, route}: any) => {
       <Headers
         type="dark-profile"
         title={receiverData.fullname}
-        photo={{
-          uri: receiverData?.photo?.uri
-            ? receiverData.photo.uri
-            : receiverData.photo,
-        }}
+        photo={receiverData?.photo ? receiverData?.photo : ILNullPhoto}
         desc={receiverData?.role}
         onPress={() => navigation.goBack()}
       />
@@ -96,7 +89,9 @@ const Chatting = ({navigation, route}: any) => {
               photo={
                 item.from === profile.uid
                   ? null
-                  : {uri: item?.photo?.uri ? item.photo.uri : item.photo}
+                  : item?.photo
+                  ? item.photo
+                  : ILNullPhoto
               }
             />
           )}

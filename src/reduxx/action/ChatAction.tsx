@@ -17,6 +17,7 @@ import {
   SET_SEARCHUSER_SUCCESS,
 } from '../types';
 import uuid from 'react-native-uuid';
+import {ILNullPhoto} from '../../assets';
 
 export const getAllUserLoadin = (loading: any) => ({
   type: SET_GETALLUSER_LOADING,
@@ -161,7 +162,7 @@ export const createChat =
               roomId,
               uid: profile.uid,
               fullname: profile.fullname,
-              photo: profile.photo.uri ? profile.photo.uri : profile.photo,
+              photo: profile?.photo ? profile.photo : ILNullPhoto,
               role: profile.role,
               lastMsg: '',
             };
@@ -182,14 +183,14 @@ export const createChat =
               .ref(`/chatlist/${profile.uid}/${data.uid}`)
               .update({
                 ...snapshot.val(),
-                photo: data.photo.uri ? data.photo.uri : data.photo,
+                photo: data?.photo ? data.photo : ILNullPhoto,
                 fullname: data.fullname,
                 role: data.role,
               });
             navigation.navigate('Chatting', {
               receiverData: {
                 ...snapshot.val(),
-                photo: data.photo.uri ? data.photo.uri : data.photo,
+                photo: data?.photo ? data.photo : ILNullPhoto,
                 fullname: data.fullname,
                 role: data.role,
               },
@@ -241,6 +242,8 @@ export const getListChat = (uid: any) => async (dispatch: any) => {
           });
 
           dispatch(getChatListSuccess(dataMsgNotNull));
+        } else {
+          dispatch(getChatListSuccess([]));
         }
       });
   } catch (error: any) {

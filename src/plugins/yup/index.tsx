@@ -20,7 +20,6 @@ export const updateProfileSchema = Yup.object().shape({
     .max(100, 'Too Long!')
     .required('Required')
     .trim(),
-  pekerjaan: Yup.string().required('Required'),
   phone_number: Yup.string()
     .trim()
     .min(9, 'No Hp Terlalu Pendek')

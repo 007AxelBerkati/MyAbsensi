@@ -12,8 +12,8 @@ type initialLocationState = {
 
 const initialLocation: initialLocationState = {
   location: {
-    latitude: null,
-    longitude: null,
+    latitude: -2.2349466,
+    longitude: 113.9083208,
     latitudeDelta: 0,
     longitudeDelta: 0.05,
   },

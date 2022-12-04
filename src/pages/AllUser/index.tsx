@@ -2,6 +2,7 @@ import React, {useEffect, useState, useCallback} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {Searchbar} from 'react-native-paper';
 import uuid from 'react-native-uuid';
+import {ILNullPhoto} from '../../assets';
 import {Gap, Headers, List} from '../../components';
 import {databaseRef} from '../../plugins';
 import {
@@ -116,7 +117,7 @@ const AllUser = ({navigation, route}: any) => {
             {console.log('item', item)}
             <List
               name={item.fullname}
-              profile={{uri: item?.photo}}
+              profile={item?.photo ? item?.photo : ILNullPhoto}
               chat={item?.role}
               type="next"
               onPress={() => createChatList(item)}

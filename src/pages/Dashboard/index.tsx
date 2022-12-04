@@ -4,6 +4,7 @@ import 'moment/locale/id';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {ILNullPhoto} from '../../assets';
 import {
   BackDropComponent,
   CardCircle,
@@ -38,10 +39,7 @@ const Dashboard = ({navigation}: any) => {
   const [distance, setDistance] = useState(0);
 
   const {location} = useAppSelector((state: RootState) => state.dataLocation);
-  const [dataUser, setDataUser] = useState({
-    fullname: '',
-    photo: '',
-  });
+  const {data} = useAppSelector((state: RootState) => state.dataAkun);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -52,31 +50,31 @@ const Dashboard = ({navigation}: any) => {
 
   useEffect(() => {
     getData('user').then((res: any) => {
-      setDataUser({
-        fullname: res.fullname,
-        photo: res.photo,
-      });
-
+      getAkun(res.uid);
       dispatch(getRequest(res.uid));
       dispatch(getNotif(res.uid));
     });
   }, []);
 
   useEffect(() => {
-    dispatch(getLocation());
-    setDistance(
-      haversineDistance(
-        {
-          latitude: location.latitude,
-          longitude: location.longitude,
-        },
-        {
-          latitude: dummyData.locationSchool.latitude,
-          longitude: dummyData.locationSchool.longitude,
-        },
-        true
-      )
-    );
+    const interval = setInterval(() => {
+      dispatch(getLocation());
+      setDistance(
+        haversineDistance(
+          {
+            latitude: location.latitude,
+            longitude: location.longitude,
+          },
+          {
+            latitude: dummyData.locationSchool.latitude,
+            longitude: dummyData.locationSchool.longitude,
+          },
+          true
+        )
+      );
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, [location]);
 
   // bottomSheet
@@ -95,9 +93,9 @@ const Dashboard = ({navigation}: any) => {
     <GestureHandlerRootView style={styles.page}>
       <ScrollView style={{paddingHorizontal: 16}}>
         <CardProfile
-          name={dataUser?.fullname}
+          name={data?.fullname}
           title="Selamat Datang, "
-          photo={{uri: dataUser?.photo}}
+          photo={data?.photo ? data?.photo : ILNullPhoto}
         />
         <View style={styles.cardAbsen}>
           <Gap height={10} />
