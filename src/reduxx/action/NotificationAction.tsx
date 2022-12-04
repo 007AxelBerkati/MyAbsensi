@@ -37,7 +37,8 @@ export const getNotif = (uid: any) => {
     dispatch(getNotifLoading(true));
     databaseRef()
       .ref(`notifications/${uid}`)
-      .orderByChild('updatedAt')
+      // .orderByChild('updatedAt')
+      // .limitToLast(5)
       .on(
         'value',
         (snapshot: any) => {

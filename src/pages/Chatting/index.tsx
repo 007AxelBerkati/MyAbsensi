@@ -52,6 +52,7 @@ const Chatting = ({navigation, route}: any) => {
 
   useEffect(() => {
     dispatch(setLoading(true));
+    // get data chat with high performance from firebase realitime database
     const onChildAdd = databaseRef()
       .ref(`/messages/${receiverData.roomId}`)
       .on('child_added', snapshot => {
@@ -64,7 +65,6 @@ const Chatting = ({navigation, route}: any) => {
       databaseRef()
         .ref(`/messages${receiverData.roomId}`)
         .off('child_added', onChildAdd);
-      setallChat([]);
     };
   }, [receiverData.roomId]);
 

@@ -1,6 +1,6 @@
 import NetInfo from '@react-native-community/netinfo';
 import React, {useEffect} from 'react';
-import {StatusBar, Alert, BackHandler} from 'react-native';
+import {StatusBar, Alert, BackHandler, LogBox} from 'react-native';
 import CodePush from 'react-native-code-push';
 import FlashMessage from 'react-native-flash-message';
 import 'react-native-gesture-handler';
@@ -21,6 +21,7 @@ import {
   MockLocationDetectorError,
   MockLocationDetectorErrorCode,
 } from 'react-native-turbo-mock-location-detector';
+import {requestPermissions} from './plugins';
 
 const codePushOptions = {
   checkFrequency: CodePush.CheckFrequency.ON_APP_START,
@@ -32,6 +33,10 @@ const MainApp = () => {
   );
 
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    requestPermissions();
+  }, []);
 
   useEffect(() => {
     const removeNetInfo = NetInfo.addEventListener(state => {
@@ -64,13 +69,6 @@ const MainApp = () => {
         switch (error.code) {
           case MockLocationDetectorErrorCode.GPSNotEnabled: {
             Alert.alert('GPS Not Enabled', 'Please enable GPS');
-            return;
-          }
-          case MockLocationDetectorErrorCode.NoLocationPermissionEnabled: {
-            Alert.alert(
-              'No Location Permission',
-              'Please enable location permission'
-            );
             return;
           }
           case MockLocationDetectorErrorCode.CantDetermine: {
@@ -116,3 +114,5 @@ const App = () => {
 };
 
 export default CodePush(codePushOptions)(App);
+
+LogBox.ignoreLogs(['Remote debugger']);

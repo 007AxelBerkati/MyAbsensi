@@ -16,6 +16,7 @@ import {
 import {getData} from '../../plugins';
 import {
   getAkun,
+  getLocation,
   getNotif,
   getRequest,
   RootState,
@@ -24,6 +25,7 @@ import {
   useAppSelector,
 } from '../../reduxx';
 import {COLORS, FONTS, SIZE, windowHeight} from '../../theme';
+import {dummyData, haversineDistance} from '../../utils';
 import PermintaanIzin from './PermintaanIzin';
 
 const Dashboard = ({navigation}: any) => {
@@ -32,6 +34,10 @@ const Dashboard = ({navigation}: any) => {
   const {isRequestPending, loading} = useAppSelector(
     (state: RootState) => state.dataRequest
   );
+
+  const [distance, setDistance] = useState(0);
+
+  const {location} = useAppSelector((state: RootState) => state.dataLocation);
   const [dataUser, setDataUser] = useState({
     fullname: '',
     photo: '',
@@ -55,6 +61,23 @@ const Dashboard = ({navigation}: any) => {
       dispatch(getNotif(res.uid));
     });
   }, []);
+
+  useEffect(() => {
+    dispatch(getLocation());
+    setDistance(
+      haversineDistance(
+        {
+          latitude: location.latitude,
+          longitude: location.longitude,
+        },
+        {
+          latitude: dummyData.locationSchool.latitude,
+          longitude: dummyData.locationSchool.longitude,
+        },
+        true
+      )
+    );
+  }, [location]);
 
   // bottomSheet
   const bottomSheetRef = useRef(null);
@@ -84,7 +107,10 @@ const Dashboard = ({navigation}: any) => {
           </Text>
           <Gap height={10} />
           <View style={styles.cardDashboard}>
-            <CardDashboard title="Jarak Sekolah" text="225.78 m" />
+            <CardDashboard
+              title="Jarak Sekolah"
+              text={distance.toFixed(2).toString() + ' KM'}
+            />
             <CardDashboard
               type="maps"
               text="Buka Maps"

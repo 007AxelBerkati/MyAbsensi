@@ -20,18 +20,16 @@ export const getLocationLoading = (loading: any) => ({
   loading,
 });
 
-export const getLocation = () => {
-  return (dispatch: any) => {
-    dispatch(getLocationLoading(true));
-    Geolocation.getCurrentPosition(
-      position => {
-        const {latitude, longitude} = position.coords;
-        dispatch(getLocationSuccess({latitude, longitude}));
-      },
-      error => {
-        dispatch(getLocationError(error));
-      },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000}
-    );
-  };
+export const getLocation = () => async (dispatch: any) => {
+  dispatch(getLocationLoading(true));
+  Geolocation.getCurrentPosition(
+    position => {
+      const {latitude, longitude} = position.coords;
+      dispatch(getLocationSuccess({latitude, longitude}));
+    },
+    error => {
+      dispatch(getLocationError(error));
+    },
+    {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000}
+  );
 };

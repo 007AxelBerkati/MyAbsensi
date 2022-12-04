@@ -1,23 +1,11 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
-import {requestPermissions} from '../../plugins';
-import {
-  getLocation,
-  RootState,
-  useAppDispatch,
-  useAppSelector,
-} from '../../reduxx';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import {RootState, useAppSelector} from '../../reduxx';
 import {windowWidth} from '../../theme';
 
 const Location = ({navigation}: any) => {
-  const dispatch = useAppDispatch();
   const {location} = useAppSelector((state: RootState) => state.dataLocation);
-
-  useEffect(() => {
-    dispatch(getLocation());
-    requestPermissions();
-  }, []);
 
   return location.latitude ? (
     <View style={styles.pages}>
@@ -25,8 +13,13 @@ const Location = ({navigation}: any) => {
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         initialRegion={location}
-        showsUserLocation
-      />
+        showsUserLocation>
+        <Marker
+          coordinate={location}
+          title="Lokasi Anda"
+          description="Lokasi Anda Saat Ini"
+        />
+      </MapView>
     </View>
   ) : null;
 };

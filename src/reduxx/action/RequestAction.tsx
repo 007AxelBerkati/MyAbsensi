@@ -74,6 +74,7 @@ export const getRequest = (id: any) => async (dispatch: any) => {
     databaseRef()
       .ref(`requests`)
       .orderByChild('updatedAt')
+      .limitToLast(5)
       .on('value', (snapshot: any) => {
         if (snapshot.val()) {
           const oldData = snapshot.val();
