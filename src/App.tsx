@@ -23,6 +23,7 @@ import {
 } from 'react-native-turbo-mock-location-detector';
 import {requestPermissions} from './plugins';
 
+
 const codePushOptions = {
   checkFrequency: CodePush.CheckFrequency.ON_APP_START,
 };
