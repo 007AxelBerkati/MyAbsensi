@@ -71,7 +71,7 @@ const Chatting = ({navigation, route}: any) => {
         type="dark-profile"
         title={receiverData.fullname}
         photo={
-          receiverData?.photo.length > 1
+          receiverData?.photo?.length > 1
             ? {uri: receiverData.photo}
             : ILNullPhoto
         }

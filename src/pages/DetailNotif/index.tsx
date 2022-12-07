@@ -42,7 +42,7 @@ const DetailNotif = ({navigation, route}: any) => {
         <CardDetailNotif title="Alasan" text={item?.alasan} source={null} />
         <CardDetailNotif
           title="Bukti photo"
-          source={item?.photo ? item?.photo : ILNullPhoto}
+          source={item?.photo ? {uri: item?.photo} : ILNullPhoto}
           onPress={() => setIsVisible(true)}
         />
         <CardDetailNotif

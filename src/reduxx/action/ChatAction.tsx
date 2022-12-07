@@ -162,7 +162,7 @@ export const createChat =
               roomId,
               uid: profile.uid,
               fullname: profile.fullname,
-              photo: profile?.photo.length > 1 ? profile.photo : ILNullPhoto,
+              photo: profile?.photo?.length > 1 ? profile.photo : ILNullPhoto,
               role: profile.role,
               lastMsg: '',
             };
@@ -183,14 +183,14 @@ export const createChat =
               .ref(`/chatlist/${profile.uid}/${data.uid}`)
               .update({
                 ...snapshot.val(),
-                photo: data?.photo.length > 1 ? data.photo : ILNullPhoto,
+                photo: data?.photo?.length > 1 ? data.photo : ILNullPhoto,
                 fullname: data.fullname,
                 role: data.role,
               });
             navigation.navigate('Chatting', {
               receiverData: {
                 ...snapshot.val(),
-                photo: data?.photo.length > 1 ? data.photo : ILNullPhoto,
+                photo: data?.photo?.length > 1 ? data.photo : ILNullPhoto,
                 fullname: data.fullname,
                 role: data.role,
               },

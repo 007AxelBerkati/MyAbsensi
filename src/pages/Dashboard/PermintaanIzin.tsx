@@ -144,7 +144,7 @@ const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
 
             <UploadPhoto
               label="Bukti Foto jika ada"
-              source={values.photo ? values.photo : null}
+              source={values.photo ? {uri: values.photo} : null}
               onPress={() => getImage(setFieldValue)}
             />
 
