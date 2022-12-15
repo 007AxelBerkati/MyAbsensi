@@ -1,4 +1,4 @@
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import {COLORS, FONTS, SIZE, windowHeight, windowWidth} from '../../../theme';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -6,17 +6,31 @@ type Props = {
   title: string;
   icon: string;
   onPress: () => void;
+  absen: boolean;
 };
 
-function CardCircle({title, icon, onPress}: Props) {
+function CardCircle({title, icon, onPress, absen}: Props) {
   return (
-    <Pressable style={styles.circleButton} onPress={onPress}>
+    <Pressable style={circleButton(absen)} onPress={onPress}>
       <Icon name={icon} size={windowWidth / 5} color={COLORS.primary} />
       <Text style={styles.absen}>{title}</Text>
     </Pressable>
   );
 }
 export default CardCircle;
+
+const circleButton = (absen: boolean): ViewStyle => ({
+  width: windowWidth * 0.5,
+  height: windowWidth * 0.5,
+  borderRadius: (windowWidth * 0.5) / 2,
+  backgroundColor: absen ? COLORS.background.tertiary : COLORS.warning,
+  alignItems: 'center',
+  justifyContent: 'center',
+  shadowColor: COLORS.background.black,
+  elevation: 18,
+  shadowOpacity: 0.5,
+  shadowRadius: 10,
+});
 
 const styles = StyleSheet.create({
   page: {
@@ -42,19 +56,6 @@ const styles = StyleSheet.create({
   cardAbsen: {
     alignItems: 'center',
     justifyContent: 'center',
-  },
-
-  circleButton: {
-    width: windowWidth * 0.5,
-    height: windowWidth * 0.5,
-    borderRadius: (windowWidth * 0.5) / 2,
-    backgroundColor: COLORS.background.tertiary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: COLORS.background.black,
-    elevation: 18,
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
   },
 
   absen: {

@@ -3,6 +3,7 @@ import moment from 'moment';
 import 'moment/locale/id';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
+  Alert,
   ImageBackground,
   ScrollView,
   StyleSheet,
@@ -20,7 +21,12 @@ import {
   Gap,
   Loading,
 } from '../../components';
-import {getData} from '../../plugins';
+import {
+  getData,
+  optionalConfigObject,
+  showError,
+  showSuccess,
+} from '../../plugins';
 import {
   getAkun,
   getLocation,
@@ -31,9 +37,10 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../reduxx';
-import {COLORS, FONTS, SIZE, windowHeight} from '../../theme';
+import {COLORS, FONTS, RADIUS, SIZE, windowHeight} from '../../theme';
 import {dummyData, haversineDistance} from '../../utils';
 import PermintaanIzin from './PermintaanIzin';
+import TouchID from 'react-native-touch-id';
 
 const Dashboard = ({navigation}: any) => {
   const dispatch = useAppDispatch();
@@ -42,12 +49,45 @@ const Dashboard = ({navigation}: any) => {
     (state: RootState) => state.dataRequest
   );
 
+  const [isAbsenMasuk, setIsAbsenMasuk] = useState(true);
+
   const [distance, setDistance] = useState(0);
 
   const {location} = useAppSelector((state: RootState) => state.dataLocation);
   const {data} = useAppSelector((state: RootState) => state.dataAkun);
 
-  const attendance = () =
+  const attendance = () => {
+    TouchID.isSupported(optionalConfigObject).then(biometryType => {
+      if (biometryType === 'FaceID') {
+        Alert.alert('This device supports FaceID');
+      } else {
+        TouchID.authenticate('Lakukan Absen', optionalConfigObject)
+          .then(() => {
+            showSuccess('Absen berhasil');
+            setIsAbsenMasuk(!isAbsenMasuk);
+          })
+          .catch((error: any) => {
+            showError(error.message);
+          });
+      }
+    });
+  };
+
+  const renderInfoAttendance = () => {
+    if (isAbsenMasuk === false) {
+      return (
+        <View style={styles.service}>
+          <CardService icon="clock-in" title="Absen Masuk" clock={'19:10'} />
+          <CardService icon="clock-out" title="Absen Keluar" clock={'19:10'} />
+          <CardService
+            icon="clock-check-outline"
+            title="Jam Pulang"
+            clock={'19:10'}
+          />
+        </View>
+      );
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -129,15 +169,16 @@ const Dashboard = ({navigation}: any) => {
             <Gap height={20} />
             <CardCircle
               icon="fingerprint"
-              title="Absen Masuk"
-              onPress={() => {}}
+              title={isAbsenMasuk ? 'Absen Masuk' : 'Absen Keluar'}
+              absen={isAbsenMasuk}
+              onPress={() => attendance()}
             />
           </View>
           <Gap height={20} />
-
+          {renderInfoAttendance()}
           <View style={styles.service}>
             <CardService
-              icon="article"
+              icon="book-open-page-variant-outline"
               title="Ijin Tidak Hadir"
               onPress={() => {
                 handleOpenPress(1);
@@ -222,6 +263,12 @@ const styles = StyleSheet.create({
   service: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    paddingVertical: 20,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderRadius: RADIUS.medium,
+    borderColor: COLORS.background.secondary,
+    marginBottom: 20,
   },
 
   cardDashboard: {
