@@ -78,7 +78,11 @@ const Dashboard = ({navigation}: any) => {
       return (
         <View style={styles.service}>
           <CardService icon="clock-in" title="Absen Masuk" clock={'19:10'} />
-          <CardService icon="clock-out" title="Absen Keluar" clock={'19:10'} />
+          <CardService
+            icon="clock-out"
+            title="Absen Keluar"
+            clock={'-- : --'}
+          />
           <CardService
             icon="clock-check-outline"
             title="Jam Pulang"
