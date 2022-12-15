@@ -1,8 +1,15 @@
 import React, {useEffect} from 'react';
-import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  ScrollView,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {Fade, Placeholder, PlaceholderMedia} from 'rn-placeholder';
 import {version} from '../../../package.json';
-import {ILNullPhoto} from '../../assets';
+import {Bg, ILNullPhoto} from '../../assets';
 import {CardList, Headers, Profile} from '../../components';
 import {getData} from '../../plugins';
 import {
@@ -48,37 +55,38 @@ function AkunScreen({navigation}: any) {
   };
 
   return (
-    <View style={styles.pages}>
-      <Headers title="Akun Saya" />
-
-      <ScrollView>
-        {checkIsLoading()}
-        <CardList
-          type="akun"
-          name="edit"
-          title="Ubah Akun"
-          onPress={() => navigation.navigate('EditProfile')}
-        />
-        <CardList type="akun" name="setting" title="Pengaturan Akun" />
-        <CardList
-          type="akun"
-          name="logout"
-          title="Keluar"
-          onPress={() => {
-            Alert.alert(
-              'Keluar',
-              'Apakah anda yakin ingin keluar?',
-              [
-                {text: 'Tidak', style: 'cancel'},
-                {text: 'Ya', onPress: () => onLogout()},
-              ],
-              {cancelable: false}
-            );
-          }}
-        />
-        <Text style={styles.version}>Version {version}</Text>
-      </ScrollView>
-    </View>
+    <ImageBackground source={Bg} style={{flex: 1}}>
+      <View style={styles.pages}>
+        <Headers title="Akun Saya" />
+        <ScrollView>
+          {checkIsLoading()}
+          <CardList
+            type="akun"
+            name="edit"
+            title="Ubah Akun"
+            onPress={() => navigation.navigate('EditProfile')}
+          />
+          <CardList type="akun" name="setting" title="Pengaturan Akun" />
+          <CardList
+            type="akun"
+            name="logout"
+            title="Keluar"
+            onPress={() => {
+              Alert.alert(
+                'Keluar',
+                'Apakah anda yakin ingin keluar?',
+                [
+                  {text: 'Tidak', style: 'cancel'},
+                  {text: 'Ya', onPress: () => onLogout()},
+                ],
+                {cancelable: false}
+              );
+            }}
+          />
+          <Text style={styles.version}>Version {version}</Text>
+        </ScrollView>
+      </View>
+    </ImageBackground>
   );
 }
 

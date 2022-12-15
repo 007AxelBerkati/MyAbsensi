@@ -1,6 +1,12 @@
 import NetInfo from '@react-native-community/netinfo';
 import React, {useEffect} from 'react';
-import {StatusBar, Alert, BackHandler, LogBox} from 'react-native';
+import {
+  StatusBar,
+  Alert,
+  BackHandler,
+  LogBox,
+  ImageBackground,
+} from 'react-native';
 import CodePush from 'react-native-code-push';
 import FlashMessage from 'react-native-flash-message';
 import 'react-native-gesture-handler';
@@ -22,12 +28,11 @@ import {
   MockLocationDetectorErrorCode,
 } from 'react-native-turbo-mock-location-detector';
 import {requestPermissions} from './plugins';
-
+import {Bg} from './assets';
 
 const codePushOptions = {
   checkFrequency: CodePush.CheckFrequency.ON_APP_START,
 };
-
 
 const MainApp = () => {
   const {loading, isOnline} = useSelector(
@@ -103,6 +108,7 @@ const MainApp = () => {
           alignSelf: 'center',
         }}
       />
+
       {isOnline ? null : <NoInternet />}
 
       {loading && <Loading />}

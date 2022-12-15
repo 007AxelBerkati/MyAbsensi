@@ -16,6 +16,7 @@ import Splash from './Splash.json';
 import IconsApp2 from './IconsApp2.png';
 import ILLogin from './ILLogin.svg';
 import IconSellNull from './sellNull.svg';
+import Bg from './bg.png';
 
 export {
   IconsApp2,
@@ -36,4 +37,5 @@ export {
   IconAddPhoto,
   ILLogin,
   IconSellNull,
+  Bg
 };

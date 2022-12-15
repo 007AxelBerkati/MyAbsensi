@@ -6,10 +6,11 @@ import {
   View,
   ScrollView,
   RefreshControl,
+  ImageBackground,
   Text,
 } from 'react-native';
 import uuid from 'react-native-uuid';
-import {IconSellNull, ILNullPhoto} from '../../assets';
+import {Bg, IconSellNull, ILNullPhoto} from '../../assets';
 import {
   CustomButton,
   EmptySkeletonNotif,
@@ -81,8 +82,9 @@ const Chat = ({navigation}: any) => {
   };
 
   return (
-    <View style={styles.page}>
-      {/* <ScrollView
+    <ImageBackground source={Bg} style={{flex: 1}}>
+      <View style={styles.page}>
+        {/* <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
@@ -91,24 +93,25 @@ const Chat = ({navigation}: any) => {
             colors={[COLORS.primary]}
           />
         }> */}
-      <Headers title="Semua Pesan" />
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        keyExtractor={(Item, index) => index.toString()}
-        data={dataChatList}
-        renderItem={renderItem}
-        ListEmptyComponent={emptyComponent}
-      />
+        <Headers title="Semua Pesan" />
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(Item, index) => index.toString()}
+          data={dataChatList}
+          renderItem={renderItem}
+          ListEmptyComponent={emptyComponent}
+        />
 
-      <CustomButton
-        icon="account-multiple"
-        type="floating-btn"
-        color={COLORS.secondary}
-        onPress={() => navigation.navigate('AllUser', {profile})}
-      />
+        <CustomButton
+          icon="account-multiple"
+          type="floating-btn"
+          color={COLORS.secondary}
+          onPress={() => navigation.navigate('AllUser', {profile})}
+        />
 
-      {/* </ScrollView> */}
-    </View>
+        {/* </ScrollView> */}
+      </View>
+    </ImageBackground>
   );
 };
 
@@ -117,7 +120,6 @@ export default Chat;
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    backgroundColor: COLORS.background.primary,
     marginHorizontal: 16,
   },
   emptyText: {

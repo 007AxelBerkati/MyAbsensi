@@ -2,9 +2,15 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import moment from 'moment';
 import 'moment/locale/id';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {ILNullPhoto} from '../../assets';
+import {Bg, ILNullPhoto} from '../../assets';
 import {
   BackDropComponent,
   CardCircle,
@@ -40,6 +46,8 @@ const Dashboard = ({navigation}: any) => {
 
   const {location} = useAppSelector((state: RootState) => state.dataLocation);
   const {data} = useAppSelector((state: RootState) => state.dataAkun);
+
+  const attendance = () =
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -91,73 +99,77 @@ const Dashboard = ({navigation}: any) => {
 
   return (
     <GestureHandlerRootView style={styles.page}>
-      <ScrollView style={{paddingHorizontal: 16}}>
-        <CardProfile
-          name={data?.fullname}
-          title="Selamat Datang, "
-          photo={data?.photo ? {uri: data?.photo} : ILNullPhoto}
-        />
-        <View style={styles.cardAbsen}>
-          <Gap height={10} />
-          <Text style={styles.hourMinutes}>{currTime.format('HH:mm:ss')}</Text>
-          <Text style={styles.date}>
-            {currTime.format('dddd, DD MMM YYYY')}
-          </Text>
-          <Gap height={10} />
-          <View style={styles.cardDashboard}>
-            <CardDashboard
-              title="Jarak Sekolah"
-              text={distance.toFixed(2).toString() + ' KM'}
-            />
-            <CardDashboard
-              type="maps"
-              text="Buka Maps"
-              onPress={() => navigation.navigate('Location')}
+      <ImageBackground source={Bg} style={{flex: 1}}>
+        <ScrollView style={{paddingHorizontal: 16}}>
+          <CardProfile
+            name={data?.fullname}
+            title="Selamat Datang, "
+            photo={data?.photo ? {uri: data?.photo} : ILNullPhoto}
+          />
+          <View style={styles.cardAbsen}>
+            <Gap height={10} />
+            <Text style={styles.hourMinutes}>
+              {currTime.format('HH:mm:ss')}
+            </Text>
+            <Text style={styles.date}>
+              {currTime.format('dddd, DD MMM YYYY')}
+            </Text>
+            <Gap height={10} />
+            <View style={styles.cardDashboard}>
+              <CardDashboard
+                title="Jarak Sekolah"
+                text={distance.toFixed(2).toString() + ' KM'}
+              />
+              <CardDashboard
+                type="maps"
+                text="Buka Maps"
+                onPress={() => navigation.navigate('Location')}
+              />
+            </View>
+            <Gap height={20} />
+            <CardCircle
+              icon="fingerprint"
+              title="Absen Masuk"
+              onPress={() => {}}
             />
           </View>
           <Gap height={20} />
-          <CardCircle
-            icon="fingerprint"
-            title="Absen Masuk"
-            onPress={() => {}}
-          />
-        </View>
-        <Gap height={20} />
 
-        <View style={styles.service}>
-          <CardService
-            icon="article"
-            title="Ijin Tidak Hadir"
-            onPress={() => {
-              handleOpenPress(1);
-            }}
-          />
-          <CardService
-            icon="history"
-            title="Lihat History"
-            onPress={() => {
-              navigation.navigate('Riwayat');
-            }}
-          />
-        </View>
+          <View style={styles.service}>
+            <CardService
+              icon="article"
+              title="Ijin Tidak Hadir"
+              onPress={() => {
+                handleOpenPress(1);
+              }}
+            />
+            <CardService
+              icon="history"
+              title="Lihat History"
+              onPress={() => {
+                navigation.navigate('Riwayat');
+              }}
+            />
+          </View>
 
-        <Gap height={40} />
-      </ScrollView>
-      <BottomSheet
-        enablePanDownToClose
-        enableContentPanningGesture
-        enableHandlePanningGesture
-        animateOnMount
-        enableOverDrag
-        ref={bottomSheetRef}
-        index={0}
-        snapPoints={snapPoints}
-        backdropComponent={BackDropComponent}>
-        <PermintaanIzin
-          handleCloseSheet={handleClosePress}
-          isRequestPending={isRequestPending}
-        />
-      </BottomSheet>
+          <Gap height={40} />
+        </ScrollView>
+        <BottomSheet
+          enablePanDownToClose
+          enableContentPanningGesture
+          enableHandlePanningGesture
+          animateOnMount
+          enableOverDrag
+          ref={bottomSheetRef}
+          index={0}
+          snapPoints={snapPoints}
+          backdropComponent={BackDropComponent}>
+          <PermintaanIzin
+            handleCloseSheet={handleClosePress}
+            isRequestPending={isRequestPending}
+          />
+        </BottomSheet>
+      </ImageBackground>
     </GestureHandlerRootView>
   );
 };

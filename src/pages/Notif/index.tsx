@@ -1,7 +1,7 @@
 import moment from 'moment';
 import React, {useEffect, useCallback} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {IconSellNull, ILNullPhoto} from '../../assets';
+import {FlatList, StyleSheet, Text, View, ImageBackground} from 'react-native';
+import {Bg, IconSellNull, ILNullPhoto} from '../../assets';
 import {CardNotif, EmptySkeletonNotif, Headers} from '../../components';
 import {
   getNotif,
@@ -53,19 +53,21 @@ const Notif = ({navigation}: any) => {
     );
 
   return (
-    <View style={styles.page}>
-      <Headers title="Notification" />
-      <FlatList
-        data={dataNotif}
-        keyExtractor={item => item.uid}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        maxToRenderPerBatch={5}
-        initialNumToRender={5}
-        removeClippedSubviews
-        ListEmptyComponent={emptyComponent}
-      />
-    </View>
+    <ImageBackground source={Bg} style={{flex: 1}}>
+      <View style={styles.page}>
+        <Headers title="Notification" />
+        <FlatList
+          data={dataNotif}
+          keyExtractor={item => item.uid}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+          maxToRenderPerBatch={5}
+          initialNumToRender={5}
+          removeClippedSubviews
+          ListEmptyComponent={emptyComponent}
+        />
+      </View>
+    </ImageBackground>
   );
 };
 
