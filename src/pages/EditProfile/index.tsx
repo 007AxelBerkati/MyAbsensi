@@ -10,13 +10,13 @@ import {
 
 import moment from 'moment';
 import {DatePickerModal} from 'react-native-paper-dates';
+import {ILNullPhoto} from '../../assets';
 import {
   CustomButton,
   Gap,
   Headers,
-  Input2,
-  Select2,
   HelperText,
+  Input2,
   Profile,
 } from '../../components';
 import {getData, updateProfileSchema} from '../../plugins';
@@ -30,8 +30,6 @@ import {
   windowHeight,
   windowWidth,
 } from '../../theme';
-import FastImage from 'react-native-fast-image';
-import {ILNullPhoto} from '../../assets';
 
 function EditProfile({navigation}: any) {
   const {data, loading} = useAppSelector(state => state.dataAkun);

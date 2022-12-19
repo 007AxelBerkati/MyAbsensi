@@ -6,3 +6,4 @@ export * from './RequestAction';
 export * from './NotificationAction';
 export * from './RequestAction';
 export * from './Location';
+export * from './PresenceAction';

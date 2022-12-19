@@ -142,14 +142,10 @@ export const forgetPass =
 
 export const signOutUser = (navigation: any) => async (dispatch: any) => {
   dispatch(setSignOutLoadin(true));
-
   await signOut()
     .then(() => {
       dispatch(setSignOutSuccess());
-      removeData('user');
-      removeDataSecure('userLogin').then(() => {
-        navigation.replace('Login');
-      });
+      navigation.replace('Login');
     })
     .catch((error: any) => {
       dispatch(setSignOutError(error));

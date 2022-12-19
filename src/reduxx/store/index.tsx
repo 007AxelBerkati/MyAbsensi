@@ -9,6 +9,7 @@ import {
   AuthReducer,
   ChatReducer,
   LocationReducer,
+  PresenceReducer,
 } from '../reducer';
 
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
@@ -17,7 +18,7 @@ import {RequestReducer} from '../reducer/RequestReducer';
 
 const persistConfig = {
   key: 'root',
-  blacklist: ['dataGlobal', 'dataAkun'],
+  blacklist: ['dataGlobal', 'dataAkun', 'dataPresence'],
   whitelist: ['dataAuth', 'dataChat', 'dataNotification', 'dataRequest'],
   storage: AsyncStorage,
 };
@@ -30,6 +31,7 @@ const rootReducer = {
   dataNotif: NotificationReducer,
   dataRequest: RequestReducer,
   dataLocation: LocationReducer,
+  dataPresence: PresenceReducer,
 };
 
 const rootReducers = combineReducers(rootReducer);

@@ -25,12 +25,16 @@ import {
   getData,
   optionalConfigObject,
   showError,
+  showInfo,
   showSuccess,
+  usersRef,
 } from '../../plugins';
 import {
+  absen,
   getAkun,
   getLocation,
   getNotif,
+  getPresence,
   getRequest,
   RootState,
   setLoading,
@@ -49,32 +53,66 @@ const Dashboard = ({navigation}: any) => {
     (state: RootState) => state.dataRequest
   );
 
-  const [isAbsenMasuk, setIsAbsenMasuk] = useState(true);
-
   const [distance, setDistance] = useState(0);
+
+  const [triggerPresence, setTriggerPresence] = useState(false);
 
   const {location} = useAppSelector((state: RootState) => state.dataLocation);
   const {data} = useAppSelector((state: RootState) => state.dataAkun);
+  const {presence} = useAppSelector((state: RootState) => state.dataPresence);
 
   const attendance = () => {
-    TouchID.isSupported(optionalConfigObject).then(biometryType => {
-      if (biometryType === 'FaceID') {
-        Alert.alert('This device supports FaceID');
+    if (presence === 'alreadyPresence') {
+      showInfo('Anda sudah melakukan absen Hari ini');
+    } else {
+      if (
+        data.address &&
+        data.birth_date &&
+        data.phone_number &&
+        data.tempat_lahir
+      ) {
+        TouchID.isSupported(optionalConfigObject).then(biometryType => {
+          if (biometryType === 'FaceID') {
+            Alert.alert('This device supports FaceID');
+          } else {
+            TouchID.authenticate('Lakukan Absen', optionalConfigObject)
+              .then(() => {
+                const dataAbsen = {
+                  address: data.address,
+                  date: moment().format(),
+                  distance: distance,
+                  in_area: distance <= 0.1 ? true : false,
+                  latitude: location.latitude,
+                  longitude: location.longitude,
+                };
+
+                dispatch(absen(data.uid, dataAbsen));
+                setTriggerPresence(!triggerPresence);
+              })
+              .catch((error: any) => {
+                showError(error.message);
+              });
+          }
+        });
       } else {
-        TouchID.authenticate('Lakukan Absen', optionalConfigObject)
-          .then(() => {
-            showSuccess('Absen berhasil');
-            setIsAbsenMasuk(!isAbsenMasuk);
-          })
-          .catch((error: any) => {
-            showError(error.message);
-          });
+        Alert.alert(
+          'Data profile tidak lengkap',
+          'Tolong lengkapi data profile anda terlebih dahulu',
+          [
+            {text: 'Tidak', style: 'cancel'},
+            {
+              text: 'Update Profile',
+              onPress: () => navigation.navigate('EditProfile'),
+            },
+          ],
+          {cancelable: false}
+        );
       }
-    });
+    }
   };
 
   const renderInfoAttendance = () => {
-    if (isAbsenMasuk === false) {
+    if (presence === 'keluar' || presence === 'alreadyPresence') {
       return (
         <View style={styles.service}>
           <CardService icon="clock-in" title="Absen Masuk" clock={'19:10'} />
@@ -93,6 +131,27 @@ const Dashboard = ({navigation}: any) => {
     }
   };
 
+  const renderTitlePresence = () => {
+    switch (presence) {
+      case 'masuk':
+        return 'Absen Masuk';
+      case 'keluar':
+        return 'Absen Keluar';
+      case 'alreadyPresence':
+        return 'Anda sudah absen';
+      default:
+        return 'Absen Masuk';
+    }
+  };
+
+  // bottomSheet
+  const bottomSheetRef = useRef(null);
+  const snapPoints = useMemo(() => ['1%', '80%'], []);
+
+  const handleOpenPress = (index: any) =>
+    bottomSheetRef?.current?.snapToIndex(index);
+  const handleClosePress = () => bottomSheetRef.current?.close();
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrTime(moment());
@@ -109,33 +168,30 @@ const Dashboard = ({navigation}: any) => {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      dispatch(getLocation());
-      setDistance(
-        haversineDistance(
-          {
-            latitude: location.latitude,
-            longitude: location.longitude,
-          },
-          {
-            latitude: dummyData.locationSchool.latitude,
-            longitude: dummyData.locationSchool.longitude,
-          },
-          true
-        )
-      );
-    }, 1000);
+    getData('user').then((res: any) => {
+      dispatch(getPresence(res.uid));
+    });
+  }, [triggerPresence]);
 
-    return () => clearInterval(interval);
-  }, [location]);
-
-  // bottomSheet
-  const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ['1%', '80%'], []);
-
-  const handleOpenPress = (index: any) =>
-    bottomSheetRef?.current?.snapToIndex(index);
-  const handleClosePress = () => bottomSheetRef.current?.close();
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     dispatch(getLocation());
+  //     setDistance(
+  //       haversineDistance(
+  //         {
+  //           latitude: location.latitude,
+  //           longitude: location.longitude,
+  //         },
+  //         {
+  //           latitude: dummyData.locationSchool.latitude,
+  //           longitude: dummyData.locationSchool.longitude,
+  //         },
+  //         true
+  //       )
+  //     );
+  //   }, 3000);
+  //   return () => clearInterval(interval);
+  // }, [location]);
 
   if (loading) {
     return <Loading />;
@@ -173,8 +229,8 @@ const Dashboard = ({navigation}: any) => {
             <Gap height={20} />
             <CardCircle
               icon="fingerprint"
-              title={isAbsenMasuk ? 'Absen Masuk' : 'Absen Keluar'}
-              absen={isAbsenMasuk}
+              title={renderTitlePresence()}
+              absen={presence}
               onPress={() => attendance()}
             />
           </View>

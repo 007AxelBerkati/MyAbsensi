@@ -17,4 +17,5 @@ export const databaseRef = () =>
       'https://my-absensi-2-default-rtdb.asia-southeast1.firebasedatabase.app/'
     );
 
-export const firestoreRef = () => firestore();
+// COLLECTION USERS
+export const usersRef = () => firestore().collection('users');

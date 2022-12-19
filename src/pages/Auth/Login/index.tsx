@@ -44,9 +44,19 @@ function LoginScreen({navigation}: any) {
     (state: RootState) => state.dataAuth
   );
 
+  const [dataLogin, setDataLogin] = useState(null);
+
   const login = ({email, password}: loginUserProps) => {
     dispatch(loginUser(email, password, navigation));
   };
+
+  useEffect(() => {
+    getDataSecure('userLogin').then(user => {
+      if (user) {
+        setDataLogin(user);
+      }
+    });
+  }, []);
 
   const onFingerprint = () => {
     TouchID.isSupported(optionalConfigObject).then(biometryType => {
@@ -146,13 +156,13 @@ function LoginScreen({navigation}: any) {
                 <Gap height={30} />
                 <View style={styles.buttonLogin}>
                   <CustomButton
-                    style={{width: isLogin ? '83%' : '100%'}}
+                    style={{width: dataLogin ? '83%' : '100%'}}
                     type={'primary'}
                     title={loading ? 'Loading...' : 'Login'}
                     onPress={handleSubmit}
                     disable={!(dirty && isValid) || loading}
                   />
-                  {isLogin && (
+                  {dataLogin && (
                     <CustomButton type="icon-button" onPress={onFingerprint} />
                   )}
                 </View>

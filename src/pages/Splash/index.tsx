@@ -5,17 +5,13 @@ import {Splash} from '../../assets';
 import {COLORS, FONTS, SIZE, windowHeight, windowWidth} from '../../theme';
 import auth from '@react-native-firebase/auth';
 import {getDataSecure} from '../../plugins';
+import {RootState, useAppSelector} from '../../reduxx';
 
 function SplashScreen({navigation}: any) {
+  const {isLogin} = useAppSelector((state: RootState) => state.dataAuth);
   useEffect(() => {
     setTimeout(() => {
-      getDataSecure('userLogin').then(user => {
-        if (user) {
-          navigation.replace('Dashboard');
-        } else {
-          navigation.replace('Login');
-        }
-      });
+      isLogin ? navigation.replace('Dashboard') : navigation.replace('Login');
     }, 3000);
   }, []);
 

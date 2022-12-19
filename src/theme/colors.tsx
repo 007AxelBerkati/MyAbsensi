@@ -35,6 +35,7 @@ export const COLORS = {
     tertiary: mainColors.blue2,
     black: mainColors.black1,
     grey: mainColors.grey7,
+    disable: mainColors.blue3,
   },
   button: {
     primary: {

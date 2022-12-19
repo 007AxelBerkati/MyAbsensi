@@ -6,7 +6,7 @@ type Props = {
   title: string;
   icon: string;
   onPress: () => void;
-  absen: boolean;
+  absen: string;
 };
 
 function CardCircle({title, icon, onPress, absen}: Props) {
@@ -19,11 +19,16 @@ function CardCircle({title, icon, onPress, absen}: Props) {
 }
 export default CardCircle;
 
-const circleButton = (absen: boolean): ViewStyle => ({
+const circleButton = (absen: string): ViewStyle => ({
   width: windowWidth * 0.5,
   height: windowWidth * 0.5,
   borderRadius: (windowWidth * 0.5) / 2,
-  backgroundColor: absen ? COLORS.background.tertiary : COLORS.warning,
+  backgroundColor:
+    absen === 'keluar'
+      ? COLORS.warning
+      : absen === 'alreadyPresence'
+      ? COLORS.background.disable
+      : COLORS.background.tertiary,
   alignItems: 'center',
   justifyContent: 'center',
   shadowColor: COLORS.background.black,
