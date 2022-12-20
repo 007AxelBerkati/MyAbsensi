@@ -59,11 +59,13 @@ const Dashboard = ({navigation}: any) => {
 
   const {location} = useAppSelector((state: RootState) => state.dataLocation);
   const {data} = useAppSelector((state: RootState) => state.dataAkun);
-  const {presence} = useAppSelector((state: RootState) => state.dataPresence);
+  const {presence, dataPresence} = useAppSelector(
+    (state: RootState) => state.dataPresence
+  );
 
   const attendance = () => {
     if (presence === 'alreadyPresence') {
-      showInfo('Anda sudah melakukan absen Hari ini');
+      showInfo('Anda sudah melakukan absen Hari ini', () => {});
     } else {
       if (
         data.address &&
@@ -76,7 +78,7 @@ const Dashboard = ({navigation}: any) => {
             Alert.alert('This device supports FaceID');
           } else {
             TouchID.authenticate('Lakukan Absen', optionalConfigObject)
-              .then(() => {
+              .then(async () => {
                 const dataAbsen = {
                   address: data.address,
                   date: moment().format(),
@@ -86,7 +88,7 @@ const Dashboard = ({navigation}: any) => {
                   longitude: location.longitude,
                 };
 
-                dispatch(absen(data.uid, dataAbsen));
+                await dispatch(absen(data.uid, dataAbsen));
                 setTriggerPresence(!triggerPresence);
               })
               .catch((error: any) => {
@@ -115,11 +117,19 @@ const Dashboard = ({navigation}: any) => {
     if (presence === 'keluar' || presence === 'alreadyPresence') {
       return (
         <View style={styles.service}>
-          <CardService icon="clock-in" title="Absen Masuk" clock={'19:10'} />
+          <CardService
+            icon="clock-in"
+            title="Absen Masuk"
+            clock={moment(dataPresence.masuk.date).format('HH:mm')}
+          />
           <CardService
             icon="clock-out"
             title="Absen Keluar"
-            clock={'-- : --'}
+            clock={
+              dataPresence?.keluar?.date
+                ? moment(dataPresence.keluar.date).format('HH:mm')
+                : '--:--'
+            }
           />
           <CardService
             icon="clock-check-outline"

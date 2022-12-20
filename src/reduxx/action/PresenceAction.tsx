@@ -27,22 +27,26 @@ export const setPresenceSuccess = (success: any) => ({
 
 export const absen = (uid: any, data: any) => async (dispatch: any) => {
   dispatch(setPresenceLoading(true));
-  usersRef()
+  await usersRef()
     .doc(`${uid}/presence/${moment().format('DD-MM-YYYY')}`)
     .get()
     .then(doc => {
       if (doc.exists) {
         usersRef()
           .doc(`${uid}/presence/${moment().format('DD-MM-YYYY')}`)
-          .update({keluar: data});
-        showSuccess('Berhasil Absen Keluar');
-        setPresence('keluar');
+          .update({keluar: data})
+          .then(() => {
+            setPresence('alreadyPresence');
+            showSuccess('Berhasil Absen Keluar');
+          });
       } else {
         usersRef()
           .doc(`${uid}/presence/${moment().format('DD-MM-YYYY')}`)
-          .set({masuk: data});
-        showSuccess('Berhasil Absen Masuk');
-        setPresence('masuk');
+          .set({masuk: data})
+          .then(() => {
+            setPresence('keluar');
+            showSuccess('Berhasil Absen Masuk');
+          });
       }
     });
   dispatch(setPresenceLoading(false));
