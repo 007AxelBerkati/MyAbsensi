@@ -1,4 +1,7 @@
 import {
+  GET_ALL_PRESENCE_ERROR,
+  GET_ALL_PRESENCE_LOADING,
+  GET_ALL_PRESENCE_SUCCESS,
   GET_PRESENCE_ERROR,
   GET_PRESENCE_LOADING,
   GET_PRESENCE_SUCCESS,
@@ -14,6 +17,7 @@ type initialPropsPresence = {
   error: any;
   dataPresence: any;
   presence: string;
+  allPresence: any;
 };
 
 const initialPresence: initialPropsPresence = {
@@ -21,6 +25,7 @@ const initialPresence: initialPropsPresence = {
   error: null,
   dataPresence: null,
   presence: 'masuk',
+  allPresence: null,
 };
 
 export const PresenceReducer = (state = initialPresence, action: any) => {
@@ -57,6 +62,26 @@ export const PresenceReducer = (state = initialPresence, action: any) => {
     case SET_PRESENCE_SUCCESS:
       return {
         ...state,
+        loading: false,
+      };
+
+    case GET_ALL_PRESENCE_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
+
+    case GET_ALL_PRESENCE_LOADING:
+      return {
+        ...state,
+        loading: action.loading,
+      };
+
+    case GET_ALL_PRESENCE_SUCCESS:
+      return {
+        ...state,
+        allPresence: action.success,
         loading: false,
       };
 

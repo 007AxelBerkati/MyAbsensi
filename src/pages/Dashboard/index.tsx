@@ -183,25 +183,25 @@ const Dashboard = ({navigation}: any) => {
     });
   }, [triggerPresence]);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     dispatch(getLocation());
-  //     setDistance(
-  //       haversineDistance(
-  //         {
-  //           latitude: location.latitude,
-  //           longitude: location.longitude,
-  //         },
-  //         {
-  //           latitude: dummyData.locationSchool.latitude,
-  //           longitude: dummyData.locationSchool.longitude,
-  //         },
-  //         true
-  //       )
-  //     );
-  //   }, 3000);
-  //   return () => clearInterval(interval);
-  // }, [location]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      dispatch(getLocation());
+      setDistance(
+        haversineDistance(
+          {
+            latitude: location.latitude,
+            longitude: location.longitude,
+          },
+          {
+            latitude: dummyData.locationSchool.latitude,
+            longitude: dummyData.locationSchool.longitude,
+          },
+          true
+        )
+      );
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [location]);
 
   if (loading) {
     return <Loading />;
@@ -258,7 +258,7 @@ const Dashboard = ({navigation}: any) => {
               icon="history"
               title="Lihat History"
               onPress={() => {
-                navigation.navigate('Riwayat');
+                navigation.navigate('Riwayat', {uid: data?.uid});
               }}
             />
           </View>

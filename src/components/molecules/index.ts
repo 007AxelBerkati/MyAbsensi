@@ -16,6 +16,7 @@ import EmptySkeletonNotif from './EmptySkeletonNotif';
 import CardDetailNotif from './CardDetailNotif';
 import BadgeStatus from './BadgeStatus';
 import CardDashboard from './CardDashboard';
+import CardDetailPresensi from './CardDetailPresensi';
 
 export {
   CardList,
@@ -36,4 +37,5 @@ export {
   EmptySkeletonNotif,
   CardDetailNotif,
   BadgeStatus,
+  CardDetailPresensi,
 };

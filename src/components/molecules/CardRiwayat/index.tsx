@@ -7,7 +7,7 @@ type Props = {
   jamMasuk: string;
   jamKeluar: string;
   tanggal: string;
-  type: string;
+  type?: string;
   onPress: () => void;
 };
 

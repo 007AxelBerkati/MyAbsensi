@@ -121,7 +121,7 @@ function EditProfile({navigation}: any) {
                   onPressIn={() => setOpen(true)}
                 />
                 <DatePickerModal
-                  locale="id"
+                  locale="en"
                   mode="single"
                   visible={open}
                   onDismiss={onDismissSingle}
@@ -129,12 +129,11 @@ function EditProfile({navigation}: any) {
                   onConfirm={() => onConfirmSingle({date}, setFieldValue)}
                   startYear={1960} // optional, default is 1800
                   endYear={2100} // optional, default is 2200
-
                   // onChange={} // same props as onConfirm but triggered without confirmed by user
                   // saveLabel="Save" // optional
                   // saveLabelDisabled={true} // optional, default is false
                   // uppercase={false} // optional, default is true
-                  // label="Select date" // optional
+                  label="Pilih Tanggal" // optional
                   // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
                   // closeIcon="close" // optional, default is "close"
                   // editIcon="pencil" // optional, default is "pencil"

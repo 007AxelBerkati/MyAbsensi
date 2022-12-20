@@ -33,6 +33,9 @@ import {COLORS, FONTS, SIZE, windowHeight} from '../../theme';
 const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
   const dispatch = useAppDispatch();
   const {loading} = useAppSelector((state: RootState) => state.dataRequest);
+  const {dataPresence} = useAppSelector(
+    (state: RootState) => state.dataPresence
+  );
 
   const reqIzin = ({alasan, photo, jenis_izin}: any) => {
     getData('user').then((res: any) => {
@@ -73,6 +76,17 @@ const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
       handleCloseSheet();
     });
   };
+
+  const renderTitleIzin = () => {
+    if (isRequestPending) {
+      return 'Telah mengajukan izin';
+    } else if (loading) {
+      return 'Loading...';
+    } else if (dataPresence) {
+      return 'Anda tidak bisa mengajukan izin, jika telah absen';
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <Formik
@@ -152,15 +166,15 @@ const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
             <View
               style={{position: 'absolute', bottom: 0, left: 16, right: 16}}>
               <CustomButton
-                title={
-                  isRequestPending
-                    ? 'Telah mengajukan izin'
-                    : loading
-                    ? 'Loading...'
-                    : 'Ajukan Izin'
-                }
+                title={renderTitleIzin()}
                 onPress={handleSubmit}
-                disable={!isValid || !dirty || loading || isRequestPending}
+                disable={
+                  !isValid ||
+                  !dirty ||
+                  loading ||
+                  isRequestPending ||
+                  !dataPresence
+                }
               />
             </View>
             <Gap height={windowHeight * 0.05} />

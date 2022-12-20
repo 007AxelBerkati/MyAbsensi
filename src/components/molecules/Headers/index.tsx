@@ -42,7 +42,7 @@ function Headers({
         <Text style={styles.titleBack}>{title}</Text>
         {pressFilter && (
           <TouchableOpacity
-            onPress={onPress}
+            onPress={pressFilter}
             style={{
               position: 'absolute',
               right: 0,

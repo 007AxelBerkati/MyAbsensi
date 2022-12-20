@@ -1,6 +1,9 @@
 import moment from 'moment';
 import {showSuccess, usersRef} from '../../plugins';
 import {
+  GET_ALL_PRESENCE_ERROR,
+  GET_ALL_PRESENCE_LOADING,
+  GET_ALL_PRESENCE_SUCCESS,
   GET_PRESENCE_ERROR,
   GET_PRESENCE_LOADING,
   GET_PRESENCE_SUCCESS,
@@ -42,7 +45,7 @@ export const absen = (uid: any, data: any) => async (dispatch: any) => {
       } else {
         usersRef()
           .doc(`${uid}/presence/${moment().format('DD-MM-YYYY')}`)
-          .set({masuk: data})
+          .set({date: data.date, masuk: data})
           .then(() => {
             setPresence('keluar');
             showSuccess('Berhasil Absen Masuk');
@@ -94,3 +97,63 @@ export const getPresence = (uid: any) => async (dispatch: any) => {
     });
   dispatch(getPresenceLoading(false));
 };
+
+export const getAllPresenceLoading = (loading: any) => ({
+  type: GET_ALL_PRESENCE_LOADING,
+  loading,
+});
+
+export const getAllPresenceError = (error: any) => ({
+  type: GET_ALL_PRESENCE_ERROR,
+  error,
+});
+
+export const getAllPresenceSuccess = (success: any) => ({
+  type: GET_ALL_PRESENCE_SUCCESS,
+  success,
+});
+
+export const getAllPresence =
+  (uid: any, range: any) => async (dispatch: any) => {
+    dispatch(getAllPresenceLoading(true));
+
+    console.log('range', range);
+
+    if (range) {
+      usersRef()
+        .doc(uid)
+        .collection('presence')
+        .where('date', '>=', range.start)
+        .where('date', '<=', range.end)
+        .get()
+        .then((querySnapshot: any) => {
+          const data: any = [];
+          querySnapshot.forEach((doc: any) => {
+            data.push(doc.data());
+          });
+
+          console.log('data', data);
+
+          dispatch(getAllPresenceSuccess(data));
+        })
+
+        .catch((error: any) => {
+          dispatch(getAllPresenceError(error));
+        });
+    } else {
+      usersRef()
+        .doc(uid)
+        .collection('presence')
+        .get()
+        .then((querySnapshot: any) => {
+          const data: any = [];
+          querySnapshot.forEach((doc: any) => {
+            data.push(doc.data());
+          });
+          dispatch(getAllPresenceSuccess(data));
+        })
+        .catch((error: any) => {
+          dispatch(getAllPresenceError(error));
+        });
+    }
+  };

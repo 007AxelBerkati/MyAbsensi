@@ -8,7 +8,7 @@ type Props = {
   title: string;
   onPress?: () => void;
   icon: string;
-  clock: string;
+  clock?: string;
 };
 
 const CardService = ({title, onPress, icon, clock}: Props) => {
