@@ -1,8 +1,11 @@
 import Geolocation from 'react-native-geolocation-service';
+import {dummyData, haversineDistance} from '../../utils';
 import {
   GET_LOCATION_ERROR,
   GET_LOCATION_LOADING,
   GET_LOCATION_SUCCESS,
+  SET_DISTANCE,
+  SET_LOCATION,
 } from '../types';
 
 export const getLocationSuccess = (location: any) => ({
@@ -20,12 +23,29 @@ export const getLocationLoading = (loading: any) => ({
   loading,
 });
 
+export const setDistance = (distance: any) => ({
+  type: SET_DISTANCE,
+  distance,
+});
+
 export const getLocation = () => async (dispatch: any) => {
   dispatch(getLocationLoading(true));
   Geolocation.getCurrentPosition(
     position => {
       const {latitude, longitude} = position.coords;
       dispatch(getLocationSuccess({latitude, longitude}));
+      dispatch(
+        setDistance(
+          haversineDistance(
+            {latitude, longitude},
+            {
+              latitude: dummyData.locationSchool.latitude,
+              longitude: dummyData.locationSchool.longitude,
+            },
+            true
+          )
+        )
+      );
     },
     error => {
       dispatch(getLocationError(error));

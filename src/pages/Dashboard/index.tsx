@@ -1,7 +1,7 @@
 import BottomSheet from '@gorhom/bottom-sheet';
 import moment from 'moment';
 import 'moment/locale/id';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Alert,
   ImageBackground,
@@ -53,11 +53,11 @@ const Dashboard = ({navigation}: any) => {
     (state: RootState) => state.dataRequest
   );
 
-  const [distance, setDistance] = useState(0);
-
   const [triggerPresence, setTriggerPresence] = useState(false);
 
-  const {location} = useAppSelector((state: RootState) => state.dataLocation);
+  const {location, distance} = useAppSelector(
+    (state: RootState) => state.dataLocation
+  );
   const {data} = useAppSelector((state: RootState) => state.dataAkun);
   const {presence, dataPresence} = useAppSelector(
     (state: RootState) => state.dataPresence
@@ -113,7 +113,7 @@ const Dashboard = ({navigation}: any) => {
     }
   };
 
-  const renderInfoAttendance = () => {
+  const renderInfoAttendance = useCallback(() => {
     if (presence === 'keluar' || presence === 'alreadyPresence') {
       return (
         <View style={styles.service}>
@@ -139,7 +139,11 @@ const Dashboard = ({navigation}: any) => {
         </View>
       );
     }
-  };
+  }, [presence]);
+
+  const renderInfoAttendanceMemo = useMemo(() => {
+    return renderInfoAttendance();
+  }, [renderInfoAttendance]);
 
   const renderTitlePresence = () => {
     switch (presence) {
@@ -154,13 +158,26 @@ const Dashboard = ({navigation}: any) => {
     }
   };
 
+  const renderTitlePresenceMemo = useMemo(() => {
+    return renderTitlePresence();
+  }, [presence]);
+
   // bottomSheet
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ['1%', '80%'], []);
 
-  const handleOpenPress = (index: any) =>
-    bottomSheetRef?.current?.snapToIndex(index);
-  const handleClosePress = () => bottomSheetRef.current?.close();
+  const handleOpenPress = useCallback(
+    (index: any) => bottomSheetRef?.current?.snapToIndex(index),
+    []
+  );
+  const handleClosePress = useCallback(
+    () => bottomSheetRef?.current?.snapToIndex(0),
+    []
+  );
+
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -186,19 +203,6 @@ const Dashboard = ({navigation}: any) => {
   useEffect(() => {
     const interval = setInterval(() => {
       dispatch(getLocation());
-      setDistance(
-        haversineDistance(
-          {
-            latitude: location.latitude,
-            longitude: location.longitude,
-          },
-          {
-            latitude: dummyData.locationSchool.latitude,
-            longitude: dummyData.locationSchool.longitude,
-          },
-          true
-        )
-      );
     }, 3000);
     return () => clearInterval(interval);
   }, [location]);
@@ -239,13 +243,13 @@ const Dashboard = ({navigation}: any) => {
             <Gap height={20} />
             <CardCircle
               icon="fingerprint"
-              title={renderTitlePresence()}
+              title={renderTitlePresenceMemo}
               absen={presence}
               onPress={() => attendance()}
             />
           </View>
           <Gap height={20} />
-          {renderInfoAttendance()}
+          {renderInfoAttendanceMemo}
           <View style={styles.service}>
             <CardService
               icon="book-open-page-variant-outline"
@@ -274,7 +278,8 @@ const Dashboard = ({navigation}: any) => {
           ref={bottomSheetRef}
           index={0}
           snapPoints={snapPoints}
-          backdropComponent={BackDropComponent}>
+          backdropComponent={BackDropComponent}
+          onChange={handleSheetChanges}>
           <PermintaanIzin
             handleCloseSheet={handleClosePress}
             isRequestPending={isRequestPending}

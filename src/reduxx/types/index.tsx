@@ -103,6 +103,9 @@ export const GET_LOCATION_LOADING = '@GET_LOCATION_LOADING';
 export const GET_LOCATION_ERROR = '@GET_LOCATION_ERROR';
 export const GET_LOCATION_SUCCESS = '@GET_LOCATION_SUCCESS';
 
+//Location distance
+export const SET_DISTANCE = '@SET_DISTANCE';
+
 // presence getPresence
 export const GET_PRESENCE_LOADING = '@GET_PRESENCE_LOADING';
 export const GET_PRESENCE_ERROR = '@GET_PRESENCE_ERROR';

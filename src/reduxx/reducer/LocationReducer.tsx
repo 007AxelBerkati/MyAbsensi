@@ -2,12 +2,14 @@ import {
   GET_LOCATION_ERROR,
   GET_LOCATION_LOADING,
   GET_LOCATION_SUCCESS,
+  SET_DISTANCE,
 } from '../types';
 
 type initialLocationState = {
   location: object;
   loading: boolean;
   error: any;
+  distance: number;
 };
 
 const initialLocation: initialLocationState = {
@@ -19,6 +21,7 @@ const initialLocation: initialLocationState = {
   },
   loading: false,
   error: null,
+  distance: 0,
 };
 
 export const LocationReducer = (state = initialLocation, action: any) => {
@@ -40,6 +43,13 @@ export const LocationReducer = (state = initialLocation, action: any) => {
         location: {...state.location, ...action.location},
         loading: false,
       };
+
+    case SET_DISTANCE:
+      return {
+        ...state,
+        distance: action.distance,
+      };
+
     default:
       return state;
   }

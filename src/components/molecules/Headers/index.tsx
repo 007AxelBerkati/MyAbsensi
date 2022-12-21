@@ -85,7 +85,6 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: windowHeight * 0.03,
   },
 
   container2: {
