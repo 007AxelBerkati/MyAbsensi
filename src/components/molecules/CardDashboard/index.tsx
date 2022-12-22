@@ -7,15 +7,27 @@ import {
 } from 'react-native';
 import React from 'react';
 import {COLORS, FONTS, RADIUS, SIZE, windowWidth} from '../../../theme';
+import {BcDashAdmin} from '../../../assets';
 
 type Props = {
   type?: string;
-  text: string;
+  text?: string;
   title?: string;
   onPress?: () => void;
+  hadir?: string;
+  user?: string;
+  belumHadir?: string;
 };
 
-const CardDashboard = ({type, text, title, onPress}: Props) => {
+const CardDashboard = ({
+  type,
+  text,
+  title,
+  onPress,
+  hadir,
+  belumHadir,
+  user,
+}: Props) => {
   if (type === 'maps') {
     return (
       <TouchableOpacity onPress={onPress}>
@@ -30,6 +42,29 @@ const CardDashboard = ({type, text, title, onPress}: Props) => {
       </TouchableOpacity>
     );
   }
+
+  if (type === 'admin') {
+    return (
+      <View style={styles.cardAdmin}>
+        <ImageBackground source={BcDashAdmin} style={{padding: 16}}>
+          <Text style={styles.textTitleAdmin}>{title}</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'flex-end',
+              marginBottom: 16,
+            }}>
+            <Text style={styles.totalHadir}>{hadir}</Text>
+            <Text style={styles.totalUser}>/ {user}</Text>
+          </View>
+          <Text style={styles.totalBelumHadir}>
+            {belumHadir} orang belum hadir
+          </Text>
+        </ImageBackground>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.card}>
       <Text style={styles.textTitle}>{title}</Text>
@@ -76,5 +111,40 @@ const styles = StyleSheet.create({
     fontSize: SIZE.font20,
     fontFamily: FONTS.primary[800],
     color: COLORS.text.primary,
+  },
+
+  cardAdmin: {
+    borderRadius: RADIUS.medium,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: COLORS.border.primary,
+  },
+
+  textTitleAdmin: {
+    fontSize: SIZE.font14,
+    fontFamily: FONTS.primary[600],
+    color: COLORS.text.secondary,
+    marginTop: windowWidth * 0.1,
+  },
+
+  totalHadir: {
+    fontSize: SIZE.font44,
+    fontFamily: FONTS.primary[800],
+    color: COLORS.text.secondary,
+  },
+
+  totalUser: {
+    fontSize: SIZE.font20,
+    fontFamily: FONTS.primary[800],
+    color: COLORS.text.secondary,
+  },
+
+  totalBelumHadir: {
+    fontSize: SIZE.font14,
+    fontFamily: FONTS.primary[600],
+    color: COLORS.text.secondary,
+    position: 'absolute',
+    bottom: 16,
+    right: 16,
   },
 });

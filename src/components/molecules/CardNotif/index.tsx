@@ -40,6 +40,12 @@ const CardNotif = ({
           return 'Permintaan Anda Diterima';
         case 'declined':
           return 'Permintaan Anda Ditolak';
+        case 'hadir':
+          return 'User Telah Hadir';
+        case 'belum_hadir':
+          return 'User Belum Hadir';
+        default:
+          return;
       }
     }
   };
@@ -81,6 +87,8 @@ const CardNotif = ({
           return <BadgeStatus type="pending" text="Pending" />;
         case 'accepted':
           return <BadgeStatus type="accepted" text="Accepted" />;
+        case 'hadir':
+          return <BadgeStatus type="accepted" text="Hadir" />;
         case 'declined':
           return <BadgeStatus type="declined" text="Declined" />;
       }

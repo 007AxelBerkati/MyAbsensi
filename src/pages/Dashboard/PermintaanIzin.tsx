@@ -84,6 +84,8 @@ const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
       return 'Loading...';
     } else if (dataPresence) {
       return 'Anda tidak bisa mengajukan izin, jika telah absen';
+    } else {
+      return 'Ajukan Izin';
     }
   };
 
@@ -173,7 +175,7 @@ const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
                   !dirty ||
                   loading ||
                   isRequestPending ||
-                  !dataPresence
+                  dataPresence
                 }
               />
             </View>
