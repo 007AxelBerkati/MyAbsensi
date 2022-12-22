@@ -1,7 +1,7 @@
 const dummyData = {
   locationSchool: {
-    latitude: -2.2349466,
-    longitude: 113.9083208,
+    latitude: -2.8219293,
+    longitude: 114.3520864,
     latitudeDelta: 0,
     longitudeDelta: 0.05,
   },
