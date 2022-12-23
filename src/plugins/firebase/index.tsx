@@ -19,3 +19,5 @@ export const databaseRef = () =>
 
 // COLLECTION USERS
 export const usersRef = () => firestore().collection('users');
+
+export const AllPresenceRef = () => firestore().collection('presence');

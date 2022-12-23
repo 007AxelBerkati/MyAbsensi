@@ -89,6 +89,8 @@ const CardNotif = ({
           return <BadgeStatus type="accepted" text="Accepted" />;
         case 'hadir':
           return <BadgeStatus type="accepted" text="Hadir" />;
+        case 'belum_hadir':
+          return <BadgeStatus type="declined" text="Belum Absen" />;
         case 'declined':
           return <BadgeStatus type="declined" text="Declined" />;
       }

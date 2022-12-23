@@ -4,6 +4,9 @@ import {
   GET_ALL_PRESENCE_ERROR,
   GET_ALL_PRESENCE_LOADING,
   GET_ALL_PRESENCE_SUCCESS,
+  GET_PRESENCE_ALL_USER_ERROR,
+  GET_PRESENCE_ALL_USER_LOADING,
+  GET_PRESENCE_ALL_USER_SUCCESS,
   GET_PRESENCE_ERROR,
   GET_PRESENCE_LOADING,
   GET_PRESENCE_SUCCESS,
@@ -28,33 +31,62 @@ export const setPresenceSuccess = (success: any) => ({
   success,
 });
 
-export const absen = (uid: any, data: any) => async (dispatch: any) => {
-  dispatch(setPresenceLoading(true));
-  await usersRef()
-    .doc(`${uid}/presence/${moment().format('DD-MM-YYYY')}`)
-    .get()
-    .then(doc => {
-      if (doc.exists) {
-        usersRef()
-          .doc(`${uid}/presence/${moment().format('DD-MM-YYYY')}`)
-          .update({keluar: data})
-          .then(() => {
-            setPresence('alreadyPresence');
-            showSuccess('Berhasil Absen Keluar');
-          });
-      } else {
-        usersRef()
-          .doc(`${uid}/presence/${moment().format('DD-MM-YYYY')}`)
-          .set({date: data.date, masuk: data})
-          .then(() => {
-            setPresence('keluar');
-            showSuccess('Berhasil Absen Masuk');
-          });
-      }
-    });
-  dispatch(setPresenceLoading(false));
-  dispatch(setPresenceSuccess(true));
-};
+export const absen =
+  (uid: any, data: any, dataAkun: any) => async (dispatch: any) => {
+    dispatch(setPresenceLoading(true));
+    await usersRef()
+      .doc(`${uid}/presence/${moment().format('YYYY')}`)
+      .collection(`${moment().format('MM')}`)
+      .doc(`${moment().format('DD')}`)
+      .get()
+      .then(async doc => {
+        if (doc.exists) {
+          await usersRef()
+            .doc(`${uid}/presence/${moment().format('YYYY')}`)
+            .collection(`${moment().format('MM')}`)
+            .doc(`${moment().format('DD')}`)
+            .update({keluar: data})
+            .then(() => {
+              setPresence('alreadyPresence');
+              showSuccess('Berhasil Absen Keluar');
+            });
+        } else {
+          await usersRef()
+            .doc(`${uid}`)
+            .get()
+            .then(async doc => {
+              if (doc.exists) {
+                await usersRef()
+                  .doc(`${uid}/presence/${moment().format('YYYY')}`)
+                  .collection(`${moment().format('MM')}`)
+                  .doc(`${moment().format('DD')}`)
+                  .set({date: data.date, masuk: data})
+                  .then(() => {
+                    setPresence('keluar');
+                    showSuccess('Berhasil Absen Masuk');
+                  });
+              } else {
+                await usersRef()
+                  .doc(`${uid}`)
+                  .set(dataAkun)
+                  .then(async () => {
+                    await usersRef()
+                      .doc(`${uid}/presence/${moment().format('YYYY')}`)
+                      .collection(`${moment().format('MM')}`)
+                      .doc(`${moment().format('DD')}`)
+                      .set({date: data.date, masuk: data})
+                      .then(() => {
+                        setPresence('keluar');
+                        showSuccess('Berhasil Absen Masuk');
+                      });
+                  });
+              }
+            });
+        }
+      });
+    dispatch(setPresenceLoading(false));
+    dispatch(setPresenceSuccess(true));
+  };
 
 export const getPresenceLoading = (loading: any) => ({
   type: GET_PRESENCE_LOADING,
@@ -78,12 +110,12 @@ export const setPresence = (presence: any) => ({
 
 export const getPresence = (uid: any) => async (dispatch: any) => {
   dispatch(getPresenceLoading(true));
-  console.log('uid', uid);
-
-  usersRef()
-    .doc(`${uid}/presence/${moment().format('DD-MM-YYYY')}`)
+  await usersRef()
+    .doc(`${uid}/presence/${moment().format('YYYY')}`)
+    .collection(`${moment().format('MM')}`)
+    .doc(`${moment().format('DD')}`)
     .get()
-    .then((doc: any) => {
+    .then(async (doc: any) => {
       if (doc.exists) {
         dispatch(getPresenceSuccess(doc.data()));
         if (doc.data().keluar && doc.data().masuk) {
@@ -116,24 +148,20 @@ export const getAllPresenceSuccess = (success: any) => ({
 export const getAllPresence =
   (uid: any, range: any) => async (dispatch: any) => {
     dispatch(getAllPresenceLoading(true));
-
-    console.log('range', range);
-
     if (range) {
       usersRef()
         .doc(uid)
         .collection('presence')
+        .doc(`${moment(range.start).format('YYYY')}`)
+        .collection(`${moment(range.start).format('MM')}`)
         .where('date', '>=', range.start)
         .where('date', '<=', range.end)
         .get()
-        .then((querySnapshot: any) => {
+        .then(async (querySnapshot: any) => {
           const data: any = [];
-          querySnapshot.forEach((doc: any) => {
+          await querySnapshot.forEach((doc: any) => {
             data.push(doc.data());
           });
-
-          console.log('data', data);
-
           dispatch(getAllPresenceSuccess(data));
         })
 
@@ -144,6 +172,8 @@ export const getAllPresence =
       usersRef()
         .doc(uid)
         .collection('presence')
+        .doc(`${moment().format('YYYY')}`)
+        .collection(`${moment().format('MM')}`)
         .get()
         .then((querySnapshot: any) => {
           const data: any = [];
@@ -157,3 +187,68 @@ export const getAllPresence =
         });
     }
   };
+
+export const getPresenceAllUserLoading = (loading: any) => ({
+  type: GET_PRESENCE_ALL_USER_LOADING,
+  loading,
+});
+
+export const getPresenceAllUserError = (error: any) => ({
+  type: GET_PRESENCE_ALL_USER_ERROR,
+  error,
+});
+
+export const getPresenceAllUserSuccess = (success: any, total: any) => ({
+  type: GET_PRESENCE_ALL_USER_SUCCESS,
+  success,
+  total,
+});
+
+export const getPresenceAllUser = () => async (dispatch: any) => {
+  dispatch(getPresenceAllUserLoading(true));
+  usersRef()
+    .get()
+    .then(async querySnapshot => {
+      const list: any = [];
+      const data: any = [];
+      var total = 0;
+
+      await querySnapshot.forEach(documentSnapshot => {
+        list.push({
+          ...documentSnapshot.data(),
+          uid: documentSnapshot.id,
+        });
+      });
+
+      await list.forEach((item: any) => {
+        usersRef()
+          .doc(item.uid)
+          .collection('presence')
+          .doc(`${moment().format('YYYY')}`)
+          .collection(`${moment().format('MM')}`)
+          .doc(`${moment().format('DD')}`)
+          .get()
+          .then(async (doc: any) => {
+            if (doc.exists) {
+              total = total + 1;
+              data.push({
+                ...item,
+                ...doc.data(),
+              });
+            } else {
+              data.push({
+                ...item,
+              });
+            }
+            dispatch(getPresenceAllUserSuccess(data, total));
+          })
+          .catch((error: any) => {
+            dispatch(getPresenceAllUserError(error));
+          });
+      });
+      dispatch(getPresenceAllUserLoading(false));
+    })
+    .catch((error: any) => {
+      dispatch(getPresenceAllUserError(error));
+    });
+};

@@ -14,9 +14,9 @@ type Props = {
   text?: string;
   title?: string;
   onPress?: () => void;
-  hadir?: string;
-  user?: string;
-  belumHadir?: string;
+  hadir?: number;
+  user?: number;
+  belumHadir?: number;
 };
 
 const CardDashboard = ({

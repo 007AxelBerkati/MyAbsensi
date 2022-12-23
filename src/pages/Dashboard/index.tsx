@@ -88,7 +88,17 @@ const Dashboard = ({navigation}: any) => {
                   longitude: location.longitude,
                 };
 
-                await dispatch(absen(data.uid, dataAbsen));
+                const dataAkun = {
+                  fullname: data.fullname,
+                  email: data.email,
+                  birth_date: data.birth_date,
+                  phone_number: data.phone_number,
+                  tempat_lahir: data.tempat_lahir,
+                  address: data.address,
+                  photo: data.photo || null,
+                };
+
+                await dispatch(absen(data.uid, dataAbsen, dataAkun));
                 setTriggerPresence(!triggerPresence);
               })
               .catch((error: any) => {

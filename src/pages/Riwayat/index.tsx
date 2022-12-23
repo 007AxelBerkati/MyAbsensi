@@ -47,8 +47,8 @@ const Riwayat = ({navigation, route}: any) => {
     if (range.startDate && range.endDate) {
       dispatch(
         getAllPresence(uid, {
-          start: moment(range.startDate).format('DD-MM-YYYY'),
-          end: moment(range.endDate).format('DD-MM-YYYY'),
+          start: moment(range.startDate).format(),
+          end: moment(range.endDate).format(),
         })
       );
     }
