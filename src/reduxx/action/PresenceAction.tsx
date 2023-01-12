@@ -50,6 +50,12 @@ export const absen =
               setPresence('alreadyPresence');
               showSuccess('Berhasil Absen Keluar');
             });
+        } else if (data.status) {
+          await usersRef()
+            .doc(`${uid}/presence/${moment().format('YYYY')}`)
+            .collection(`${moment().format('MM')}`)
+            .doc(`${moment().format('DD')}`)
+            .set({date: data.date, status: data.status});
         } else {
           await usersRef()
             .doc(`${uid}`)
@@ -118,7 +124,9 @@ export const getPresence = (uid: any) => async (dispatch: any) => {
     .then(async (doc: any) => {
       if (doc.exists) {
         dispatch(getPresenceSuccess(doc.data()));
-        if (doc.data().keluar && doc.data().masuk) {
+        if (doc.data().status) {
+          dispatch(setPresence('alreadyPresence'));
+        } else if (doc.data().keluar && doc.data().masuk) {
           dispatch(setPresence('alreadyPresence'));
         } else if (doc.data().masuk) {
           dispatch(setPresence('keluar'));

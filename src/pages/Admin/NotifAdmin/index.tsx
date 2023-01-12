@@ -4,6 +4,7 @@ import {Alert, FlatList, StyleSheet, Text, View} from 'react-native';
 import {IconSellNull, ILNullPhoto} from '../../../assets';
 import {CardNotif, EmptySkeletonNotif, Headers} from '../../../components';
 import {
+  absen,
   deleteRequest,
   getRequest,
   RootState,
@@ -19,7 +20,10 @@ const Notif = ({navigation}: any) => {
   const {dataRequest, loading} = useAppSelector(
     (state: RootState) => state.dataRequest
   );
-  const {data} = useAppSelector((state: RootState) => state.dataAuth);
+  const {location, distance} = useAppSelector(
+    (state: RootState) => state.dataLocation
+  );
+  const {data} = useAppSelector((state: RootState) => state.dataAkun);
 
   const onClickCardNotif = (item: any) => {
     if (item.isRead === false) {
@@ -77,6 +81,13 @@ const Notif = ({navigation}: any) => {
                       item.uid
                     )
                   );
+
+                  const dataAbsen = {
+                    date: moment(item?.createdAt).format('DD/MM/YYYY'),
+                    status: item.jenis_izin,
+                  };
+
+                  dispatch(absen(item.id_user, dataAbsen, {}));
                   dispatch(deleteRequest(item.id_user));
                   dispatch(getRequest(null));
                 },

@@ -17,5 +17,3 @@ const useUser = () => {
 };
 
 export default useUser;
-
-const styles = StyleSheet.create({});

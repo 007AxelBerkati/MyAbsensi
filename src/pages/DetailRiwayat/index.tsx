@@ -6,8 +6,6 @@ import moment from 'moment';
 const DetailRiwayat = ({navigation, route}: any) => {
   const {detailPresence} = route.params;
 
-  console.log(detailPresence);
-
   return (
     <View style={styles.pages}>
       <Headers

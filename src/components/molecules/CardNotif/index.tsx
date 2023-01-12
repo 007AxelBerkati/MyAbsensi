@@ -11,7 +11,7 @@ type Props = {
   request: string;
   time: string;
   onPress: () => void;
-  read: boolean;
+  read?: boolean;
   status: string;
   role?: string;
   onPressTerima?: () => void;

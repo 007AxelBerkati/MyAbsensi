@@ -168,7 +168,6 @@ export const deleteRequest = (id: any) => async (dispatch: any) => {
   try {
     databaseRef().ref(`requests/${id}`).remove();
     dispatch(deleteRequestSuccess());
-    showSuccess('Permintaan berhasil dihapus');
   } catch (error: any) {
     dispatch(deleteRequestError(error));
     showError(error.message);

@@ -76,7 +76,6 @@ export const loginUser =
     dispatch(setLoginLoading(true));
     await login(email, password)
       .then((res: any) => {
-        console.log('res', res.user.uid);
         databaseRef()
           .ref(`users/${res?.user?.uid}`)
           .once('value')
@@ -100,20 +99,25 @@ export const loginUser =
               databaseRef()
                 .ref(`admins/${res?.user?.uid}`)
                 .on('value', snapshot => {
-                  dispatch(setLoginSuccess(snapshot.val()));
-                  dispatch(setRole(snapshot.val().role));
-                  storeData('user', {
-                    ...snapshot.val(),
-                    photo: snapshot.val().photo,
-                    role: snapshot.val().role,
-                  });
-                  storeDataSecure('userLogin', {
-                    email,
-                    password,
-                    uid: res.user.uid,
-                  });
-                  showSuccess('Login Berhasil');
-                  navigation.replace('Dashboard');
+                  if (snapshot.val() !== null) {
+                    dispatch(setLoginSuccess(snapshot.val()));
+                    dispatch(setRole(snapshot.val().role));
+                    storeData('user', {
+                      ...snapshot.val(),
+                      photo: snapshot.val().photo,
+                      role: snapshot.val().role,
+                    });
+                    storeDataSecure('userLogin', {
+                      email,
+                      password,
+                      uid: res.user.uid,
+                    });
+                    showSuccess('Login Berhasil');
+                    navigation.replace('Dashboard');
+                  } else {
+                    dispatch(setLoginError('User Sepertinya Telah Terhapus'));
+                    showError('User Sepertinya Telah Terhapus');
+                  }
                 });
             }
           });
