@@ -1,19 +1,20 @@
 import NetInfo from '@react-native-community/netinfo';
-import React, {useEffect} from 'react';
-import {
-  StatusBar,
-  Alert,
-  BackHandler,
-  LogBox,
-  ImageBackground,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Alert, BackHandler, LogBox, StatusBar} from 'react-native';
 import CodePush from 'react-native-code-push';
+import RNExitApp from 'react-native-exit-app';
 import FlashMessage from 'react-native-flash-message';
 import 'react-native-gesture-handler';
+import {
+  isMockingLocation,
+  MockLocationDetectorError,
+  MockLocationDetectorErrorCode,
+} from 'react-native-turbo-mock-location-detector';
 import {Provider, useSelector} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {Loading, NoInternet} from './components';
 import Navigation from './navigations';
+import {requestPermissions} from './plugins';
 import {
   Persistore,
   RootState,
@@ -22,13 +23,6 @@ import {
   useAppDispatch,
 } from './reduxx';
 import {COLORS, RADIUS, windowHeight, windowWidth} from './theme';
-import {
-  isMockingLocation,
-  MockLocationDetectorError,
-  MockLocationDetectorErrorCode,
-} from 'react-native-turbo-mock-location-detector';
-import {requestPermissions} from './plugins';
-import {Bg} from './assets';
 
 const codePushOptions = {
   checkFrequency: CodePush.CheckFrequency.ON_APP_START,
@@ -38,6 +32,8 @@ const MainApp = () => {
   const {loading, isOnline} = useSelector(
     (state: RootState) => state.dataGlobal
   );
+
+  const [isMocked, setIsMocked] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -56,41 +52,38 @@ const MainApp = () => {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      isMockingLocation()
-        .then(({isLocationMocked}) => {
-          if (isLocationMocked) {
+    isMockingLocation()
+      .then(({isLocationMocked}) => {
+        setIsMocked(isLocationMocked);
+        if (isLocationMocked) {
+          Alert.alert(
+            'Pemalsuan Lokasi Terdeteksi',
+            'Tolong matikan fitur pemalsuan lokasi',
+            [
+              {
+                text: 'OK',
+                onPress: () => RNExitApp.exitApp(),
+              },
+            ],
+            {cancelable: false}
+          );
+        }
+      })
+      .catch((error: MockLocationDetectorError) => {
+        switch (error.code) {
+          case MockLocationDetectorErrorCode.GPSNotEnabled: {
+            Alert.alert('GPS Not Enabled', 'Please enable GPS');
+            return;
+          }
+          case MockLocationDetectorErrorCode.CantDetermine: {
             Alert.alert(
-              'Pemalsuan Lokasi Terdeteksi',
-              'Tolong matikan fitur pemalsuan lokasi',
-              [
-                {
-                  text: 'OK',
-                  onPress: () => BackHandler.exitApp(),
-                },
-              ],
-              {cancelable: false}
+              'Can not determine if mock location is enabled',
+              'Please try again'
             );
           }
-        })
-        .catch((error: MockLocationDetectorError) => {
-          switch (error.code) {
-            case MockLocationDetectorErrorCode.GPSNotEnabled: {
-              Alert.alert('GPS Not Enabled', 'Please enable GPS');
-              return;
-            }
-            case MockLocationDetectorErrorCode.CantDetermine: {
-              Alert.alert(
-                'Can not determine if mock location is enabled',
-                'Please try again'
-              );
-            }
-          }
-        });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
+        }
+      });
+  }, [isMocked]);
 
   return (
     <>

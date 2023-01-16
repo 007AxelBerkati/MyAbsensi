@@ -1,7 +1,14 @@
 import moment from 'moment';
 import React, {useEffect} from 'react';
-import {Alert, FlatList, StyleSheet, Text, View} from 'react-native';
-import {IconSellNull, ILNullPhoto} from '../../../assets';
+import {
+  Alert,
+  FlatList,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import {Bg, IconSellNull, ILNullPhoto} from '../../../assets';
 import {CardNotif, EmptySkeletonNotif, Headers} from '../../../components';
 import {
   absen,
@@ -75,7 +82,7 @@ const Notif = ({navigation}: any) => {
                       {
                         ...item,
                         status: 'accepted',
-                        isRead: false,
+                        isRead: true,
                         updatedAt: moment().format(''),
                       },
                       item.uid
@@ -114,7 +121,7 @@ const Notif = ({navigation}: any) => {
                       {
                         ...item,
                         status: 'declined',
-                        isRead: false,
+                        isRead: true,
                         updatedAt: moment().format(''),
                       },
                       item.uid
@@ -131,19 +138,21 @@ const Notif = ({navigation}: any) => {
     );
 
   return (
-    <View style={styles.page}>
-      <Headers title="Notification" />
-      <FlatList
-        data={dataRequest}
-        keyExtractor={item => item.uid}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        maxToRenderPerBatch={5}
-        initialNumToRender={5}
-        removeClippedSubviews
-        ListEmptyComponent={emptyComponent}
-      />
-    </View>
+    <ImageBackground source={Bg} style={{flex: 1}}>
+      <View style={styles.page}>
+        <Headers title="Notification" />
+        <FlatList
+          data={dataRequest}
+          keyExtractor={item => item.uid}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+          maxToRenderPerBatch={5}
+          initialNumToRender={5}
+          removeClippedSubviews
+          ListEmptyComponent={emptyComponent}
+        />
+      </View>
+    </ImageBackground>
   );
 };
 

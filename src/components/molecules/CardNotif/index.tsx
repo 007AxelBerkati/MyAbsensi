@@ -44,6 +44,12 @@ const CardNotif = ({
           return 'User Telah Hadir';
         case 'belum_hadir':
           return 'User Belum Hadir';
+        case 'Izin':
+          return 'User Izin Tidak Dapat Hadir';
+        case 'Sakit':
+          return 'User Izin Sakit';
+        case 'Cuti':
+          return 'User Izin Cuti';
         default:
           return;
       }
@@ -91,6 +97,12 @@ const CardNotif = ({
           return <BadgeStatus type="accepted" text="Hadir" />;
         case 'belum_hadir':
           return <BadgeStatus type="declined" text="Belum Absen" />;
+        case 'Izin':
+          return <BadgeStatus type="pending" text="Izin" />;
+        case 'Sakit':
+          return <BadgeStatus type="pending" text="Sakit" />;
+        case 'Cuti':
+          return <BadgeStatus type="pending" text="Cuti" />;
         case 'declined':
           return <BadgeStatus type="declined" text="Declined" />;
       }

@@ -130,7 +130,11 @@ const Dashboard = ({navigation}: any) => {
           <CardService
             icon="clock-in"
             title="Absen Masuk"
-            clock={moment(dataPresence.masuk.date).format('HH:mm')}
+            clock={
+              dataPresence?.masuk?.date
+                ? moment(dataPresence.masuk.date).format('HH:mm')
+                : '--:--'
+            }
           />
           <CardService
             icon="clock-out"
@@ -243,6 +247,14 @@ const Dashboard = ({navigation}: any) => {
               <CardDashboard
                 title="Jarak Sekolah"
                 text={distance.toFixed(2).toString() + ' KM'}
+                onPress={() =>
+                  showInfo(
+                    distance <= 0.1
+                      ? 'Anda sudah berada di lingkungan sekolah'
+                      : 'Anda belum di lingkungan sekolah',
+                    () => {}
+                  )
+                }
               />
               <CardDashboard
                 type="maps"

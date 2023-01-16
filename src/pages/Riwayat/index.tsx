@@ -1,7 +1,7 @@
 import moment from 'moment';
 import React, {useEffect, useState, useCallback} from 'react';
-import {StyleSheet, View, FlatList, Text} from 'react-native';
-import {IconSellNull} from '../../assets';
+import {StyleSheet, View, FlatList, Text, ImageBackground} from 'react-native';
+import {Bg, IconSellNull} from '../../assets';
 import {CardRiwayat, EmptySkeletonNotif, Headers} from '../../components';
 import {
   getAllPresence,
@@ -78,47 +78,49 @@ const Riwayat = ({navigation, route}: any) => {
   );
 
   return (
-    <View style={styles.pages}>
-      <Headers
-        title="Riwayat Absen"
-        type="back-title"
-        pressFilter={() => {
-          setOpen(true);
-        }}
-        onPress={() => navigation.goBack()}
-      />
-      <DatePickerModal
-        locale="en"
-        mode="range"
-        visible={open}
-        onDismiss={onDismiss}
-        startDate={range.startDate}
-        endDate={range.endDate}
-        onConfirm={onConfirm}
-        startYear={1960} // optional, default is 1800
-        endYear={2100} // optional, default is 2200
-        // onChange={} // same props as onConfirm but triggered without confirmed by user
-        // saveLabel="Save" // optional
-        // saveLabelDisabled={true} // optional, default is false
-        // uppercase={false} // optional, default is true
-        label="Pilih Range Tanggal Absen" // optional
-        // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
-        // closeIcon="close" // optional, default is "close"
-        // editIcon="pencil" // optional, default is "pencil"
-        // calendarIcon="calendar" // optional, default is "calendar"
-      />
+    <ImageBackground source={Bg} style={{flex: 1}}>
+      <View style={styles.pages}>
+        <Headers
+          title="Riwayat Absen"
+          type="back-title"
+          pressFilter={() => {
+            setOpen(true);
+          }}
+          onPress={() => navigation.goBack()}
+        />
+        <DatePickerModal
+          locale="en"
+          mode="range"
+          visible={open}
+          onDismiss={onDismiss}
+          startDate={range.startDate}
+          endDate={range.endDate}
+          onConfirm={onConfirm}
+          startYear={1960} // optional, default is 1800
+          endYear={2100} // optional, default is 2200
+          // onChange={} // same props as onConfirm but triggered without confirmed by user
+          // saveLabel="Save" // optional
+          // saveLabelDisabled={true} // optional, default is false
+          // uppercase={false} // optional, default is true
+          label="Pilih Range Tanggal Absen" // optional
+          // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
+          // closeIcon="close" // optional, default is "close"
+          // editIcon="pencil" // optional, default is "pencil"
+          // calendarIcon="calendar" // optional, default is "calendar"
+        />
 
-      <FlatList
-        data={allPresence}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        maxToRenderPerBatch={5}
-        initialNumToRender={5}
-        removeClippedSubviews
-        ListEmptyComponent={emptyComponent}
-      />
-    </View>
+        <FlatList
+          data={allPresence}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+          maxToRenderPerBatch={5}
+          initialNumToRender={5}
+          removeClippedSubviews
+          ListEmptyComponent={emptyComponent}
+        />
+      </View>
+    </ImageBackground>
   );
 };
 

@@ -1,22 +1,21 @@
 // import Geo from './Geo';
-import Dashboard from './Dashboard';
-import SplashScreen from './Splash';
-import Login from './Auth/Login';
-import ForgetPass from './Auth/ForgetPass';
-import Chat from './Chat';
-import Riwayat from './Riwayat';
-import Profile from './Profile';
-import InformasiProfile from './InformasiProfile';
-import EditProfile from './EditProfile';
-import AllUser from './AllUser';
-import Chatting from './Chatting';
-import Notif from './Notif';
-import DetailRiwayat from './DetailRiwayat';
 import DashboardAdmin from './Admin/DashboardAdmin';
-import TrackingAdmin from './Admin/TrackingAdmin';
 import NotifAdmin from './Admin/NotifAdmin';
+import TrackingAdmin from './Admin/TrackingAdmin';
+import AllUser from './AllUser';
+import ForgetPass from './Auth/ForgetPass';
+import Login from './Auth/Login';
+import Chat from './Chat';
+import Chatting from './Chatting';
+import Dashboard from './Dashboard';
 import DetailNotif from './DetailNotif';
+import DetailRiwayat from './DetailRiwayat';
+import EditProfile from './EditProfile';
 import Location from './Location';
+import Notif from './Notif';
+import Profile from './Profile';
+import Riwayat from './Riwayat';
+import SplashScreen from './Splash';
 
 export {
   Login,
@@ -26,7 +25,6 @@ export {
   Chat,
   Riwayat,
   Profile,
-  InformasiProfile,
   EditProfile,
   AllUser,
   Chatting,

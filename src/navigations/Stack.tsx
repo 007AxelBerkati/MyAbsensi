@@ -7,7 +7,6 @@ import {
   DetailRiwayat,
   EditProfile,
   ForgetPass,
-  InformasiProfile,
   Location,
   Login,
   Riwayat,
@@ -28,7 +27,6 @@ function Router() {
       <Stack.Screen name="Dashboard" component={MainApp} />
       <Stack.Screen name="SplashScreen" component={SplashScreen} />
       <Stack.Screen name="ForgetPass" component={ForgetPass} />
-      <Stack.Screen name="InformasiProfile" component={InformasiProfile} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="AllUser" component={AllUser} />
       <Stack.Screen name="Chatting" component={Chatting} />

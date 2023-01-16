@@ -1,10 +1,16 @@
 import moment from 'moment';
 import React, {useState} from 'react';
-import {Modal, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  Modal,
+  ScrollView,
+  StyleSheet,
+  View,
+  ImageBackground,
+} from 'react-native';
 import {BadgeStatus, CardDetailNotif, Headers} from '../../components';
 import {COLORS} from '../../theme';
 import ImageViewer from 'react-native-image-zoom-viewer';
-import {ILNullPhoto} from '../../assets';
+import {Bg, ILNullPhoto} from '../../assets';
 
 const DetailNotif = ({navigation, route}: any) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -17,44 +23,46 @@ const DetailNotif = ({navigation, route}: any) => {
   ];
 
   return (
-    <View style={styles.page}>
-      <Headers
-        title="Detail Notif"
-        type="back-title"
-        onPress={() => navigation.goBack()}
-      />
-      <Modal
-        visible={isVisible}
-        transparent={true}
-        onRequestClose={() => setIsVisible(false)}>
-        <ImageViewer
-          imageUrls={images}
-          onDoubleClick={() => setIsVisible(false)}
+    <ImageBackground source={Bg} style={{flex: 1}}>
+      <View style={styles.page}>
+        <Headers
+          title="Detail Notif"
+          type="back-title"
+          onPress={() => navigation.goBack()}
         />
-      </Modal>
-      <ScrollView style={styles.container}>
-        <CardDetailNotif title="Nama" text={item?.fullname} source={null} />
-        <CardDetailNotif
-          title="Jenis Izin"
-          text={item?.jenis_izin}
-          source={null}
-        />
-        <CardDetailNotif title="Alasan" text={item?.alasan} source={null} />
-        <CardDetailNotif
-          title="Bukti photo"
-          source={item?.photo ? {uri: item?.photo} : ILNullPhoto}
-          onPress={() => setIsVisible(true)}
-        />
-        <CardDetailNotif
-          title="Durasi"
-          text={moment(item?.created_at).format('DD MMMM YYYY')}
-          source={null}
-        />
-        <View style={{position: 'absolute', right: 0}}>
-          <BadgeStatus type={item?.status} text={item?.status} />
-        </View>
-      </ScrollView>
-    </View>
+        <Modal
+          visible={isVisible}
+          transparent={true}
+          onRequestClose={() => setIsVisible(false)}>
+          <ImageViewer
+            imageUrls={images}
+            onDoubleClick={() => setIsVisible(false)}
+          />
+        </Modal>
+        <ScrollView style={styles.container}>
+          <CardDetailNotif title="Nama" text={item?.fullname} source={null} />
+          <CardDetailNotif
+            title="Jenis Izin"
+            text={item?.jenis_izin}
+            source={null}
+          />
+          <CardDetailNotif title="Alasan" text={item?.alasan} source={null} />
+          <CardDetailNotif
+            title="Bukti photo"
+            source={item?.photo ? {uri: item?.photo} : ILNullPhoto}
+            onPress={() => setIsVisible(true)}
+          />
+          <CardDetailNotif
+            title="Durasi"
+            text={moment(item?.created_at).format('DD MMMM YYYY')}
+            source={null}
+          />
+          <View style={{position: 'absolute', right: 0}}>
+            <BadgeStatus type={item?.status} text={item?.status} />
+          </View>
+        </ScrollView>
+      </View>
+    </ImageBackground>
   );
 };
 

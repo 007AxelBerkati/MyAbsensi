@@ -58,7 +58,7 @@ const CardDashboard = ({
             <Text style={styles.totalUser}>/ {user}</Text>
           </View>
           <Text style={styles.totalBelumHadir}>
-            {belumHadir} orang belum hadir
+            {belumHadir} user belum absen
           </Text>
         </ImageBackground>
       </View>
@@ -66,10 +66,10 @@ const CardDashboard = ({
   }
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={onPress}>
       <Text style={styles.textTitle}>{title}</Text>
       <Text style={styles.text}>{text}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 

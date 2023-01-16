@@ -63,7 +63,7 @@ const DashboardAdmin = ({navigation}: any) => {
           user={totalUser}
           hadir={total}
           belumHadir={totalUser - total}
-          title="Kehadiran Hari Ini"
+          title="Absensi Hari Ini"
         />
 
         <View>
@@ -74,7 +74,13 @@ const DashboardAdmin = ({navigation}: any) => {
                 key={item.uid}
                 photo={item?.photo ? {uri: item?.photo} : ILNullPhoto}
                 request={item.fullname}
-                status={item?.masuk ? 'hadir' : 'belum_hadir'}
+                status={
+                  item?.status
+                    ? item?.status
+                    : item?.masuk
+                    ? 'hadir'
+                    : 'belum_hadir'
+                }
                 time={
                   item?.masuk
                     ? moment(item?.masuk?.date).format('HH:mm')
@@ -98,7 +104,13 @@ const DashboardAdmin = ({navigation}: any) => {
                 key={item.uid}
                 photo={item?.photo ? {uri: item?.photo} : ILNullPhoto}
                 request={item.fullname}
-                status={item?.keluar ? 'hadir' : 'belum_hadir'}
+                status={
+                  item?.status
+                    ? item?.status
+                    : item?.keluar
+                    ? 'hadir'
+                    : 'belum_hadir'
+                }
                 time={
                   item?.keluar
                     ? moment(item?.keluar.date).format('HH:mm')
