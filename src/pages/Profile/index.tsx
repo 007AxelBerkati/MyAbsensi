@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react';
 import {
   Alert,
-  ScrollView,
   ImageBackground,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -66,7 +66,6 @@ function AkunScreen({navigation}: any) {
             title="Ubah Akun"
             onPress={() => navigation.navigate('EditProfile')}
           />
-          <CardList type="akun" name="setting" title="Pengaturan Akun" />
           <CardList
             type="akun"
             name="logout"
