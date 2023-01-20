@@ -9,9 +9,32 @@ type Props = {
   tanggal: string;
   type?: string;
   onPress: () => void;
+  status?: string;
+  date?: string;
 };
 
-const CardRiwayat = ({jamMasuk, jamKeluar, tanggal, type, onPress}: Props) => {
+const CardRiwayat = ({
+  jamMasuk,
+  jamKeluar,
+  tanggal,
+  onPress,
+  status,
+  date,
+}: Props) => {
+  if (status) {
+    return (
+      <TouchableOpacity onPress={onPress} style={styles.containerRiwayat}>
+        <View style={styles.descAbsen}>
+          <Text style={styles.titleAbsen}>User Telah Izin</Text>
+          <Text style={styles.textAbsen}>{status}</Text>
+        </View>
+        <View style={styles.descAbsen}>
+          <Text style={styles.textTanggal}>{date}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
   return (
     <TouchableOpacity onPress={onPress} style={styles.containerRiwayat}>
       <View style={styles.descAbsen}>

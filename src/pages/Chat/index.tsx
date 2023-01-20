@@ -2,26 +2,23 @@ import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {
   FlatList,
-  StyleSheet,
-  View,
-  ScrollView,
-  RefreshControl,
   ImageBackground,
+  StyleSheet,
   Text,
+  View,
+  Image,
 } from 'react-native';
-import uuid from 'react-native-uuid';
-import {Bg, IconSellNull, ILNullPhoto} from '../../assets';
+import {Bg, IconSellNull, ILNullPhoto, PesanNull} from '../../assets';
 import {
   CustomButton,
   EmptySkeletonNotif,
   Headers,
   List,
 } from '../../components';
-import {databaseRef, getData} from '../../plugins';
+import {getData} from '../../plugins';
 import {
   createChat,
   getListChat,
-  refreshing,
   RootState,
   useAppDispatch,
   useAppSelector,
@@ -38,8 +35,6 @@ const Chat = ({navigation}: any) => {
 
   const dispatch = useAppDispatch();
 
-  const {isRefreshing} = useAppSelector((state: RootState) => state.dataGlobal);
-
   const {dataChatList, loading} = useAppSelector(
     (state: RootState) => state.dataChat
   );
@@ -55,10 +50,9 @@ const Chat = ({navigation}: any) => {
   useEffect(() => {
     getUserData();
   }, []);
-
   const emptyComponent = () => (
     <View style={styles.empty}>
-      <IconSellNull style={styles.image} />
+      <Image source={PesanNull} style={styles.image} />
       <Text style={styles.emptyText}>Notifikasi Anda Masih Kosong </Text>
     </View>
   );
@@ -84,15 +78,6 @@ const Chat = ({navigation}: any) => {
   return (
     <ImageBackground source={Bg} style={{flex: 1}}>
       <View style={styles.page}>
-        {/* <ScrollView
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={() => dispatch(refreshing(getChatList(profile.uid)))}
-            colors={[COLORS.primary]}
-          />
-        }> */}
         <Headers title="Semua Pesan" />
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -108,8 +93,6 @@ const Chat = ({navigation}: any) => {
           color={COLORS.secondary}
           onPress={() => navigation.navigate('AllUser', {profile})}
         />
-
-        {/* </ScrollView> */}
       </View>
     </ImageBackground>
   );

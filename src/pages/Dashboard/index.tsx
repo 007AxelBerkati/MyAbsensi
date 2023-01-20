@@ -78,28 +78,36 @@ const Dashboard = ({navigation}: any) => {
             Alert.alert('This device supports FaceID');
           } else {
             TouchID.authenticate('Lakukan Absen', optionalConfigObject)
-              .then(async () => {
-                const dataAbsen = {
-                  address: data.address,
-                  date: moment().format(),
-                  distance: distance,
-                  in_area: distance <= 0.1 ? true : false,
-                  latitude: location.latitude,
-                  longitude: location.longitude,
-                };
+              .then(() => {
+                const lat = location.latitude;
+                const long = location.longitude;
+                fetch(
+                  `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${long}`
+                )
+                  .then(response => response.json())
+                  .then(async dataLocation => {
+                    const dataAbsen = {
+                      address: dataLocation.display_name,
+                      date: moment().format(),
+                      distance: distance,
+                      in_area: distance <= 0.1 ? true : false,
+                      latitude: location.latitude,
+                      longitude: location.longitude,
+                    };
 
-                const dataAkun = {
-                  fullname: data.fullname,
-                  email: data.email,
-                  birth_date: data.birth_date,
-                  phone_number: data.phone_number,
-                  tempat_lahir: data.tempat_lahir,
-                  address: data.address,
-                  photo: data.photo || null,
-                };
+                    const dataAkun = {
+                      fullname: data.fullname,
+                      email: data.email,
+                      birth_date: data.birth_date,
+                      phone_number: data.phone_number,
+                      tempat_lahir: data.tempat_lahir,
+                      address: dataLocation.display_name,
+                      photo: data.photo || null,
+                    };
 
-                await dispatch(absen(data.uid, dataAbsen, dataAkun));
-                setTriggerPresence(!triggerPresence);
+                    await dispatch(absen(data.uid, dataAbsen, dataAkun));
+                    setTriggerPresence(!triggerPresence);
+                  });
               })
               .catch((error: any) => {
                 showError(error.message);

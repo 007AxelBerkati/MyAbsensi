@@ -67,6 +67,8 @@ const Riwayat = ({navigation, route}: any) => {
         onPress={() => {
           navigation.navigate('DetailRiwayat', {detailPresence: item});
         }}
+        status={item?.status}
+        date={moment(item?.date).format('DD MMMM YYYY')}
       />
     );
 

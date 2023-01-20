@@ -157,6 +157,8 @@ export const getAllPresence =
   (uid: any, range: any) => async (dispatch: any) => {
     dispatch(getAllPresenceLoading(true));
     if (range) {
+      const data: any = [];
+
       usersRef()
         .doc(uid)
         .collection('presence')
@@ -166,11 +168,34 @@ export const getAllPresence =
         .where('date', '<=', range.end)
         .get()
         .then(async (querySnapshot: any) => {
-          const data: any = [];
           await querySnapshot.forEach((doc: any) => {
             data.push(doc.data());
           });
-          dispatch(getAllPresenceSuccess(data));
+        });
+
+      usersRef()
+        .doc(uid)
+        .collection('presence')
+        .doc(`${moment(range.end).format('YYYY')}`)
+        .collection(`${moment(range.end).format('MM')}`)
+        .where('date', '>=', range.start)
+        .where('date', '<=', range.end)
+        .get()
+        .then(async (querySnapshot: any) => {
+          await querySnapshot.forEach((doc: any) => {
+            data.push(doc.data());
+          });
+
+          // filter Data
+          const filteredData: any = [];
+          data.forEach((item: any) => {
+            const i = filteredData.findIndex((x: any) => x.date === item.date);
+            if (i <= -1) {
+              filteredData.push(item);
+            }
+          });
+
+          dispatch(getAllPresenceSuccess(filteredData));
         })
 
         .catch((error: any) => {

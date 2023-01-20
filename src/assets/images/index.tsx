@@ -18,6 +18,9 @@ import ILLogin from './ILLogin.svg';
 import IconSellNull from './sellNull.svg';
 import Bg from './bg.png';
 import BcDashAdmin from './BcDashAdmin.png';
+import PermintaanNull from './permintaanNull.png';
+import PesanNull from './pesanNull.png';
+import NotifNull from './notifNull.png';
 
 export {
   IconsApp2,
@@ -40,4 +43,7 @@ export {
   IconSellNull,
   Bg,
   BcDashAdmin,
+  PermintaanNull,
+  PesanNull,
+  NotifNull,
 };

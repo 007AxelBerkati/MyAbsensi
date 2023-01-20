@@ -146,7 +146,7 @@ const MainApp = ({navigation}: any) => {
           name="Notifikasi"
           component={NotifAdmin}
           options={{
-            tabBarLabel: 'Notifikasi',
+            tabBarLabel: 'Permintaan',
             tabBarBadge: totalRequestNotif > 0 ? totalRequestNotif : null,
             tabBarBadgeStyle: {
               backgroundColor: COLORS.warning,

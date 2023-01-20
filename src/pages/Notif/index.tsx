@@ -1,7 +1,14 @@
 import moment from 'moment';
 import React, {useEffect, useCallback} from 'react';
-import {FlatList, StyleSheet, Text, View, ImageBackground} from 'react-native';
-import {Bg, IconSellNull, ILNullPhoto} from '../../assets';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  ImageBackground,
+  Image,
+} from 'react-native';
+import {Bg, IconSellNull, ILNullPhoto, NotifNull} from '../../assets';
 import {CardNotif, EmptySkeletonNotif, Headers} from '../../components';
 import {
   getNotif,
@@ -24,12 +31,12 @@ const Notif = ({navigation}: any) => {
       dispatch(updateNotif(item.id_user, {isRead: true}, item.uid));
       dispatch(getNotif(item.id_user));
     }
-    navigation.navigate('DetailNotif', {item});
+    navigation.navigate('DetailNotif', {item, titleHeader: 'Notifikasi'});
   }, []);
 
   const emptyComponent = () => (
     <View style={styles.empty}>
-      <IconSellNull style={styles.image} />
+      <Image source={NotifNull} style={styles.image} />
       <Text style={styles.emptyText}>Notifikasi Anda Masih Kosong </Text>
     </View>
   );
@@ -79,9 +86,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   emptyText: {
-    fontSize: SIZE.font14,
-    color: COLORS.text.subtitle,
-    fontFamily: FONTS.primary[400],
+    fontSize: SIZE.font16,
+    color: COLORS.text.primary,
+    fontFamily: FONTS.primary[600],
+    bottom: 50,
   },
   empty: {
     flex: 1,

@@ -14,7 +14,7 @@ import {Bg, ILNullPhoto} from '../../assets';
 
 const DetailNotif = ({navigation, route}: any) => {
   const [isVisible, setIsVisible] = useState(false);
-  const {item} = route.params;
+  const {item, titleHeader} = route.params;
 
   const images = [
     {
@@ -26,7 +26,7 @@ const DetailNotif = ({navigation, route}: any) => {
     <ImageBackground source={Bg} style={{flex: 1}}>
       <View style={styles.page}>
         <Headers
-          title="Detail Notif"
+          title={`Detail ${titleHeader}`}
           type="back-title"
           onPress={() => navigation.goBack()}
         />

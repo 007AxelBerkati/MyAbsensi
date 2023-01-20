@@ -7,8 +7,9 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
 } from 'react-native';
-import {Bg, IconSellNull, ILNullPhoto} from '../../../assets';
+import {Bg, IconSellNull, ILNullPhoto, PermintaanNull} from '../../../assets';
 import {CardNotif, EmptySkeletonNotif, Headers} from '../../../components';
 import {
   absen,
@@ -37,13 +38,13 @@ const Notif = ({navigation}: any) => {
       dispatch(updateRequest(item.id_user, {isRead: true}));
       dispatch(getRequest(null));
     }
-    navigation.navigate('DetailNotif', {item});
+    navigation.navigate('DetailNotif', {item, titleHeader: 'Permintaan'});
   };
 
   const emptyComponent = () => (
     <View style={styles.empty}>
-      <IconSellNull style={styles.image} />
-      <Text style={styles.emptyText}>Notifikasi Anda Masih Kosong </Text>
+      <Image source={PermintaanNull} style={styles.image} />
+      <Text style={styles.emptyText}>Permintaan Izin Tidak Ada </Text>
     </View>
   );
 
@@ -90,7 +91,7 @@ const Notif = ({navigation}: any) => {
                   );
 
                   const dataAbsen = {
-                    date: moment(item?.createdAt).format('DD/MM/YYYY'),
+                    date: moment().format(''),
                     status: item.jenis_izin,
                   };
 
@@ -140,7 +141,7 @@ const Notif = ({navigation}: any) => {
   return (
     <ImageBackground source={Bg} style={{flex: 1}}>
       <View style={styles.page}>
-        <Headers title="Notification" />
+        <Headers title="Permintaan" />
         <FlatList
           data={dataRequest}
           keyExtractor={item => item.uid}
@@ -164,12 +165,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   emptyText: {
-    fontSize: SIZE.font14,
-    color: COLORS.text.subtitle,
-    fontFamily: FONTS.primary[400],
+    fontSize: SIZE.font16,
+    color: COLORS.text.primary,
+    fontFamily: FONTS.primary[600],
+    bottom: 50,
   },
   empty: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 16,

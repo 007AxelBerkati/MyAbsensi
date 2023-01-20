@@ -14,7 +14,11 @@ const CardDetailPresensi = ({date, time, status, address, type}: Props) => {
   return (
     <View style={cardDetail(type)}>
       <Text style={titleText(type)}>
-        {type === 'masuk' ? 'Absen Masuk' : 'Absen Keluar'}
+        {status
+          ? 'Izin Diterima'
+          : type === 'masuk'
+          ? 'Absen Masuk'
+          : 'Absen Keluar'}
       </Text>
       <Text style={desc(type)}>{time}</Text>
       <Text style={titleText(type)}>Status</Text>

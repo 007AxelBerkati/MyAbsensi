@@ -33,6 +33,7 @@ export const getLocation = () => async (dispatch: any) => {
   Geolocation.getCurrentPosition(
     position => {
       const {latitude, longitude} = position.coords;
+
       dispatch(getLocationSuccess({latitude, longitude}));
       dispatch(
         setDistance(
