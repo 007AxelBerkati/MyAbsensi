@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import TouchID from 'react-native-touch-id';
 import {Bg, ILNullPhoto} from '../../assets';
 import {
   BackDropComponent,
@@ -26,8 +27,6 @@ import {
   optionalConfigObject,
   showError,
   showInfo,
-  showSuccess,
-  usersRef,
 } from '../../plugins';
 import {
   absen,
@@ -37,14 +36,11 @@ import {
   getPresence,
   getRequest,
   RootState,
-  setLoading,
   useAppDispatch,
   useAppSelector,
 } from '../../reduxx';
 import {COLORS, FONTS, RADIUS, SIZE, windowHeight} from '../../theme';
-import {dummyData, haversineDistance} from '../../utils';
 import PermintaanIzin from './PermintaanIzin';
-import TouchID from 'react-native-touch-id';
 
 const Dashboard = ({navigation}: any) => {
   const dispatch = useAppDispatch();
@@ -101,8 +97,10 @@ const Dashboard = ({navigation}: any) => {
                       birth_date: data.birth_date,
                       phone_number: data.phone_number,
                       tempat_lahir: data.tempat_lahir,
-                      address: dataLocation.display_name,
+                      address: data.address,
                       photo: data.photo || null,
+                      role: data.role,
+                      pekerjaan: data.pekerjaan,
                     };
 
                     await dispatch(absen(data.uid, dataAbsen, dataAkun));
@@ -230,7 +228,7 @@ const Dashboard = ({navigation}: any) => {
   }, [location]);
 
   if (loading) {
-    return <Loading />;
+    return <Loading type="full" />;
   }
 
   return (

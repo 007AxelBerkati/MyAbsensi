@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     fontSize: SIZE.font16,
     color: COLORS.text.primary,
     fontFamily: FONTS.primary[600],
-    bottom: 50,
+    bottom: 30,
   },
   empty: {
     flex: 1,

@@ -8,13 +8,23 @@ type Props = {
   status: string;
   address: string;
   type: string;
+  statusAbsensi: string;
 };
 
-const CardDetailPresensi = ({date, time, status, address, type}: Props) => {
+const CardDetailPresensi = ({
+  date,
+  time,
+  status,
+  statusAbsensi,
+  address,
+  type,
+}: Props) => {
+  console.log('statusAbsensi', statusAbsensi);
+
   return (
     <View style={cardDetail(type)}>
       <Text style={titleText(type)}>
-        {status
+        {statusAbsensi
           ? 'Izin Diterima'
           : type === 'masuk'
           ? 'Absen Masuk'

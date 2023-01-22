@@ -24,6 +24,7 @@ const DetailRiwayat = ({navigation, route}: any) => {
             status={detailPresence?.status}
             address={detailPresence?.address ? detailPresence?.address : '-'}
             type="masuk"
+            statusAbsensi={detailPresence?.status}
           />
         ) : (
           <View>
@@ -38,6 +39,7 @@ const DetailRiwayat = ({navigation, route}: any) => {
                   : 'Absen Di Luar Lokasi Sekolah'
               }
               address={detailPresence?.masuk.address}
+              statusAbsensi={detailPresence?.status}
               type="masuk"
             />
             {detailPresence?.keluar && (
@@ -52,6 +54,7 @@ const DetailRiwayat = ({navigation, route}: any) => {
                     : 'Absen Di Luar Lokasi Sekolah'
                 }
                 address={detailPresence?.keluar?.address}
+                statusAbsensi={detailPresence?.status}
                 type="keluar"
               />
             )}
