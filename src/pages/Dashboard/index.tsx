@@ -57,44 +57,6 @@ const Dashboard = ({navigation}: any) => {
     (state: RootState) => state.dataRequest
   );
 
-  BackgroundFetch.configure(
-    {
-      minimumFetchInterval: 15, // 1 jam dalam menit
-      stopOnTerminate: false,
-      startOnBoot: true,
-    },
-    async taskId => {
-      Geolocation.getCurrentPosition(
-        async position => {
-          trackingLocationRef().doc(data.uid).set({
-            fullname: data.fullname,
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            timestamp: position.timestamp,
-            pekerjaan: data.pekerjaan,
-            role: data.role,
-          });
-        },
-
-        error => {
-          console.log(error);
-          BackgroundFetch.finish(taskId);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 15000,
-          maximumAge: 10000,
-          distanceFilter: 0,
-        }
-      );
-    },
-    taskId => {
-      BackgroundFetch.finish(taskId);
-    }
-  );
-
-  BackgroundFetch.start();
-
   const [triggerPresence, setTriggerPresence] = useState(false);
 
   const {location, distance} = useAppSelector(
@@ -287,6 +249,44 @@ const Dashboard = ({navigation}: any) => {
       dispatch(getAkun(res.uid));
       dispatch(getRequest(res.uid));
       dispatch(getNotif(res.uid));
+
+      BackgroundFetch.configure(
+        {
+          minimumFetchInterval: 15, // 1 jam dalam menit
+          stopOnTerminate: false,
+          startOnBoot: true,
+        },
+        async taskId => {
+          Geolocation.getCurrentPosition(
+            async position => {
+              trackingLocationRef().doc(res.uid).set({
+                fullname: res?.fullname,
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                timestamp: position.timestamp,
+                pekerjaan: res?.pekerjaan,
+                role: res?.role,
+              });
+            },
+
+            error => {
+              console.log(error);
+              BackgroundFetch.finish(taskId);
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 15000,
+              maximumAge: 10000,
+              distanceFilter: 0,
+            }
+          );
+        },
+        taskId => {
+          BackgroundFetch.finish(taskId);
+        }
+      );
+
+      BackgroundFetch.start();
     });
   }, []);
 
