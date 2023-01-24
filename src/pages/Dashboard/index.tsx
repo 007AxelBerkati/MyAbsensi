@@ -27,6 +27,7 @@ import {
   optionalConfigObject,
   showError,
   showInfo,
+  trackingLocationRef,
 } from '../../plugins';
 import {
   absen,
@@ -46,6 +47,8 @@ import {
   MockLocationDetectorError,
   MockLocationDetectorErrorCode,
 } from 'react-native-turbo-mock-location-detector';
+import BackgroundFetch from 'react-native-background-fetch';
+import Geolocation from 'react-native-geolocation-service';
 
 const Dashboard = ({navigation}: any) => {
   const dispatch = useAppDispatch();
@@ -53,6 +56,44 @@ const Dashboard = ({navigation}: any) => {
   const {isRequestPending, loading} = useAppSelector(
     (state: RootState) => state.dataRequest
   );
+
+  BackgroundFetch.configure(
+    {
+      minimumFetchInterval: 15, // 1 jam dalam menit
+      stopOnTerminate: false,
+      startOnBoot: true,
+    },
+    async taskId => {
+      Geolocation.getCurrentPosition(
+        async position => {
+          trackingLocationRef().doc(data.uid).set({
+            fullname: data.fullname,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            timestamp: position.timestamp,
+            pekerjaan: data.pekerjaan,
+            role: data.role,
+          });
+        },
+
+        error => {
+          console.log(error);
+          BackgroundFetch.finish(taskId);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 10000,
+          distanceFilter: 0,
+        }
+      );
+    },
+    taskId => {
+      BackgroundFetch.finish(taskId);
+    }
+  );
+
+  BackgroundFetch.start();
 
   const [triggerPresence, setTriggerPresence] = useState(false);
 

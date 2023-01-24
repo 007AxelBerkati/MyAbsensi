@@ -21,3 +21,6 @@ export const databaseRef = () =>
 export const usersRef = () => firestore().collection('users');
 
 export const AllPresenceRef = () => firestore().collection('presence');
+
+export const trackingLocationRef = () =>
+  firestore().collection('trackingLocation');
