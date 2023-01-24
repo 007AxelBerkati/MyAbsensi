@@ -267,8 +267,8 @@ const Dashboard = ({navigation}: any) => {
                 pekerjaan: res?.pekerjaan,
                 role: res?.role,
               });
+              BackgroundFetch.finish(taskId);
             },
-
             error => {
               console.log(error);
               BackgroundFetch.finish(taskId);
