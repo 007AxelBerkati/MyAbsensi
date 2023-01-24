@@ -10,8 +10,15 @@ import {
   Text,
   View,
 } from 'react-native';
+import BackgroundService from 'react-native-background-actions';
+import Geolocation from 'react-native-geolocation-service';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import TouchID from 'react-native-touch-id';
+import {
+  isMockingLocation,
+  MockLocationDetectorError,
+  MockLocationDetectorErrorCode,
+} from 'react-native-turbo-mock-location-detector';
 import {Bg, ILNullPhoto} from '../../assets';
 import {
   BackDropComponent,
@@ -32,7 +39,6 @@ import {
 import {
   absen,
   getAkun,
-  getLocation,
   getNotif,
   getPresence,
   getRequest,
@@ -42,13 +48,6 @@ import {
 } from '../../reduxx';
 import {COLORS, FONTS, RADIUS, SIZE, windowHeight} from '../../theme';
 import PermintaanIzin from './PermintaanIzin';
-import {
-  isMockingLocation,
-  MockLocationDetectorError,
-  MockLocationDetectorErrorCode,
-} from 'react-native-turbo-mock-location-detector';
-import BackgroundFetch from 'react-native-background-fetch';
-import Geolocation from 'react-native-geolocation-service';
 
 const Dashboard = ({navigation}: any) => {
   const dispatch = useAppDispatch();
@@ -66,6 +65,8 @@ const Dashboard = ({navigation}: any) => {
   const {presence, dataPresence} = useAppSelector(
     (state: RootState) => state.dataPresence
   );
+
+  const {dataLogin} = useAppSelector((state: RootState) => state.dataAuth);
 
   const attendance = () => {
     isMockingLocation()
@@ -244,50 +245,67 @@ const Dashboard = ({navigation}: any) => {
     return () => clearInterval(interval);
   }, []);
 
+  const sleep = (time: any) =>
+    new Promise((resolve: any) => setTimeout(() => resolve(), time));
+
+  const trackLocation = async () => {
+    await new Promise(async () => {
+      for (let i = 1; BackgroundService.isRunning(); i++) {
+        try {
+          await Geolocation.getCurrentPosition(
+            async position => {
+              await trackingLocationRef()
+                .doc(dataLogin.uid)
+                .set({
+                  fullname: dataLogin.fullname,
+                  pekerjaan: dataLogin.pekerjaan,
+                  role: dataLogin.role,
+                  photo: dataLogin.photo || null,
+                  latitude: position.coords.latitude,
+                  longitude: position.coords.longitude,
+                  date: moment().format(),
+                });
+            },
+            error => {
+              console.log('failed to get location', error);
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 15000,
+              maximumAge: 1000,
+            }
+          );
+        } catch (error) {
+          // console.log(error);
+        }
+        await sleep(900000);
+      }
+    });
+  };
+  const options = {
+    taskName: 'Example',
+    taskTitle: 'ExampleTask title',
+    taskDesc: 'ExampleTask description',
+    taskIcon: {
+      name: 'ic_launcher',
+      type: 'mipmap',
+    },
+    color: '#ff00ff',
+    linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
+    parameters: {
+      delay: 900000,
+    },
+  };
+  const startTask = async () => {
+    await BackgroundService.start(trackLocation, options);
+  };
+
   useEffect(() => {
     getData('user').then((res: any) => {
       dispatch(getAkun(res.uid));
       dispatch(getRequest(res.uid));
       dispatch(getNotif(res.uid));
-
-      BackgroundFetch.configure(
-        {
-          minimumFetchInterval: 15, // 1 jam dalam menit
-          stopOnTerminate: false,
-          startOnBoot: true,
-        },
-        async taskId => {
-          Geolocation.getCurrentPosition(
-            async position => {
-              trackingLocationRef().doc(res.uid).set({
-                fullname: res?.fullname,
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-                timestamp: position.timestamp,
-                pekerjaan: res?.pekerjaan,
-                role: res?.role,
-                photo: res?.photo,
-              });
-              BackgroundFetch.finish(taskId);
-            },
-            error => {
-              console.log(error);
-              BackgroundFetch.finish(taskId);
-            },
-            {
-              enableHighAccuracy: true,
-              timeout: 15000,
-              maximumAge: 10000,
-              distanceFilter: 0,
-            }
-          );
-        },
-        taskId => {
-          BackgroundFetch.finish(taskId);
-        }
-      );
-
-      BackgroundFetch.start();
+      startTask();
     });
   }, []);
 
@@ -297,12 +315,12 @@ const Dashboard = ({navigation}: any) => {
     });
   }, [triggerPresence]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      dispatch(getLocation());
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [location]);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     dispatch(getLocation());
+  //   }, 3000);
+  //   return () => clearInterval(interval);
+  // }, [location]);
 
   if (loading) {
     return <Loading type="full" />;

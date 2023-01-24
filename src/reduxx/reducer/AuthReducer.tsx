@@ -14,7 +14,7 @@ import {
 type initialStateAuthProps = {
   loading: boolean;
   error: any;
-  data: any;
+  dataLogin: any;
   isLogin: boolean;
   role: any;
 };
@@ -22,7 +22,7 @@ type initialStateAuthProps = {
 const initialStateAuth: initialStateAuthProps = {
   loading: false,
   error: null,
-  data: null,
+  dataLogin: null,
   isLogin: false,
   role: null,
 };
@@ -47,7 +47,7 @@ export function AuthReducer(
     case SET_LOGIN_SUCCESS:
       return {
         ...state,
-        data: action.success,
+        dataLogin: action.success,
         loading: false,
         isLogin: true,
       };

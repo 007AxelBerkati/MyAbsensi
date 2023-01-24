@@ -7,3 +7,11 @@ export async function requestPermissions() {
     );
   }
 }
+
+export async function requestPermissions2() {
+  if (Platform.OS === 'android') {
+    await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
+    );
+  }
+}

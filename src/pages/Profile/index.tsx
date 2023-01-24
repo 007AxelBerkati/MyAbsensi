@@ -28,6 +28,7 @@ import {
   windowHeight,
   windowWidth,
 } from '../../theme';
+import BackgroundService from 'react-native-background-actions';
 
 function AkunScreen({navigation}: any) {
   const dispatch = useAppDispatch();
@@ -41,6 +42,7 @@ function AkunScreen({navigation}: any) {
 
   const onLogout = () => {
     dispatch(signOutUser(navigation));
+    BackgroundService.stop();
   };
 
   const checkIsLoading = () => {
