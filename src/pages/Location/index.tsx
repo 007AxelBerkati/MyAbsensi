@@ -7,8 +7,6 @@ import {COLORS, FONTS, SIZE, windowWidth} from '../../theme';
 import {dummyData} from '../../utils';
 
 const Location = ({navigation}: any) => {
-  console.log('location');
-
   const {location, distance} = useAppSelector(
     (state: RootState) => state.dataLocation
   );

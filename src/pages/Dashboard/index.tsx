@@ -266,6 +266,7 @@ const Dashboard = ({navigation}: any) => {
                 timestamp: position.timestamp,
                 pekerjaan: res?.pekerjaan,
                 role: res?.role,
+                photo: res?.photo,
               });
               BackgroundFetch.finish(taskId);
             },

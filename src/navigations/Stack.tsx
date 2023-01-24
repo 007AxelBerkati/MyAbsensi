@@ -11,6 +11,7 @@ import {
   Login,
   Riwayat,
   SplashScreen,
+  TrackingAdmin,
 } from '../pages';
 import MainApp from './MainApp';
 
@@ -34,6 +35,7 @@ function Router() {
       <Stack.Screen name="DetailRiwayat" component={DetailRiwayat} />
       <Stack.Screen name="DetailNotif" component={DetailNotif} />
       <Stack.Screen name="Location" component={Location} />
+      <Stack.Screen name="TrackingAdmin" component={TrackingAdmin} />
     </Stack.Navigator>
   );
 }

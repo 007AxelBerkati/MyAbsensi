@@ -5,7 +5,6 @@ import {
   GET_LOCATION_LOADING,
   GET_LOCATION_SUCCESS,
   SET_DISTANCE,
-  SET_LOCATION,
 } from '../types';
 
 export const getLocationSuccess = (location: any) => ({

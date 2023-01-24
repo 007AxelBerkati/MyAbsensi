@@ -7,6 +7,7 @@ import {
   CardDashboard,
   CardNotif,
   CardProfile,
+  CustomButton,
   Loading,
 } from '../../../components';
 import useUser from '../../../hooks/useUser';
@@ -133,6 +134,14 @@ const DashboardAdmin = ({navigation}: any) => {
           })}
         </View>
       </ScrollView>
+      <CustomButton
+        icon="google-maps"
+        type="floating-btn"
+        color={COLORS.secondary}
+        onPress={() => {
+          navigation.navigate('TrackingAdmin');
+        }}
+      />
     </View>
   );
 };
