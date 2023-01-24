@@ -39,8 +39,6 @@ const AllUser = ({navigation, route}: any) => {
   }, [dispatch, searchQuery]);
 
   const createChatList = (data: any) => {
-    console.log('data test', data);
-
     databaseRef()
       .ref(`/chatlist/${profile.uid}/${data.uid}`)
       .once('value')
@@ -54,8 +52,6 @@ const AllUser = ({navigation, route}: any) => {
             photo: profile.photo,
             lastMsg: '',
           };
-
-          console.log('myData', myData);
 
           databaseRef()
             .ref(`/chatlist/${data.uid}/${profile.uid}`)
