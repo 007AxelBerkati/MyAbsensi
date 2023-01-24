@@ -41,6 +41,11 @@ import {
 } from '../../reduxx';
 import {COLORS, FONTS, RADIUS, SIZE, windowHeight} from '../../theme';
 import PermintaanIzin from './PermintaanIzin';
+import {
+  isMockingLocation,
+  MockLocationDetectorError,
+  MockLocationDetectorErrorCode,
+} from 'react-native-turbo-mock-location-detector';
 
 const Dashboard = ({navigation}: any) => {
   const dispatch = useAppDispatch();
@@ -60,73 +65,103 @@ const Dashboard = ({navigation}: any) => {
   );
 
   const attendance = () => {
-    if (presence === 'alreadyPresence') {
-      showInfo('Anda sudah melakukan absen Hari ini', () => {});
-    } else {
-      if (
-        data.address &&
-        data.birth_date &&
-        data.phone_number &&
-        data.tempat_lahir
-      ) {
-        TouchID.isSupported(optionalConfigObject).then(biometryType => {
-          if (biometryType === 'FaceID') {
-            Alert.alert('This device supports FaceID');
+    isMockingLocation()
+      .then(({isLocationMocked}) => {
+        if (isLocationMocked) {
+          Alert.alert(
+            'Pemalsuan Lokasi Terdeteksi',
+            'Tolong matikan fitur pemalsuan lokasi',
+            [
+              {
+                text: 'OK',
+              },
+            ],
+            {cancelable: false}
+          );
+        } else {
+          if (presence === 'alreadyPresence') {
+            showInfo('Anda sudah melakukan absen Hari ini', () => {});
           } else {
-            TouchID.authenticate('Lakukan Absen', optionalConfigObject)
-              .then(() => {
-                const lat = location.latitude;
-                const long = location.longitude;
-                fetch(
-                  `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${long}`
-                )
-                  .then(response => response.json())
-                  .then(async dataLocation => {
-                    const dataAbsen = {
-                      address: dataLocation.display_name,
-                      date: moment().format(),
-                      distance: distance,
-                      in_area: distance <= 0.1 ? true : false,
-                      latitude: location.latitude,
-                      longitude: location.longitude,
-                    };
+            if (
+              data.address &&
+              data.birth_date &&
+              data.phone_number &&
+              data.tempat_lahir
+            ) {
+              TouchID.isSupported(optionalConfigObject).then(biometryType => {
+                if (biometryType === 'FaceID') {
+                  Alert.alert('This device supports FaceID');
+                } else {
+                  TouchID.authenticate('Lakukan Absen', optionalConfigObject)
+                    .then(() => {
+                      const lat = location.latitude;
+                      const long = location.longitude;
+                      fetch(
+                        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${long}`
+                      )
+                        .then(response => response.json())
+                        .then(async dataLocation => {
+                          const dataAbsen = {
+                            address: dataLocation.display_name,
+                            date: moment().format(),
+                            distance: distance,
+                            in_area: distance <= 0.1 ? true : false,
+                            latitude: location.latitude,
+                            longitude: location.longitude,
+                          };
 
-                    const dataAkun = {
-                      fullname: data.fullname,
-                      email: data.email,
-                      birth_date: data.birth_date,
-                      phone_number: data.phone_number,
-                      tempat_lahir: data.tempat_lahir,
-                      address: data.address,
-                      photo: data.photo || null,
-                      role: data.role,
-                      pekerjaan: data.pekerjaan,
-                    };
+                          const dataAkun = {
+                            fullname: data.fullname,
+                            email: data.email,
+                            birth_date: data.birth_date,
+                            phone_number: data.phone_number,
+                            tempat_lahir: data.tempat_lahir,
+                            address: data.address,
+                            photo: data.photo || null,
+                            role: data.role,
+                            pekerjaan: data.pekerjaan,
+                          };
 
-                    await dispatch(absen(data.uid, dataAbsen, dataAkun));
-                    setTriggerPresence(!triggerPresence);
-                  });
-              })
-              .catch((error: any) => {
-                showError(error.message);
+                          await dispatch(absen(data.uid, dataAbsen, dataAkun));
+                          setTriggerPresence(!triggerPresence);
+                        });
+                    })
+                    .catch((error: any) => {
+                      showError(error.message);
+                    });
+                }
               });
+            } else {
+              Alert.alert(
+                'Data profile tidak lengkap',
+                'Tolong lengkapi data profile anda terlebih dahulu',
+                [
+                  {text: 'Tidak', style: 'cancel'},
+                  {
+                    text: 'Update Profile',
+                    onPress: () => navigation.navigate('EditProfile'),
+                  },
+                ],
+                {cancelable: false}
+              );
+            }
           }
-        });
-      } else {
-        Alert.alert(
-          'Data profile tidak lengkap',
-          'Tolong lengkapi data profile anda terlebih dahulu',
-          [
-            {text: 'Tidak', style: 'cancel'},
-            {
-              text: 'Update Profile',
-              onPress: () => navigation.navigate('EditProfile'),
-            },
-          ],
-          {cancelable: false}
-        );
-      }
-    }
+        }
+      })
+      .catch((error: MockLocationDetectorError) => {
+        switch (error.code) {
+          case MockLocationDetectorErrorCode.GPSNotEnabled: {
+            Alert.alert('GPS Not Enabled', 'Please enable GPS');
+            return;
+          }
+          case MockLocationDetectorErrorCode.CantDetermine: {
+            Alert.alert(
+              'Can not determine if mock location is enabled',
+              'Please try again'
+            );
+          }
+        }
+      });
   };
 
   const renderInfoAttendance = useCallback(() => {
