@@ -1,32 +1,25 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  ImageBackground,
-  ScrollView,
-  Alert,
-} from 'react-native';
-import React, {useEffect} from 'react';
-import {BcDashAdmin, ILNullPhoto} from '../../../assets';
+import moment from 'moment';
+import React, {useEffect, useState} from 'react';
+import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {RefreshControl} from 'react-native-gesture-handler';
+import {ILNullPhoto} from '../../../assets';
 import {
   CardDashboard,
   CardNotif,
   CardProfile,
   Loading,
 } from '../../../components';
-import {COLORS, FONTS, SIZE} from '../../../theme';
+import useUser from '../../../hooks/useUser';
+import {getData} from '../../../plugins';
 import {
   getAkun,
-  getNotif,
   getPresenceAllUser,
   getRequest,
   RootState,
   useAppDispatch,
   useAppSelector,
 } from '../../../reduxx';
-import {getData, usersRef} from '../../../plugins';
-import moment from 'moment';
-import useUser from '../../../hooks/useUser';
+import {COLORS, FONTS, SIZE} from '../../../theme';
 
 const DashboardAdmin = ({navigation}: any) => {
   const dispatch = useAppDispatch();
@@ -36,6 +29,8 @@ const DashboardAdmin = ({navigation}: any) => {
   );
   const {totalUser} = useUser();
 
+  const [refreshing, setRefreshing] = useState(false);
+
   useEffect(() => {
     getData('user').then((res: any) => {
       dispatch(getAkun(res.uid));
@@ -44,15 +39,25 @@ const DashboardAdmin = ({navigation}: any) => {
     });
   }, []);
 
-  useEffect(() => {}, []);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getData('user').then((res: any) => {
+      dispatch(getAkun(res.uid));
+      dispatch(getRequest(res.uid));
+      dispatch(getPresenceAllUser());
+    });
+    setRefreshing(false);
+  }, []);
 
-  console.log('allPresence', allPresence);
-
-  if (loading) return <Loading />;
+  if (loading) return <Loading type="full" />;
 
   return (
     <View style={styles.pages}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <CardProfile
           name={data?.fullname}
           title="Selamat Datang, "
