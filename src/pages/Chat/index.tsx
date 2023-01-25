@@ -53,7 +53,7 @@ const Chat = ({navigation}: any) => {
   const emptyComponent = () => (
     <View style={styles.empty}>
       <Image source={PesanNull} style={styles.image} />
-      <Text style={styles.emptyText}>Notifikasi Anda Masih Kosong </Text>
+      <Text style={styles.emptyText}>Pesan Masih Kosong </Text>
     </View>
   );
 

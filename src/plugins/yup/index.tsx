@@ -23,7 +23,7 @@ export const updateProfileSchema = Yup.object().shape({
   phone_number: Yup.string()
     .trim()
     .min(9, 'No Hp Terlalu Pendek')
-    .max(11, 'No Hp Terlalu Panjang')
+    .max(12, 'No Hp Terlalu Panjang')
     .required('Silahkan Isi Nomor Handphone Anda'),
   tempat_lahir: Yup.string()
     .min(2, 'Too Short!')
