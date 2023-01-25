@@ -10,6 +10,7 @@ import {
   ChatReducer,
   LocationReducer,
   PresenceReducer,
+  SettingReducer,
 } from '../reducer';
 
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
@@ -32,6 +33,7 @@ const rootReducer = {
   dataRequest: RequestReducer,
   dataLocation: LocationReducer,
   dataPresence: PresenceReducer,
+  dataSetting: SettingReducer,
 };
 
 const rootReducers = combineReducers(rootReducer);

@@ -24,7 +24,7 @@ const Notif = ({navigation}: any) => {
   const {dataNotif, loading} = useAppSelector(
     (state: RootState) => state.dataNotif
   );
-  const {data} = useAppSelector((state: RootState) => state.dataAuth);
+  const {dataLogin} = useAppSelector((state: RootState) => state.dataAuth);
 
   const onClickCardNotif = useCallback((item: any) => {
     if (item.isRead === false) {
@@ -42,7 +42,7 @@ const Notif = ({navigation}: any) => {
   );
 
   useEffect(() => {
-    dispatch(getNotif(data?.uid));
+    dispatch(getNotif(dataLogin?.uid));
   }, []);
 
   const renderItem = ({item}: any) =>
@@ -52,7 +52,7 @@ const Notif = ({navigation}: any) => {
       <CardNotif
         request={item?.jenis_izin}
         status={item?.status}
-        photo={data?.photo ? {uri: data?.photo} : ILNullPhoto}
+        photo={dataLogin?.photo ? {uri: dataLogin?.photo} : ILNullPhoto}
         onPress={() => onClickCardNotif(item)}
         read={item?.isRead}
         time={moment(item?.createdAt).format('DD MMMM YYYY, HH:mm')}

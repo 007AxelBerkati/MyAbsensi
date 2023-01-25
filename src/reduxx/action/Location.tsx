@@ -27,7 +27,7 @@ export const setDistance = (distance: any) => ({
   distance,
 });
 
-export const getLocation = () => async (dispatch: any) => {
+export const getLocation = (lat: any, long: any) => async (dispatch: any) => {
   dispatch(getLocationLoading(true));
   Geolocation.getCurrentPosition(
     position => {
@@ -39,8 +39,8 @@ export const getLocation = () => async (dispatch: any) => {
           haversineDistance(
             {latitude, longitude},
             {
-              latitude: dummyData.locationSchool.latitude,
-              longitude: dummyData.locationSchool.longitude,
+              latitude: lat,
+              longitude: long,
             },
             true
           )

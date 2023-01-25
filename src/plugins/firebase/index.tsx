@@ -24,3 +24,5 @@ export const AllPresenceRef = () => firestore().collection('presence');
 
 export const trackingLocationRef = () =>
   firestore().collection('trackingLocation');
+
+export const settingRef = () => firestore().collection('setting');

@@ -39,6 +39,8 @@ import {
 import {
   absen,
   getAkun,
+  getDataSetting,
+  getLocation,
   getNotif,
   getPresence,
   getRequest,
@@ -55,6 +57,8 @@ const Dashboard = ({navigation}: any) => {
   const {isRequestPending, loading} = useAppSelector(
     (state: RootState) => state.dataRequest
   );
+
+  const {dataSetting} = useAppSelector((state: RootState) => state.dataSetting);
 
   const [triggerPresence, setTriggerPresence] = useState(false);
 
@@ -305,6 +309,7 @@ const Dashboard = ({navigation}: any) => {
       dispatch(getAkun(res.uid));
       dispatch(getRequest(res.uid));
       dispatch(getNotif(res.uid));
+      dispatch(getDataSetting());
       startTask();
     });
   }, []);
@@ -315,12 +320,14 @@ const Dashboard = ({navigation}: any) => {
     });
   }, [triggerPresence]);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     dispatch(getLocation());
-  //   }, 3000);
-  //   return () => clearInterval(interval);
-  // }, [location]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      dispatch(
+        getLocation(dataSetting?.latitudeSekolah, dataSetting?.longitudeSekolah)
+      );
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [location]);
 
   if (loading) {
     return <Loading type="full" />;
@@ -360,7 +367,12 @@ const Dashboard = ({navigation}: any) => {
               <CardDashboard
                 type="maps"
                 text="Buka Maps"
-                onPress={() => navigation.navigate('Location')}
+                onPress={() =>
+                  navigation.navigate('Location', {
+                    latitude: dataSetting?.latitudeSekolah,
+                    longitude: dataSetting?.longitudeSekolah,
+                  })
+                }
               />
             </View>
             <Gap height={20} />

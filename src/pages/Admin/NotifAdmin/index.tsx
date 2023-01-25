@@ -93,6 +93,7 @@ const Notif = ({navigation}: any) => {
                   const dataAbsen = {
                     date: moment().format(''),
                     status: item.jenis_izin,
+                    photoBukti: item.photo,
                   };
 
                   dispatch(absen(item.id_user, dataAbsen, {}));

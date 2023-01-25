@@ -6,3 +6,4 @@ export * from './RequestReducer';
 export * from './NotificationReducer';
 export * from './LocationReducer';
 export * from './PresenceReducer';
+export * from './SettingReducer';

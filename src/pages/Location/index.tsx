@@ -6,7 +6,8 @@ import {RootState, useAppSelector} from '../../reduxx';
 import {COLORS, FONTS, SIZE, windowWidth} from '../../theme';
 import {dummyData} from '../../utils';
 
-const Location = ({navigation}: any) => {
+const Location = ({navigation, route}: any) => {
+  const {latitude, longitude} = route.params;
   const {location, distance} = useAppSelector(
     (state: RootState) => state.dataLocation
   );
@@ -65,8 +66,8 @@ const Location = ({navigation}: any) => {
         showsUserLocation>
         <Circle
           center={{
-            latitude: dummyData.locationSchool.latitude,
-            longitude: dummyData.locationSchool.longitude,
+            latitude: latitude,
+            longitude: longitude,
           }}
           radius={100}
           strokeWidth={1}
