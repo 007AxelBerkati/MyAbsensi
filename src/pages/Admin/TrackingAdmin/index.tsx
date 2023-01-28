@@ -1,18 +1,28 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
-import {Headers} from '../../../components';
+import moment from 'moment';
+import React, {useEffect, useRef} from 'react';
+import {StyleSheet, Text, View, Image} from 'react-native';
 import MapView, {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import {RootState, useAppSelector} from '../../../reduxx';
-import {COLORS, FONTS, windowWidth} from '../../../theme';
-import useTrackingLocation from '../../../hooks/useTrackingLocation';
-import {dummyData} from '../../../utils';
-import {Svg, Image as ImageSvg} from 'react-native-svg';
+import {Image as ImageSvg, Svg} from 'react-native-svg';
 import {ILNullPhoto} from '../../../assets';
+import {Headers} from '../../../components';
+import useTrackingLocation from '../../../hooks/useTrackingLocation';
+import {
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+  getLocation,
+} from '../../../reduxx';
+import {COLORS, FONTS, windowWidth} from '../../../theme';
 
 const TrackingAdmin = ({navigation}: any) => {
   const {dataTrackingLocation} = useTrackingLocation();
-
-  let myMap: any;
+  const dispatch = useAppDispatch();
+  const {location} = useAppSelector((state: RootState) => state.dataLocation);
+  const mapRef = useRef(null);
+  useEffect(() => {
+    dispatch(getLocation(location.latitude, location.longitude));
+  }, []);
+  // let myMap: any;
 
   return (
     <View style={styles.pages}>
@@ -24,12 +34,24 @@ const TrackingAdmin = ({navigation}: any) => {
         />
       </View>
       <MapView
-        ref={ref => {
-          myMap = ref;
-        }}
+        ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={styles.map}
-        initialRegion={dummyData.locationSchool}
+        initialRegion={
+          location
+            ? {
+                latitude: location.latitude,
+                longitude: location.longitude,
+                latitudeDelta: 0.015,
+                longitudeDelta: 0.0121,
+              }
+            : {
+                latitude: -6.175392,
+                longitude: 106.824964,
+                latitudeDelta: 0.015,
+                longitudeDelta: 0.0121,
+              }
+        }
         showsUserLocation>
         {dataTrackingLocation?.map((item: any) => {
           return (
@@ -41,8 +63,27 @@ const TrackingAdmin = ({navigation}: any) => {
               key={item.id}
               title={item.fullname}
               description={item.pekerjaan}
+              // onPress={() => {
+              //   myMap.fitToCoordinates(
+              //     [
+              //       {
+              //         latitude: item.latitude,
+              //         longitude: item.longitude,
+              //       },
+              //     ],
+              //     {
+              //       edgePadding: {
+              //         top: 50,
+              //         right: 50,
+              //         bottom: 50,
+              //         left: 50,
+              //       },
+              //       animated: true,
+              //     }
+              //   );
+              // }}>
               onPress={() => {
-                myMap.fitToCoordinates(
+                mapRef.current.fitToCoordinates(
                   [
                     {
                       latitude: item.latitude,
@@ -65,14 +106,25 @@ const TrackingAdmin = ({navigation}: any) => {
                   <View style={styles.bubble}>
                     <Text style={styles.title}>{item.fullname}</Text>
                     <Text style={styles.description}>{item.pekerjaan}</Text>
-                    <Svg width={125} height={120}>
-                      <ImageSvg
-                        width="100%"
-                        height="100%"
-                        preserveAspectRatio="xMidYmid slice"
-                        href={item?.photo ? {uri: item.photo} : ILNullPhoto}
-                      />
-                    </Svg>
+                    <Text style={styles.description}>
+                      {moment(item.date).format('DD MMMM YYYY, HH:mm')}
+                    </Text>
+                    <View
+                      style={{
+                        width: 80,
+                        height: 80,
+                        borderRadius: 20,
+                        alignSelf: 'center',
+                      }}>
+                      <Svg style={{overflow: 'hidden'}}>
+                        <ImageSvg
+                          width="100%"
+                          height="100%"
+                          preserveAspectRatio="xMidYmid slice"
+                          href={item?.photo ? {uri: item.photo} : ILNullPhoto}
+                        />
+                      </Svg>
+                    </View>
                   </View>
                   <View style={styles.arrowBorder} />
                   <View style={styles.arrow} />
@@ -105,7 +157,10 @@ const styles = StyleSheet.create({
     borderColor: COLORS.outlineInput,
     borderWidth: 0.5,
     padding: 15,
-    width: 150,
+    minWidth: 150,
+    maxWidth: 300,
+    // width: 150,
+    alignItems: 'center',
   },
 
   arrow: {
@@ -130,12 +185,13 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.primary[600],
     fontSize: 16,
     color: COLORS.text.primary,
+    textTransform: 'uppercase',
   },
 
   description: {
     fontFamily: FONTS.primary[400],
     fontSize: 12,
     color: COLORS.text.subtitle,
-    marginBottom: 5,
+    // marginBottom: 5,
   },
 });

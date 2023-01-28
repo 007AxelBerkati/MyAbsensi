@@ -225,7 +225,7 @@ const Dashboard = ({navigation}: any) => {
     return renderTitlePresence();
   }, [presence]);
 
-  // bottomSheet
+  // code to handle bottom sheet for dashboard
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ['1%', '80%'], []);
 
@@ -242,6 +242,7 @@ const Dashboard = ({navigation}: any) => {
     console.log('handleSheetChanges', index);
   }, []);
 
+  // to get current time for realtime clock to show in UI dashboard every second
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrTime(moment());
@@ -249,9 +250,11 @@ const Dashboard = ({navigation}: any) => {
     return () => clearInterval(interval);
   }, []);
 
+  // function to wait
   const sleep = (time: any) =>
     new Promise((resolve: any) => setTimeout(() => resolve(), time));
 
+  // function to get current location of user and update it in firestore (realtime location tracking, every 15 minutes)
   const trackLocation = async () => {
     await new Promise(async () => {
       for (let i = 1; BackgroundService.isRunning(); i++) {
@@ -287,9 +290,9 @@ const Dashboard = ({navigation}: any) => {
     });
   };
   const options = {
-    taskName: 'Example',
-    taskTitle: 'ExampleTask title',
-    taskDesc: 'ExampleTask description',
+    taskName: 'Live Tracking Location',
+    taskTitle: 'Live Tracking Location',
+    taskDesc: 'Live Tracking Location',
     taskIcon: {
       name: 'ic_launcher',
       type: 'mipmap',
@@ -304,6 +307,7 @@ const Dashboard = ({navigation}: any) => {
     await BackgroundService.start(trackLocation, options);
   };
 
+  // to get data user, request, notif, and setting in first time render in dashboard
   useEffect(() => {
     getData('user').then((res: any) => {
       dispatch(getAkun(res.uid));
@@ -314,12 +318,14 @@ const Dashboard = ({navigation}: any) => {
     });
   }, []);
 
+  // to get data presence
   useEffect(() => {
     getData('user').then((res: any) => {
       dispatch(getPresence(res.uid));
     });
   }, [triggerPresence]);
 
+  // to get distance and data location
   useEffect(() => {
     const interval = setInterval(() => {
       dispatch(
@@ -332,6 +338,21 @@ const Dashboard = ({navigation}: any) => {
   if (loading) {
     return <Loading type="full" />;
   }
+
+  const checkBatasJamMasuk = () => {
+    const mulaiJamMasuk = moment(dataSetting?.mulaiMasuk, 'HH:mm');
+    const mulaiJamPulang = moment(dataSetting?.mulaiPulang, 'HH:mm');
+    const batasJamMasuk = moment(dataSetting?.batasJamMasuk, 'HH:mm');
+    const batasJamPulang = moment(dataSetting?.batasJamPulang, 'HH:mm');
+    const currTime = moment();
+    if (
+      currTime.isBetween(mulaiJamMasuk, batasJamMasuk) ||
+      currTime.isBetween(mulaiJamPulang, batasJamPulang)
+    ) {
+      return true;
+    }
+    return false;
+  };
 
   return (
     <GestureHandlerRootView style={styles.page}>

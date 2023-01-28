@@ -11,7 +11,7 @@ import {
   Loading,
 } from '../../../components';
 import useUser from '../../../hooks/useUser';
-import {getData} from '../../../plugins';
+import {databaseRef, getData} from '../../../plugins';
 import {
   getAkun,
   getPresenceAllUser,
@@ -21,6 +21,7 @@ import {
   useAppSelector,
 } from '../../../reduxx';
 import {COLORS, FONTS, SIZE} from '../../../theme';
+import uuid from 'react-native-uuid';
 
 const DashboardAdmin = ({navigation}: any) => {
   const dispatch = useAppDispatch();
@@ -49,6 +50,54 @@ const DashboardAdmin = ({navigation}: any) => {
     });
     setRefreshing(false);
   }, []);
+
+  const createChatList = (anotherUser: any) => {
+    databaseRef()
+      .ref(`/chatlist/${data.uid}/${anotherUser.uid}`)
+      .once('value')
+      .then(snapshot => {
+        if (snapshot.val() == null) {
+          const roomId = uuid.v4();
+          const myData = {
+            roomId,
+            uid: data.uid,
+            fullname: data.fullname,
+            photo: data.photo,
+            lastMsg: '',
+          };
+
+          databaseRef()
+            .ref(`/chatlist/${anotherUser.uid}/${data.uid}`)
+            .update(myData);
+
+          anotherUser.lastMsg = '';
+          anotherUser.roomId = roomId;
+          databaseRef()
+            .ref(`/chatlist/${data.uid}/${anotherUser.uid}`)
+            .update(anotherUser);
+
+          navigation.navigate('Chatting', {receiverData: anotherUser, data});
+        } else {
+          databaseRef()
+            .ref(`/chatlist/${data.uid}/${anotherUser.uid}`)
+            .update({
+              ...snapshot.val(),
+              photo: anotherUser.photo,
+              fullname: anotherUser.fullname,
+              role: anotherUser.role,
+            });
+          navigation.navigate('Chatting', {
+            receiverData: {
+              ...snapshot.val(),
+              photo: anotherUser.photo,
+              fullname: anotherUser.fullname,
+              role: anotherUser.role,
+            },
+            profile: data,
+          });
+        }
+      });
+  };
 
   if (loading) return <Loading type="full" />;
 
@@ -97,7 +146,18 @@ const DashboardAdmin = ({navigation}: any) => {
                     ? navigation.navigate('DetailRiwayat', {
                         detailPresence: item,
                       })
-                    : null
+                    : Alert.alert('Perhatian', 'User Belum Melakukan Absen', [
+                        {
+                          text: 'OK',
+                          onPress: () => {},
+                        },
+                        {
+                          text: 'CHAT USER',
+                          onPress: () => {
+                            createChatList(item);
+                          },
+                        },
+                      ])
                 }
               />
             );
@@ -127,7 +187,18 @@ const DashboardAdmin = ({navigation}: any) => {
                     ? navigation.navigate('DetailRiwayat', {
                         detailPresence: item,
                       })
-                    : Alert.alert('Perhatian', 'Belum ada data absen pulang')
+                    : Alert.alert('Perhatian', 'User Belum Melakukan Absen', [
+                        {
+                          text: 'OK',
+                          onPress: () => {},
+                        },
+                        {
+                          text: 'CHAT USER',
+                          onPress: () => {
+                            createChatList(item);
+                          },
+                        },
+                      ])
                 }
               />
             );
