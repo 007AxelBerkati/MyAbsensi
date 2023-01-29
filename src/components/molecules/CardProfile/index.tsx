@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: FONTS.primary[800],
     fontSize: SIZE.font16,
+    textTransform: 'uppercase',
     color: COLORS.text.primary,
   },
 });

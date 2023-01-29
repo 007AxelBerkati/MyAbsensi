@@ -83,7 +83,7 @@ const Notif = ({navigation}: any) => {
                       {
                         ...item,
                         status: 'accepted',
-                        isRead: true,
+                        isRead: false,
                         updatedAt: moment().format(''),
                       },
                       item.uid
@@ -123,12 +123,13 @@ const Notif = ({navigation}: any) => {
                       {
                         ...item,
                         status: 'declined',
-                        isRead: true,
+                        isRead: false,
                         updatedAt: moment().format(''),
                       },
                       item.uid
                     )
                   );
+                  dispatch(updateRequest(item.id_user, {isRead: true}));
                   dispatch(deleteRequest(item?.id_user));
                   dispatch(getRequest(null));
                 },

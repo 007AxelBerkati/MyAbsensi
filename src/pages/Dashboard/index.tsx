@@ -5,6 +5,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Alert,
   ImageBackground,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -57,6 +58,8 @@ const Dashboard = ({navigation}: any) => {
   const {isRequestPending, loading} = useAppSelector(
     (state: RootState) => state.dataRequest
   );
+
+  const [refreshing, setRefreshing] = useState(false);
 
   const {dataSetting} = useAppSelector((state: RootState) => state.dataSetting);
 
@@ -357,7 +360,21 @@ const Dashboard = ({navigation}: any) => {
   return (
     <GestureHandlerRootView style={styles.page}>
       <ImageBackground source={Bg} style={{flex: 1}}>
-        <ScrollView style={{paddingHorizontal: 16}}>
+        <ScrollView
+          style={{paddingHorizontal: 16}}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => {
+                getData('user').then((res: any) => {
+                  dispatch(getAkun(res.uid));
+                  dispatch(getRequest(res.uid));
+                  dispatch(getNotif(res.uid));
+                  dispatch(getDataSetting());
+                });
+              }}
+            />
+          }>
           <CardProfile
             name={data?.fullname}
             title="Selamat Datang, "
@@ -375,7 +392,11 @@ const Dashboard = ({navigation}: any) => {
             <View style={styles.cardDashboard}>
               <CardDashboard
                 title="Jarak Sekolah"
-                text={distance.toFixed(2).toString() + ' KM'}
+                text={
+                  isNaN(distance)
+                    ? 'wait'
+                    : distance.toFixed(2).toString() + ' KM'
+                }
                 onPress={() =>
                   showInfo(
                     distance <= 0.1

@@ -25,8 +25,9 @@ const persistConfig = {
     'dataPresence',
     'dataRequest',
     'dataChat',
-    'dataLocation',
     'dataSetting',
+    'dataNotif',
+    'dataLocation',
   ],
 
   storage: AsyncStorage,

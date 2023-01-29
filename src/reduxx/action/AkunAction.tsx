@@ -1,4 +1,4 @@
-import {databaseRef, showError, showSuccess} from '../../plugins';
+import {databaseRef, showError, showSuccess, usersRef} from '../../plugins';
 import {
   SET_AKUN_ERROR,
   SET_AKUN_LOADING,
@@ -75,6 +75,16 @@ export const updateAkun =
                 dispatch(setUpdateAkunSuccess(true));
                 showSuccess('Berhasil update akun');
                 navigation.goBack();
+              })
+              .then(() => {
+                usersRef()
+                  .doc(id)
+                  .get()
+                  .then((res: any) => {
+                    if (res.exists) {
+                      usersRef().doc(id).update(data);
+                    }
+                  });
               });
           } else {
             databaseRef()
@@ -82,7 +92,6 @@ export const updateAkun =
               .update(data)
               .then(() => {
                 dispatch(setUpdateAkunSuccess(true));
-                showSuccess('Berhasil update akun');
                 navigation.goBack();
               });
           }
