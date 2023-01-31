@@ -25,7 +25,7 @@ import uuid from 'react-native-uuid';
 
 const DashboardAdmin = ({navigation}: any) => {
   const dispatch = useAppDispatch();
-  const {data} = useAppSelector((state: RootState) => state.dataAkun);
+  const {dataAkun} = useAppSelector((state: RootState) => state.dataAkun);
   const {allPresence, loading, total} = useAppSelector(
     (state: RootState) => state.dataPresence
   );
@@ -53,33 +53,36 @@ const DashboardAdmin = ({navigation}: any) => {
 
   const createChatList = (anotherUser: any) => {
     databaseRef()
-      .ref(`/chatlist/${data.uid}/${anotherUser.uid}`)
+      .ref(`/chatlist/${dataAkun.uid}/${anotherUser.uid}`)
       .once('value')
       .then(snapshot => {
         if (snapshot.val() == null) {
           const roomId = uuid.v4();
           const myData = {
             roomId,
-            uid: data.uid,
-            fullname: data.fullname,
-            photo: data.photo,
+            uid: dataAkun.uid,
+            fullname: dataAkun.fullname,
+            photo: dataAkun.photo,
             lastMsg: '',
           };
 
           databaseRef()
-            .ref(`/chatlist/${anotherUser.uid}/${data.uid}`)
+            .ref(`/chatlist/${anotherUser.uid}/${dataAkun.uid}`)
             .update(myData);
 
           anotherUser.lastMsg = '';
           anotherUser.roomId = roomId;
           databaseRef()
-            .ref(`/chatlist/${data.uid}/${anotherUser.uid}`)
+            .ref(`/chatlist/${dataAkun.uid}/${anotherUser.uid}`)
             .update(anotherUser);
 
-          navigation.navigate('Chatting', {receiverData: anotherUser, data});
+          navigation.navigate('Chatting', {
+            receiverData: anotherUser,
+            dataAkun,
+          });
         } else {
           databaseRef()
-            .ref(`/chatlist/${data.uid}/${anotherUser.uid}`)
+            .ref(`/chatlist/${dataAkun.uid}/${anotherUser.uid}`)
             .update({
               ...snapshot.val(),
               photo: anotherUser.photo,
@@ -93,7 +96,7 @@ const DashboardAdmin = ({navigation}: any) => {
               fullname: anotherUser.fullname,
               role: anotherUser.role,
             },
-            profile: data,
+            profile: dataAkun,
           });
         }
       });
@@ -109,9 +112,9 @@ const DashboardAdmin = ({navigation}: any) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
         <CardProfile
-          name={data?.fullname}
+          name={dataAkun?.fullname}
           title="Selamat Datang, "
-          photo={data?.photo ? {uri: data?.photo} : ILNullPhoto}
+          photo={dataAkun?.photo ? {uri: dataAkun?.photo} : ILNullPhoto}
         />
         <CardDashboard
           type="admin"

@@ -28,10 +28,8 @@ const Notif = ({navigation}: any) => {
   const {dataRequest, loading} = useAppSelector(
     (state: RootState) => state.dataRequest
   );
-  const {location, distance} = useAppSelector(
-    (state: RootState) => state.dataLocation
-  );
-  const {data} = useAppSelector((state: RootState) => state.dataAkun);
+
+  const {dataAkun} = useAppSelector((state: RootState) => state.dataAkun);
 
   const onClickCardNotif = (item: any) => {
     if (item.isRead === false) {
@@ -63,7 +61,7 @@ const Notif = ({navigation}: any) => {
         onPress={() => onClickCardNotif(item)}
         read={item?.isRead}
         time={moment(item?.createdAt).format('DD MMMM YYYY, HH:mm')}
-        role={data?.role}
+        role={dataAkun?.role}
         onPressTerima={() => {
           Alert.alert(
             'Terima',

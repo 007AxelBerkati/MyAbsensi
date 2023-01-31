@@ -10,13 +10,13 @@ import {
 type initialStateProps = {
   loading: boolean;
   error: any;
-  data: any;
+  dataAkun: any;
 };
 
 const initialState: initialStateProps = {
   loading: false,
   error: null,
-  data: null,
+  dataAkun: null,
 };
 
 export function AkunReducer(
@@ -38,7 +38,7 @@ export function AkunReducer(
     case SET_AKUN_SUCCESS:
       return {
         ...state,
-        data: action.success,
+        dataAkun: action.success,
         loading: false,
       };
 
@@ -50,13 +50,11 @@ export function AkunReducer(
     case SET_UPDATE_AKUN_ERROR:
       return {
         ...state,
-        error: action.error,
         loading: false,
       };
     case SET_UPDATE_AKUN_SUCCESS:
       return {
         ...state,
-        data: {...state.data, ...action.success},
         loading: false,
       };
 

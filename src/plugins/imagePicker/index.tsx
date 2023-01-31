@@ -4,9 +4,10 @@ import {showError} from '../showMessage';
 export const getImage = (setFieldValue: any) => {
   launchImageLibrary(
     {
-      quality: 1,
-      includeBase64: true,
       mediaType: 'photo',
+      includeBase64: true,
+      maxHeight: 200,
+      maxWidth: 200,
     },
     (response: any) => {
       if (response.didCancel || response.errorCode) {

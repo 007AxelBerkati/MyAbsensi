@@ -33,7 +33,9 @@ import BackgroundService from 'react-native-background-actions';
 function AkunScreen({navigation}: any) {
   const dispatch = useAppDispatch();
 
-  const {loading, data} = useAppSelector((state: RootState) => state.dataAkun);
+  const {loading, dataAkun} = useAppSelector(
+    (state: RootState) => state.dataAkun
+  );
   useEffect(() => {
     getData('user').then((res: any) => {
       dispatch(getAkun(res.uid));
@@ -53,7 +55,11 @@ function AkunScreen({navigation}: any) {
         </Placeholder>
       );
     }
-    return <Profile source={data?.photo ? {uri: data?.photo} : ILNullPhoto} />;
+    return (
+      <Profile
+        source={dataAkun?.photo ? {uri: dataAkun?.photo} : ILNullPhoto}
+      />
+    );
   };
 
   return (

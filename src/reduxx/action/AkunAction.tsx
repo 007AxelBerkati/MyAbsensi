@@ -23,14 +23,12 @@ export const setAkunSuccess = (success: any) => ({
   success,
 });
 
-export const setUpdateAkunSuccess = (success: any) => ({
+export const setUpdateAkunSuccess = () => ({
   type: SET_UPDATE_AKUN_SUCCESS,
-  success,
 });
 
-export const setUpdateAkunError = (error: any) => ({
+export const setUpdateAkunError = () => ({
   type: SET_UPDATE_AKUN_ERROR,
-  error,
 });
 
 export const setUpdateAkunLoading = (loading: any) => ({
@@ -64,40 +62,30 @@ export const updateAkun =
   (id: any, data: any, navigation: any) => async (dispatch: any) => {
     dispatch(setUpdateAkunLoading(true));
     try {
-      databaseRef()
+      await databaseRef()
         .ref(`users/${id}`)
-        .on('value', snapshot => {
+        .once('value', async snapshot => {
           if (snapshot.val() !== null) {
-            databaseRef()
+            await databaseRef()
               .ref(`users/${id}`)
               .update(data)
-              .then(() => {
-                dispatch(setUpdateAkunSuccess(true));
-                showSuccess('Berhasil update akun');
-                navigation.goBack();
-              })
-              .then(() => {
-                usersRef()
+              .then(async () => {
+                await usersRef()
                   .doc(id)
                   .get()
-                  .then((res: any) => {
+                  .then(async (res: any) => {
                     if (res.exists) {
-                      usersRef().doc(id).update(data);
+                      await usersRef().doc(id).update(data);
                     }
+                    dispatch(setUpdateAkunSuccess());
+                    navigation.goBack();
+                    showSuccess('Berhasil update akun');
                   });
-              });
-          } else {
-            databaseRef()
-              .ref(`admins/${id}`)
-              .update(data)
-              .then(() => {
-                dispatch(setUpdateAkunSuccess(true));
-                navigation.goBack();
               });
           }
         });
     } catch (error: any) {
-      dispatch(setUpdateAkunError(error));
-      showError('gagal');
+      dispatch(setUpdateAkunError());
+      showError('Gagal update akun');
     }
   };

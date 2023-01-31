@@ -68,7 +68,7 @@ const Dashboard = ({navigation}: any) => {
   const {location, distance} = useAppSelector(
     (state: RootState) => state.dataLocation
   );
-  const {data} = useAppSelector((state: RootState) => state.dataAkun);
+  const {dataAkun} = useAppSelector((state: RootState) => state.dataAkun);
   const {presence, dataPresence} = useAppSelector(
     (state: RootState) => state.dataPresence
   );
@@ -94,10 +94,10 @@ const Dashboard = ({navigation}: any) => {
             showInfo('Anda sudah melakukan absen Hari ini', () => {});
           } else {
             if (
-              data.address &&
-              data.birth_date &&
-              data.phone_number &&
-              data.tempat_lahir
+              dataAkun.address &&
+              dataAkun.birth_date &&
+              dataAkun.phone_number &&
+              dataAkun.tempat_lahir
             ) {
               TouchID.isSupported(optionalConfigObject).then(biometryType => {
                 if (biometryType === 'FaceID') {
@@ -121,19 +121,21 @@ const Dashboard = ({navigation}: any) => {
                             longitude: location.longitude,
                           };
 
-                          const dataAkun = {
-                            fullname: data.fullname,
-                            email: data.email,
-                            birth_date: data.birth_date,
-                            phone_number: data.phone_number,
-                            tempat_lahir: data.tempat_lahir,
-                            address: data.address,
-                            photo: data.photo || null,
-                            role: data.role,
-                            pekerjaan: data.pekerjaan,
+                          const dataUser = {
+                            fullname: dataAkun.fullname,
+                            email: dataAkun.email,
+                            birth_date: dataAkun.birth_date,
+                            phone_number: dataAkun.phone_number,
+                            tempat_lahir: dataAkun.tempat_lahir,
+                            address: dataAkun.address,
+                            photo: dataAkun.photo || null,
+                            role: dataAkun.role,
+                            pekerjaan: dataAkun.pekerjaan,
                           };
 
-                          await dispatch(absen(data.uid, dataAbsen, dataAkun));
+                          await dispatch(
+                            absen(dataAkun.uid, dataAbsen, dataUser)
+                          );
                           setTriggerPresence(!triggerPresence);
                         });
                     })
@@ -329,14 +331,14 @@ const Dashboard = ({navigation}: any) => {
   }, [triggerPresence]);
 
   // to get distance and data location
-  useEffect(() => {
-    const interval = setInterval(() => {
-      dispatch(
-        getLocation(dataSetting?.latitudeSekolah, dataSetting?.longitudeSekolah)
-      );
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [location]);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     dispatch(
+  //       getLocation(dataSetting?.latitudeSekolah, dataSetting?.longitudeSekolah)
+  //     );
+  //   }, 3000);
+  //   return () => clearInterval(interval);
+  // }, [location]);
 
   if (loading) {
     return <Loading type="full" />;
@@ -367,7 +369,7 @@ const Dashboard = ({navigation}: any) => {
               refreshing={refreshing}
               onRefresh={() => {
                 getData('user').then((res: any) => {
-                  dispatch(getAkun(res.uid));
+                  // dispatch(getAkun(res.uid));
                   dispatch(getRequest(res.uid));
                   dispatch(getNotif(res.uid));
                   dispatch(getDataSetting());
@@ -376,9 +378,9 @@ const Dashboard = ({navigation}: any) => {
             />
           }>
           <CardProfile
-            name={data?.fullname}
+            name={dataAkun?.fullname}
             title="Selamat Datang, "
-            photo={data?.photo ? {uri: data?.photo} : ILNullPhoto}
+            photo={dataAkun?.photo ? {uri: dataAkun?.photo} : ILNullPhoto}
           />
           <View style={styles.cardAbsen}>
             <Gap height={10} />
@@ -439,7 +441,7 @@ const Dashboard = ({navigation}: any) => {
               icon="history"
               title="Lihat History"
               onPress={() => {
-                navigation.navigate('Riwayat', {uid: data?.uid});
+                navigation.navigate('Riwayat', {uid: dataAkun?.uid});
               }}
             />
           </View>

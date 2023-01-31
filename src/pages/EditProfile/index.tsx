@@ -33,17 +33,11 @@ import {
 } from '../../theme';
 
 function EditProfile({navigation}: any) {
-  const {data, loading} = useAppSelector(state => state.dataAkun);
+  const {dataAkun, loading} = useAppSelector(state => state.dataAkun);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [open, setOpen] = useState(false);
 
   const dispatch = useAppDispatch();
-
-  const updateProfile = (value: any) => {
-    getData('user').then((res: any) => {
-      dispatch(updateAkun(res.uid, value, navigation));
-    });
-  };
 
   const onDismissSingle = useCallback(() => {
     setOpen(false);
@@ -70,16 +64,18 @@ function EditProfile({navigation}: any) {
         </View>
         <Formik
           initialValues={{
-            fullname: data?.fullname,
-            birth_date: data?.birth_date,
-            address: data?.address,
-            phone_number: data?.phone_number,
-            photo: data?.photo,
-            tempat_lahir: data?.tempat_lahir,
-            email: data?.email,
-            pekerjaan: data?.pekerjaan,
+            fullname: dataAkun?.fullname,
+            birth_date: dataAkun?.birth_date,
+            address: dataAkun?.address,
+            phone_number: dataAkun?.phone_number,
+            photo: dataAkun?.photo,
+            tempat_lahir: dataAkun?.tempat_lahir,
+            email: dataAkun?.email,
+            pekerjaan: dataAkun?.pekerjaan,
           }}
-          onSubmit={values => updateProfile(values)}
+          onSubmit={(values: any) => {
+            dispatch(updateAkun(dataAkun.uid, values, navigation));
+          }}
           validationSchema={updateProfileSchema}>
           {({
             handleChange,

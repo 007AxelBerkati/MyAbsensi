@@ -98,7 +98,7 @@ export const loginUser =
             } else {
               databaseRef()
                 .ref(`admins/${res?.user?.uid}`)
-                .on('value', snapshot => {
+                .once('value', snapshot => {
                   if (snapshot.val() !== null) {
                     dispatch(setLoginSuccess(snapshot.val()));
                     dispatch(setRole(snapshot.val().role));
