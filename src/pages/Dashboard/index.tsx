@@ -344,20 +344,20 @@ const Dashboard = ({navigation}: any) => {
     return <Loading type="full" />;
   }
 
-  const checkBatasJamMasuk = () => {
-    const mulaiJamMasuk = moment(dataSetting?.mulaiMasuk, 'HH:mm');
-    const mulaiJamPulang = moment(dataSetting?.mulaiPulang, 'HH:mm');
-    const batasJamMasuk = moment(dataSetting?.batasJamMasuk, 'HH:mm');
-    const batasJamPulang = moment(dataSetting?.batasJamPulang, 'HH:mm');
-    const currTime = moment();
-    if (
-      currTime.isBetween(mulaiJamMasuk, batasJamMasuk) ||
-      currTime.isBetween(mulaiJamPulang, batasJamPulang)
-    ) {
-      return true;
-    }
-    return false;
-  };
+  // const checkBatasJamMasuk = () => {
+  //   const mulaiJamMasuk = moment(dataSetting?.mulaiMasuk, 'HH:mm');
+  //   const mulaiJamPulang = moment(dataSetting?.mulaiPulang, 'HH:mm');
+  //   const batasJamMasuk = moment(dataSetting?.batasJamMasuk, 'HH:mm');
+  //   const batasJamPulang = moment(dataSetting?.batasJamPulang, 'HH:mm');
+  //   const currTime = moment();
+  //   if (
+  //     currTime.isBetween(mulaiJamMasuk, batasJamMasuk) ||
+  //     currTime.isBetween(mulaiJamPulang, batasJamPulang)
+  //   ) {
+  //     return true;
+  //   }
+  //   return false;
+  // };
 
   return (
     <GestureHandlerRootView style={styles.page}>

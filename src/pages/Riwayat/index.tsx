@@ -1,7 +1,14 @@
 import moment from 'moment';
 import React, {useEffect, useState, useCallback} from 'react';
-import {StyleSheet, View, FlatList, Text, ImageBackground} from 'react-native';
-import {Bg, IconSellNull} from '../../assets';
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Text,
+  ImageBackground,
+  Image,
+} from 'react-native';
+import {Bg, NotifNull} from '../../assets';
 import {CardRiwayat, EmptySkeletonNotif, Headers} from '../../components';
 import {
   getAllPresence,
@@ -14,6 +21,7 @@ import {DatePickerModal} from 'react-native-paper-dates';
 
 const Riwayat = ({navigation, route}: any) => {
   const {uid} = route.params;
+  console.log('ini uid', uid);
 
   const dispatch = useAppDispatch();
   const {allPresence, loading} = useAppSelector(
@@ -74,8 +82,8 @@ const Riwayat = ({navigation, route}: any) => {
 
   const emptyComponent = () => (
     <View style={styles.empty}>
-      <IconSellNull style={styles.image} />
-      <Text style={styles.emptyText}>Notifikasi Anda Masih Kosong </Text>
+      <Image source={NotifNull} style={styles.image} />
+      <Text style={styles.emptyText}>Riwayat Absen Masih Kosong </Text>
     </View>
   );
 
@@ -135,8 +143,8 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: SIZE.font14,
-    color: COLORS.text.subtitle,
-    fontFamily: FONTS.primary[400],
+    color: COLORS.text.primary,
+    fontFamily: FONTS.primary[600],
   },
   empty: {
     flex: 1,

@@ -159,6 +159,7 @@ export const getAllPresence =
     if (range) {
       const data: any = [];
 
+      console.log(range);
       usersRef()
         .doc(uid)
         .collection('presence')
