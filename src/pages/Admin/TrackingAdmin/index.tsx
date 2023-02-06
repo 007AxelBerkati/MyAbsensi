@@ -63,25 +63,6 @@ const TrackingAdmin = ({navigation}: any) => {
               key={item.id}
               title={item.fullname}
               description={item.pekerjaan}
-              // onPress={() => {
-              //   myMap.fitToCoordinates(
-              //     [
-              //       {
-              //         latitude: item.latitude,
-              //         longitude: item.longitude,
-              //       },
-              //     ],
-              //     {
-              //       edgePadding: {
-              //         top: 50,
-              //         right: 50,
-              //         bottom: 50,
-              //         left: 50,
-              //       },
-              //       animated: true,
-              //     }
-              //   );
-              // }}>
               onPress={() => {
                 mapRef.current.fitToCoordinates(
                   [

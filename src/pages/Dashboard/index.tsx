@@ -331,14 +331,14 @@ const Dashboard = ({navigation}: any) => {
   }, [triggerPresence]);
 
   // to get distance and data location
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     dispatch(
-  //       getLocation(dataSetting?.latitudeSekolah, dataSetting?.longitudeSekolah)
-  //     );
-  //   }, 3000);
-  //   return () => clearInterval(interval);
-  // }, [location]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      dispatch(
+        getLocation(dataSetting?.latitudeSekolah, dataSetting?.longitudeSekolah)
+      );
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [location]);
 
   if (loading) {
     return <Loading type="full" />;
