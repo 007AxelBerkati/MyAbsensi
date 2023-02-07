@@ -46,6 +46,7 @@ import {
   getPresence,
   getRequest,
   RootState,
+  setLoading,
   useAppDispatch,
   useAppSelector,
 } from '../../reduxx';
@@ -58,6 +59,8 @@ const Dashboard = ({navigation}: any) => {
   const {isRequestPending, loading} = useAppSelector(
     (state: RootState) => state.dataRequest
   );
+
+  const [isLoadingPresence, setIsLoadingPresence] = useState(false);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -75,106 +78,96 @@ const Dashboard = ({navigation}: any) => {
 
   const {dataLogin} = useAppSelector((state: RootState) => state.dataAuth);
 
-  const attendance = () => {
-    isMockingLocation()
-      .then(({isLocationMocked}) => {
-        if (isLocationMocked) {
-          Alert.alert(
-            'Pemalsuan Lokasi Terdeteksi',
-            'Tolong matikan fitur pemalsuan lokasi',
-            [
-              {
-                text: 'OK',
-              },
-            ],
-            {cancelable: false}
-          );
-        } else {
-          if (presence === 'alreadyPresence') {
-            showInfo('Anda sudah melakukan absen Hari ini', () => {});
-          } else {
-            if (
-              dataAkun.address &&
-              dataAkun.birth_date &&
-              dataAkun.phone_number &&
-              dataAkun.tempat_lahir
-            ) {
-              TouchID.isSupported(optionalConfigObject).then(biometryType => {
-                if (biometryType === 'FaceID') {
-                  Alert.alert('This device supports FaceID');
-                } else {
-                  TouchID.authenticate('Lakukan Absen', optionalConfigObject)
-                    .then(() => {
-                      const lat = location.latitude;
-                      const long = location.longitude;
-                      fetch(
-                        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${long}`
-                      )
-                        .then(response => response.json())
-                        .then(async dataLocation => {
-                          const dataAbsen = {
-                            address: dataLocation.display_name,
-                            date: moment().format(),
-                            distance: distance,
-                            in_area: distance <= 0.1 ? true : false,
-                            latitude: location.latitude,
-                            longitude: location.longitude,
-                          };
+  const attendance = async () => {
+    setIsLoadingPresence(true);
+    try {
+      const {isLocationMocked} = await isMockingLocation();
+      if (isLocationMocked) {
+        Alert.alert(
+          'Pemalsuan Lokasi Terdeteksi',
+          'Tolong matikan fitur pemalsuan lokasi',
+          [
+            {
+              text: 'OK',
+            },
+          ],
+          {cancelable: false}
+        );
+        return;
+      }
 
-                          const dataUser = {
-                            fullname: dataAkun.fullname,
-                            email: dataAkun.email,
-                            birth_date: dataAkun.birth_date,
-                            phone_number: dataAkun.phone_number,
-                            tempat_lahir: dataAkun.tempat_lahir,
-                            address: dataAkun.address,
-                            photo: dataAkun.photo || null,
-                            role: dataAkun.role,
-                            pekerjaan: dataAkun.pekerjaan,
-                          };
+      if (presence === 'alreadyPresence') {
+        showInfo('Anda sudah melakukan absen Hari ini', () => {});
+        return;
+      }
 
-                          await dispatch(
-                            absen(dataAkun.uid, dataAbsen, dataUser)
-                          );
-                          setTriggerPresence(!triggerPresence);
-                        });
-                    })
-                    .catch((error: any) => {
-                      showError(error.message);
-                    });
-                }
-              });
-            } else {
-              Alert.alert(
-                'Data profile tidak lengkap',
-                'Tolong lengkapi data profile anda terlebih dahulu',
-                [
-                  {text: 'Tidak', style: 'cancel'},
-                  {
-                    text: 'Update Profile',
-                    onPress: () => navigation.navigate('EditProfile'),
-                  },
-                ],
-                {cancelable: false}
-              );
-            }
-          }
-        }
-      })
-      .catch((error: MockLocationDetectorError) => {
-        switch (error.code) {
-          case MockLocationDetectorErrorCode.GPSNotEnabled: {
-            Alert.alert('GPS Not Enabled', 'Please enable GPS');
-            return;
-          }
-          case MockLocationDetectorErrorCode.CantDetermine: {
-            Alert.alert(
-              'Can not determine if mock location is enabled',
-              'Please try again'
-            );
-          }
-        }
-      });
+      if (
+        !dataAkun.address ||
+        !dataAkun.birth_date ||
+        !dataAkun.phone_number ||
+        !dataAkun.tempat_lahir
+      ) {
+        Alert.alert(
+          'Data profile tidak lengkap',
+          'Tolong lengkapi data profile anda terlebih dahulu',
+          [
+            {text: 'Tidak', style: 'cancel'},
+            {
+              text: 'Update Profile',
+              onPress: () => navigation.navigate('EditProfile'),
+            },
+          ],
+          {cancelable: false}
+        );
+        return;
+      }
+
+      const biometryType = await TouchID.isSupported(optionalConfigObject);
+      if (biometryType === 'FaceID') {
+        Alert.alert('This device supports FaceID');
+        return;
+      }
+
+      await TouchID.authenticate('Lakukan Absen', optionalConfigObject);
+
+      const lat = location.latitude;
+      const long = location.longitude;
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${long}`
+      );
+      const dataLocation = await response.json();
+
+      const dataAbsen = {
+        address: dataLocation.display_name,
+        date: moment().format(),
+        distance: distance,
+        in_area: distance <= 0.1 ? true : false,
+        latitude: location.latitude,
+        longitude: location.longitude,
+      };
+
+      const dataUser = {
+        fullname: dataAkun.fullname,
+        email: dataAkun.email,
+        birth_date: dataAkun.birth_date,
+        phone_number: dataAkun.phone_number,
+        tempat_lahir: dataAkun.tempat_lahir,
+        address: dataAkun.address,
+        photo: dataAkun.photo || null,
+        role: dataAkun.role,
+        pekerjaan: dataAkun.pekerjaan,
+      };
+
+      await dispatch(absen(dataAkun.uid, dataAbsen, dataUser));
+      setTriggerPresence(!triggerPresence);
+    } catch (error: any) {
+      if (error.code === MockLocationDetectorErrorCode.GPSNotEnabled) {
+        Alert.alert('GPS Not Enabled', 'Please enable GPS');
+        return;
+      }
+    }
+
+    setIsLoadingPresence(false);
   };
 
   const renderInfoAttendance = useCallback(() => {
@@ -296,13 +289,12 @@ const Dashboard = ({navigation}: any) => {
   };
   const options = {
     taskName: 'Live Tracking Location',
-    taskTitle: 'Live Tracking Location',
-    taskDesc: 'Live Tracking Location',
+    taskTitle: 'Cek Lokasi',
+    taskDesc: 'Tolong nyalakan GPS anda untuk cek lokasi anda',
     taskIcon: {
       name: 'ic_launcher',
       type: 'mipmap',
     },
-    color: '#ff00ff',
     linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
     parameters: {
       delay: 900000,
@@ -368,12 +360,14 @@ const Dashboard = ({navigation}: any) => {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={() => {
+                setRefreshing(true);
                 getData('user').then((res: any) => {
                   // dispatch(getAkun(res.uid));
                   dispatch(getRequest(res.uid));
                   dispatch(getNotif(res.uid));
                   dispatch(getDataSetting());
                 });
+                setRefreshing(false);
               }}
             />
           }>
@@ -424,6 +418,7 @@ const Dashboard = ({navigation}: any) => {
               icon="fingerprint"
               title={renderTitlePresenceMemo}
               absen={presence}
+              disable={isLoadingPresence}
               onPress={() => attendance()}
             />
           </View>

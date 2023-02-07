@@ -6,8 +6,8 @@ export const getImage = (setFieldValue: any) => {
     {
       mediaType: 'photo',
       includeBase64: true,
-      maxHeight: 200,
-      maxWidth: 200,
+      maxHeight: 400,
+      maxWidth: 400,
     },
     (response: any) => {
       if (response.didCancel || response.errorCode) {

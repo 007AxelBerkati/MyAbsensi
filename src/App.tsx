@@ -61,8 +61,6 @@ const MainApp = () => {
       />
 
       {isOnline ? null : <NoInternet />}
-
-      {loading && <Loading />}
     </>
   );
 };
