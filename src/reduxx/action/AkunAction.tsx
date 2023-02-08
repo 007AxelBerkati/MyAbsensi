@@ -80,7 +80,22 @@ export const updateAkun =
                     dispatch(setUpdateAkunSuccess());
                     navigation.goBack();
                     showSuccess('Berhasil update akun');
+                  })
+                  .catch(error => {
+                    showError(error.message);
                   });
+              });
+          } else {
+            await databaseRef()
+              .ref(`admins/${id}`)
+              .update(data)
+              .then(async () => {
+                dispatch(setUpdateAkunSuccess());
+                navigation.goBack();
+                showSuccess('Berhasil update akun');
+              })
+              .catch(err => {
+                showError(err.message);
               });
           }
         });

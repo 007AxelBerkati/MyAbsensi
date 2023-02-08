@@ -1,6 +1,6 @@
-import {Pressable, StyleSheet, Text, View, ViewStyle} from 'react-native';
-import {COLORS, FONTS, SIZE, windowHeight, windowWidth} from '../../../theme';
+import {Pressable, StyleSheet, Text, ViewStyle} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {COLORS, FONTS, SIZE, windowWidth} from '../../../theme';
 
 type Props = {
   title: string;

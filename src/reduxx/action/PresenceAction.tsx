@@ -32,8 +32,84 @@ export const setPresenceSuccess = (success: any) => ({
 });
 
 export const absen =
-  (uid: any, data: any, dataAkun: any) => async (dispatch: any) => {
+  (uid: any, data: any, dataAkun: any, dataSetting: any) =>
+  async (dispatch: any) => {
     dispatch(setPresenceLoading(true));
+    // const mulaiJamMasuk = moment(dataSetting.mulaiMasuk, 'HH:mm');
+    // const batasJamMasuk = moment(dataSetting.batasMasuk, 'HH:mm');
+    // const mulaiJamPulang = moment(dataSetting?.mulaiPulang, 'HH:mm');
+    // const batasJamPulang = moment(dataSetting?.batasPulang, 'HH:mm');
+
+    // if (moment().isBetween(mulaiJamMasuk, batasJamMasuk)) {
+    //   await usersRef()
+    //     .doc(`${uid}`)
+    //     .get()
+    //     .then(async doc => {
+    //       if (doc.exists) {
+    //         await usersRef()
+    //           .doc(`${uid}/presence/${moment().format('YYYY')}`)
+    //           .collection(`${moment().format('MM')}`)
+    //           .doc(`${moment().format('DD')}`)
+    //           .set({date: data.date, masuk: data})
+    //           .then(() => {
+    //             setPresence('keluar');
+    //             showSuccess('Berhasil Absen Masuk');
+    //           });
+    //       } else {
+    //         await usersRef()
+    //           .doc(`${uid}`)
+    //           .set(dataAkun)
+    //           .then(async () => {
+    //             await usersRef()
+    //               .doc(`${uid}/presence/${moment().format('YYYY')}`)
+    //               .collection(`${moment().format('MM')}`)
+    //               .doc(`${moment().format('DD')}`)
+    //               .set({date: data.date, masuk: data})
+    //               .then(() => {
+    //                 setPresence('keluar');
+    //                 showSuccess('Berhasil Absen Masuk');
+    //               });
+    //           });
+    //       }
+    //     });
+    // }
+
+    // if (moment().isBetween(mulaiJamPulang, batasJamPulang)) {
+    //   await usersRef()
+    //     .doc(`${uid}/presence/${moment().format('YYYY')}`)
+    //     .collection(`${moment().format('MM')}`)
+    //     .doc(`${moment().format('DD')}`)
+    //     .get()
+    //     .then(async doc => {
+    //       if (doc.exists) {
+    //         await usersRef()
+    //           .doc(`${uid}/presence/${moment().format('YYYY')}`)
+    //           .collection(`${moment().format('MM')}`)
+    //           .doc(`${moment().format('DD')}`)
+    //           .update({keluar: data})
+    //           .then(() => {
+    //             setPresence('alreadyPresence');
+    //             showSuccess('Berhasil Absen Keluar');
+    //           });
+    //       } else if (data.status) {
+    //         await usersRef()
+    //           .doc(`${uid}/presence/${moment().format('YYYY')}`)
+    //           .collection(`${moment().format('MM')}`)
+    //           .doc(`${moment().format('DD')}`)
+    //           .set({date: data.date, status: data.status});
+    //       } else {
+    //         await usersRef()
+    //           .doc(`${uid}/presence/${moment().format('YYYY')}`)
+    //           .collection(`${moment().format('MM')}`)
+    //           .doc(`${moment().format('DD')}`)
+    //           .set({keluar: data})
+    //           .then(() => {
+    //             setPresence('alreadyPresence');
+    //             showSuccess('Berhasil Absen Keluar');
+    //           });
+    //       }
+    //     });
+    // }
     await usersRef()
       .doc(`${uid}/presence/${moment().format('YYYY')}`)
       .collection(`${moment().format('MM')}`)

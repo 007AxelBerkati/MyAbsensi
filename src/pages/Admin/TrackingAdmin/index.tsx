@@ -29,7 +29,7 @@ const TrackingAdmin = ({navigation}: any) => {
       <View style={{paddingHorizontal: 16}}>
         <Headers
           type="back-title"
-          title="Cek Jangkauan"
+          title="Tracking Location"
           onPress={() => navigation.goBack()}
         />
       </View>
@@ -106,6 +106,13 @@ const TrackingAdmin = ({navigation}: any) => {
                         />
                       </Svg>
                     </View>
+                    {/* <Text>
+                      <Image
+                        style={{width: 100, height: 100}}
+                        source={item?.photo ? {uri: item.photo} : ILNullPhoto}
+                        resizeMode="cover"
+                      />
+                    </Text> */}
                   </View>
                   <View style={styles.arrowBorder} />
                   <View style={styles.arrow} />
