@@ -222,17 +222,22 @@ const DashboardAdmin = ({navigation}: any) => {
           })}
         </View>
       </ScrollView>
-      <CustomButton
-        icon="google-maps"
-        type="floating-btn"
-        color={COLORS.secondary}
-        onPress={() => {
-          navigation.navigate('TrackingAdmin', {
-            latitude: dataSetting?.latitudeSekolah,
-            longitude: dataSetting?.longitudeSekolah,
-          });
-        }}
-      />
+      {moment().isBetween(
+        moment(dataSetting?.mulaiMasuk, 'HH:mm'),
+        moment(dataSetting?.batasPulang, 'HH:mm')
+      ) && (
+        <CustomButton
+          icon="google-maps"
+          type="floating-btn"
+          color={COLORS.secondary}
+          onPress={() => {
+            navigation.navigate('TrackingAdmin', {
+              latitude: dataSetting?.latitudeSekolah,
+              longitude: dataSetting?.longitudeSekolah,
+            });
+          }}
+        />
+      )}
     </View>
   );
 };
