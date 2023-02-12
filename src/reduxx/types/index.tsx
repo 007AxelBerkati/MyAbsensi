@@ -111,6 +111,9 @@ export const GET_PRESENCE_LOADING = '@GET_PRESENCE_LOADING';
 export const GET_PRESENCE_ERROR = '@GET_PRESENCE_ERROR';
 export const GET_PRESENCE_SUCCESS = '@GET_PRESENCE_SUCCESS';
 
+// presence setDisablePresence
+export const SET_DISABLE_PRESENCE = '@SET_DISABLE_PRESENCE';
+
 // presence setPresence
 export const SET_PRESENCE = '@SET_PRESENCE';
 

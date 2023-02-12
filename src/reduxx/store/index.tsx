@@ -30,6 +30,8 @@ const persistConfig = {
     'dataLocation',
   ],
 
+  whiteList: ['dataAuth'],
+
   storage: AsyncStorage,
 };
 

@@ -1,4 +1,5 @@
 import BottomSheet from '@gorhom/bottom-sheet';
+import {Formik} from 'formik';
 import moment from 'moment';
 import 'moment/locale/id';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
@@ -14,10 +15,10 @@ import {
 import BackgroundService from 'react-native-background-actions';
 import Geolocation from 'react-native-geolocation-service';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {Modal, Portal, Provider} from 'react-native-paper';
 import TouchID from 'react-native-touch-id';
 import {
   isMockingLocation,
-  MockLocationDetectorError,
   MockLocationDetectorErrorCode,
 } from 'react-native-turbo-mock-location-detector';
 import {Bg, ILNullPhoto} from '../../assets';
@@ -27,11 +28,16 @@ import {
   CardDashboard,
   CardProfile,
   CardService,
+  CustomButton,
   Gap,
+  HelperText,
+  Input,
   Loading,
 } from '../../components';
 import {
   getData,
+  getDataSecure,
+  loginSchema,
   optionalConfigObject,
   showError,
   showInfo,
@@ -41,12 +47,11 @@ import {
   absen,
   getAkun,
   getDataSetting,
-  getLocation,
   getNotif,
   getPresence,
   getRequest,
   RootState,
-  setLoading,
+  setPresence,
   useAppDispatch,
   useAppSelector,
 } from '../../reduxx';
@@ -62,11 +67,13 @@ const Dashboard = ({navigation}: any) => {
 
   const [isLoadingPresence, setIsLoadingPresence] = useState(false);
 
+  const [isModalVisible, setisModalVisible] = useState(false);
+
+  const [isTimeForPresence, setIsTimeForPresence] = useState(true);
+
   const [refreshing, setRefreshing] = useState(false);
 
   const {dataSetting} = useAppSelector((state: RootState) => state.dataSetting);
-
-  const [triggerPresence, setTriggerPresence] = useState(false);
 
   const {location, distance} = useAppSelector(
     (state: RootState) => state.dataLocation
@@ -78,96 +85,113 @@ const Dashboard = ({navigation}: any) => {
 
   const {dataLogin} = useAppSelector((state: RootState) => state.dataAuth);
 
+  const dataForPresence = () => {
+    const lat = location.latitude;
+    const long = location.longitude;
+    fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${long}`
+    )
+      .then(response => response.json())
+      .then(async dataLocation => {
+        const dataAbsen = {
+          address: dataLocation.display_name,
+          date: moment().format(),
+          distance: distance,
+          in_area: distance <= 0.1 ? true : false,
+          latitude: location.latitude,
+          longitude: location.longitude,
+        };
+        const dataUser = {
+          fullname: dataAkun.fullname,
+          email: dataAkun.email,
+          birth_date: dataAkun.birth_date,
+          phone_number: dataAkun.phone_number,
+          tempat_lahir: dataAkun.tempat_lahir,
+          address: dataAkun.address,
+          photo: dataAkun.photo || null,
+          role: dataAkun.role,
+          pekerjaan: dataAkun.pekerjaan,
+        };
+        await dispatch(absen(dataAkun.uid, dataAbsen, dataUser, dataSetting));
+        dispatch(getPresence(dataAkun.uid, dataSetting));
+      });
+  };
+
   const attendance = async () => {
     setIsLoadingPresence(true);
     try {
       const {isLocationMocked} = await isMockingLocation();
       if (isLocationMocked) {
         Alert.alert(
-          'Pemalsuan Lokasi Terdeteksi',
-          'Tolong matikan fitur pemalsuan lokasi',
-          [
-            {
-              text: 'OK',
-            },
-          ],
+          'Detected Location Spoofing',
+          'Please turn off location spoofing',
+          [{text: 'OK'}],
           {cancelable: false}
         );
-        return;
+      } else {
+        if (presence === 'alreadyPresence') {
+          showInfo('You have already checked in today', () => {});
+        } else {
+          if (
+            dataAkun.address &&
+            dataAkun.birth_date &&
+            dataAkun.phone_number &&
+            dataAkun.tempat_lahir
+          ) {
+            TouchID.isSupported(optionalConfigObject)
+              .then(biometryType => {
+                if (biometryType === 'FaceID') {
+                  Alert.alert('This device supports FaceID');
+                } else {
+                  TouchID.authenticate('Lakukan Absen', optionalConfigObject)
+                    .then(() => {
+                      dataForPresence();
+                      dispatch(getPresence(dataAkun.uid, dataSetting));
+                    })
+                    .catch((error: any) => {
+                      showError(error.message);
+                    });
+                }
+              })
+              .catch(err => {
+                showInfo(
+                  'Device Tidak Support Touch Id, Silahkan login dengan mengisikan akun dan password anda',
+                  () => {}
+                );
+                setisModalVisible(true);
+              });
+          } else {
+            Alert.alert(
+              'Profile data is incomplete',
+              'Please complete your profile data first',
+              [
+                {text: 'No', style: 'cancel'},
+                {
+                  text: 'Update Profile',
+                  onPress: () => navigation.navigate('EditProfile'),
+                },
+              ],
+              {cancelable: false}
+            );
+          }
+        }
       }
-
-      if (presence === 'alreadyPresence') {
-        showInfo('Anda sudah melakukan absen Hari ini', () => {});
-        return;
-      }
-
-      if (
-        !dataAkun.address ||
-        !dataAkun.birth_date ||
-        !dataAkun.phone_number ||
-        !dataAkun.tempat_lahir
-      ) {
-        Alert.alert(
-          'Data profile tidak lengkap',
-          'Tolong lengkapi data profile anda terlebih dahulu',
-          [
-            {text: 'Tidak', style: 'cancel'},
-            {
-              text: 'Update Profile',
-              onPress: () => navigation.navigate('EditProfile'),
-            },
-          ],
-          {cancelable: false}
-        );
-        return;
-      }
-
-      const biometryType = await TouchID.isSupported(optionalConfigObject);
-      if (biometryType === 'FaceID') {
-        Alert.alert('This device supports FaceID');
-        return;
-      }
-
-      await TouchID.authenticate('Lakukan Absen', optionalConfigObject);
-
-      const lat = location.latitude;
-      const long = location.longitude;
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${long}`
-      );
-      const dataLocation = await response.json();
-
-      const dataAbsen = {
-        address: dataLocation.display_name,
-        date: moment().format(),
-        distance: distance,
-        in_area: distance <= 0.1 ? true : false,
-        latitude: location.latitude,
-        longitude: location.longitude,
-      };
-
-      const dataUser = {
-        fullname: dataAkun.fullname,
-        email: dataAkun.email,
-        birth_date: dataAkun.birth_date,
-        phone_number: dataAkun.phone_number,
-        tempat_lahir: dataAkun.tempat_lahir,
-        address: dataAkun.address,
-        photo: dataAkun.photo || null,
-        role: dataAkun.role,
-        pekerjaan: dataAkun.pekerjaan,
-      };
-
-      await dispatch(absen(dataAkun.uid, dataAbsen, dataUser));
-      setTriggerPresence(!triggerPresence);
     } catch (error: any) {
-      if (error.code === MockLocationDetectorErrorCode.GPSNotEnabled) {
-        Alert.alert('GPS Not Enabled', 'Please enable GPS');
-        return;
+      switch (error.code) {
+        case MockLocationDetectorErrorCode.GPSNotEnabled: {
+          Alert.alert('GPS Not Enabled', 'Please enable GPS');
+          return;
+        }
+        case MockLocationDetectorErrorCode.CantDetermine: {
+          Alert.alert(
+            'Cannot determine if mock location is enabled',
+            'Please try again'
+          );
+        }
       }
+    } finally {
+      setIsLoadingPresence(false);
     }
-
-    setIsLoadingPresence(false);
   };
 
   const renderInfoAttendance = useCallback(() => {
@@ -295,7 +319,7 @@ const Dashboard = ({navigation}: any) => {
       name: 'ic_launcher',
       type: 'mipmap',
     },
-    linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
+    // linkingURI: 'yourSchemeHere://chat/jane',
     parameters: {
       delay: 900000,
     },
@@ -315,152 +339,244 @@ const Dashboard = ({navigation}: any) => {
     });
   }, []);
 
+  const checkBatasJamAbsen = () => {
+    try {
+      const mulaiJamMasuk = moment(dataSetting?.mulaiMasuk, 'HH:mm');
+      const batasJamMasuk = moment(dataSetting?.batasMasuk, 'HH:mm');
+      const mulaiJamPulang = moment(dataSetting?.mulaiPulang, 'HH:mm');
+      const batasJamPulang = moment(dataSetting?.batasPulang, 'HH:mm');
+      if (presence === 'masuk' || presence === 'keluar') {
+        if (currTime.isBetween(mulaiJamMasuk, batasJamMasuk)) {
+          dispatch(setPresence('masuk'));
+          setIsTimeForPresence(true);
+        } else if (currTime.isBetween(mulaiJamPulang, batasJamPulang)) {
+          dispatch(setPresence('keluar'));
+          setIsTimeForPresence(true);
+        } else {
+          console.log('tidak ada');
+          setIsTimeForPresence(false);
+        }
+      }
+    } catch {
+      console.log('error');
+    }
+  };
   // to get data presence
   useEffect(() => {
     getData('user').then((res: any) => {
-      dispatch(getPresence(res.uid));
+      dispatch(getPresence(res.uid, dataSetting));
+      checkBatasJamAbsen();
     });
-  }, [triggerPresence]);
+  }, []);
 
   // to get distance and data location
-  useEffect(() => {
-    const interval = setInterval(() => {
-      dispatch(
-        getLocation(dataSetting?.latitudeSekolah, dataSetting?.longitudeSekolah)
-      );
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [location]);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     dispatch(
+  //       getLocation(dataSetting?.latitudeSekolah, dataSetting?.longitudeSekolah)
+  //     );
+  //   }, 3000);
+  //   return () => clearInterval(interval);
+  // }, [location]);
 
   if (loading) {
     return <Loading type="full" />;
   }
 
-  // const checkBatasJamMasuk = () => {
-  //   const mulaiJamMasuk = moment(dataSetting?.mulaiMasuk, 'HH:mm');
-  //   const mulaiJamPulang = moment(dataSetting?.mulaiPulang, 'HH:mm');
-  //   const batasJamMasuk = moment(dataSetting?.batasJamMasuk, 'HH:mm');
-  //   const batasJamPulang = moment(dataSetting?.batasJamPulang, 'HH:mm');
-  //   const currTime = moment();
-  //   if (
-  //     currTime.isBetween(mulaiJamMasuk, batasJamMasuk) ||
-  //     currTime.isBetween(mulaiJamPulang, batasJamPulang)
-  //   ) {
-  //     return true;
-  //   }
-  //   return false;
-  // };
-
   return (
-    <GestureHandlerRootView style={styles.page}>
-      <ImageBackground source={Bg} style={{flex: 1}}>
-        <ScrollView
-          style={{paddingHorizontal: 16}}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={() => {
-                setRefreshing(true);
-                getData('user').then((res: any) => {
-                  // dispatch(getAkun(res.uid));
-                  dispatch(getRequest(res.uid));
-                  dispatch(getNotif(res.uid));
-                  dispatch(getDataSetting());
-                });
-                setRefreshing(false);
-              }}
-            />
-          }>
-          <CardProfile
-            name={dataAkun?.fullname}
-            title="Selamat Datang, "
-            photo={dataAkun?.photo ? {uri: dataAkun?.photo} : ILNullPhoto}
-          />
-          <View style={styles.cardAbsen}>
-            <Gap height={10} />
-            <Text style={styles.hourMinutes}>
-              {currTime.format('HH:mm:ss')}
-            </Text>
-            <Text style={styles.date}>
-              {currTime.format('dddd, DD MMM YYYY')}
-            </Text>
-            <Gap height={10} />
-            <View style={styles.cardDashboard}>
-              <CardDashboard
-                title="Jarak Sekolah"
-                text={
-                  isNaN(distance)
-                    ? 'wait'
-                    : distance.toFixed(2).toString() + ' KM'
-                }
-                onPress={() =>
-                  showInfo(
-                    distance <= 0.1
-                      ? 'Anda sudah berada di lingkungan sekolah'
-                      : 'Anda belum di lingkungan sekolah',
-                    () => {}
-                  )
-                }
+    <Provider>
+      <Portal>
+        <GestureHandlerRootView style={styles.page}>
+          <ImageBackground source={Bg} style={{flex: 1}}>
+            <ScrollView
+              style={{paddingHorizontal: 16}}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={() => {
+                    setRefreshing(true);
+                    dispatch(getRequest(dataAkun.uid));
+                    dispatch(getNotif(dataAkun.uid));
+                    dispatch(getDataSetting());
+                    // checkBatasJamAbsen();
+                    setRefreshing(false);
+                  }}
+                />
+              }>
+              <CardProfile
+                name={dataAkun?.fullname}
+                title="Selamat Datang, "
+                photo={dataAkun?.photo ? {uri: dataAkun?.photo} : ILNullPhoto}
               />
-              <CardDashboard
-                type="maps"
-                text="Buka Maps"
-                onPress={() =>
-                  navigation.navigate('Location', {
-                    latitude: dataSetting?.latitudeSekolah,
-                    longitude: dataSetting?.longitudeSekolah,
-                  })
-                }
-              />
-            </View>
-            <Gap height={20} />
-            <CardCircle
-              icon="fingerprint"
-              title={renderTitlePresenceMemo}
-              absen={presence}
-              disable={isLoadingPresence}
-              onPress={() => attendance()}
-            />
-          </View>
-          <Gap height={20} />
-          {renderInfoAttendanceMemo}
-          <View style={styles.service}>
-            <CardService
-              icon="book-open-page-variant-outline"
-              title="Ijin Tidak Hadir"
-              onPress={() => {
-                handleOpenPress(1);
-              }}
-            />
-            <CardService
-              icon="history"
-              title="Lihat History"
-              onPress={() => {
-                navigation.navigate('Riwayat', {uid: dataAkun?.uid});
-              }}
-            />
-          </View>
+              <View style={styles.cardAbsen}>
+                <Gap height={10} />
+                <Text style={styles.hourMinutes}>
+                  {currTime.format('HH:mm')}
+                </Text>
+                <Text style={styles.date}>
+                  {currTime.format('dddd, DD MMM YYYY')}
+                </Text>
+                <Gap height={10} />
+                <View style={styles.cardDashboard}>
+                  <CardDashboard
+                    title="Jarak Sekolah"
+                    text={
+                      isNaN(distance)
+                        ? 'wait'
+                        : distance.toFixed(2).toString() + ' KM'
+                    }
+                    onPress={() =>
+                      showInfo(
+                        distance <= 0.1
+                          ? 'Anda sudah berada di lingkungan sekolah'
+                          : 'Anda belum di lingkungan sekolah',
+                        () => {}
+                      )
+                    }
+                  />
+                  <CardDashboard
+                    type="maps"
+                    text="Buka Maps"
+                    onPress={() =>
+                      navigation.navigate('Location', {
+                        latitude: dataSetting?.latitudeSekolah,
+                        longitude: dataSetting?.longitudeSekolah,
+                      })
+                    }
+                  />
+                </View>
+                <Gap height={20} />
+                <CardCircle
+                  icon="fingerprint"
+                  title={
+                    isLoadingPresence ? 'Loading...' : renderTitlePresenceMemo
+                  }
+                  absen={presence}
+                  disable={isLoadingPresence || !isTimeForPresence}
+                  onPress={async () => {
+                    attendance();
+                  }}
+                />
+              </View>
+              <Gap height={20} />
+              {renderInfoAttendanceMemo}
+              <View style={styles.service}>
+                <CardService
+                  icon="book-open-page-variant-outline"
+                  title="Ijin Tidak Hadir"
+                  onPress={() => {
+                    handleOpenPress(1);
+                  }}
+                />
+                <CardService
+                  icon="history"
+                  title="Lihat History"
+                  onPress={() => {
+                    navigation.navigate('Riwayat', {uid: dataAkun?.uid});
+                  }}
+                />
+              </View>
 
-          <Gap height={40} />
-        </ScrollView>
-        <BottomSheet
-          enablePanDownToClose
-          enableContentPanningGesture
-          enableHandlePanningGesture
-          animateOnMount
-          enableOverDrag
-          ref={bottomSheetRef}
-          index={0}
-          snapPoints={snapPoints}
-          backdropComponent={BackDropComponent}
-          onChange={handleSheetChanges}>
-          <PermintaanIzin
-            handleCloseSheet={handleClosePress}
-            isRequestPending={isRequestPending}
-          />
-        </BottomSheet>
-      </ImageBackground>
-    </GestureHandlerRootView>
+              <Gap height={40} />
+            </ScrollView>
+            <BottomSheet
+              enablePanDownToClose
+              enableContentPanningGesture
+              enableHandlePanningGesture
+              animateOnMount
+              enableOverDrag
+              ref={bottomSheetRef}
+              index={0}
+              snapPoints={snapPoints}
+              backdropComponent={BackDropComponent}
+              onChange={handleSheetChanges}>
+              <PermintaanIzin
+                handleCloseSheet={handleClosePress}
+                isRequestPending={isRequestPending}
+              />
+            </BottomSheet>
+          </ImageBackground>
+          <Modal
+            visible={isModalVisible}
+            onDismiss={() => setisModalVisible(false)}
+            contentContainerStyle={{
+              backgroundColor: 'white',
+              padding: 20,
+              marginHorizontal: 20,
+              marginVertical: 100,
+              borderRadius: 10,
+            }}>
+            <View style={styles.bottomView}>
+              <Text style={styles.loginText}>Absen</Text>
+              <Formik
+                initialValues={{email: '', password: ''}}
+                onSubmit={values => {
+                  getDataSecure('userLogin').then((res: any) => {
+                    if (res) {
+                      if (
+                        res.email === values.email &&
+                        res.password === values.password
+                      ) {
+                        dataForPresence();
+                        setisModalVisible(false);
+                      } else {
+                        showInfo('Email atau Password salah', () => {});
+                      }
+                    }
+                  });
+                }}
+                validationSchema={loginSchema}>
+                {({
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  values,
+                  errors,
+                  touched,
+                  isValid,
+                  dirty,
+                }) => (
+                  <View>
+                    <Input
+                      leftIcon="email"
+                      label="Email"
+                      onChangeText={handleChange('email')}
+                      value={values.email}
+                      onBlur={handleBlur('email')}
+                      color={COLORS.text.tertiary}
+                    />
+                    {errors.email && touched.email ? (
+                      <HelperText text={errors.email} />
+                    ) : null}
+
+                    <Input
+                      label="Password"
+                      onBlur={handleBlur('password')}
+                      onChangeText={handleChange('password')}
+                      value={values.password}
+                      secureTextEntry
+                      color={COLORS.text.tertiary}
+                      leftIcon="key"
+                    />
+                    {errors.password && touched.password ? (
+                      <HelperText text={errors.password} />
+                    ) : null}
+
+                    <Gap height={30} />
+                    <CustomButton
+                      type={'primary'}
+                      title={loading ? 'Loading...' : 'Absen'}
+                      onPress={handleSubmit}
+                      disable={!(dirty && isValid) || loading}
+                    />
+                  </View>
+                )}
+              </Formik>
+            </View>
+          </Modal>
+        </GestureHandlerRootView>
+      </Portal>
+    </Provider>
   );
 };
 
@@ -524,5 +640,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: 20,
+  },
+
+  bottomView: {
+    backgroundColor: COLORS.background.primary,
+    opacity: 0.95,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    paddingTop: 10,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
+  },
+
+  loginText: {
+    fontFamily: FONTS.primary[600],
+    fontSize: 24,
+    marginTop: 12,
+    marginBottom: 4,
+    color: COLORS.text.primary,
   },
 });

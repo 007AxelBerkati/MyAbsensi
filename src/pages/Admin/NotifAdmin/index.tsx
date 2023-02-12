@@ -3,13 +3,13 @@ import React, {useEffect} from 'react';
 import {
   Alert,
   FlatList,
+  Image,
   ImageBackground,
   StyleSheet,
   Text,
   View,
-  Image,
 } from 'react-native';
-import {Bg, IconSellNull, ILNullPhoto, PermintaanNull} from '../../../assets';
+import {Bg, ILNullPhoto, PermintaanNull} from '../../../assets';
 import {CardNotif, EmptySkeletonNotif, Headers} from '../../../components';
 import {
   absen,

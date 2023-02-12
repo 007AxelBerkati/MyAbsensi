@@ -10,6 +10,7 @@ import {
   GET_PRESENCE_ERROR,
   GET_PRESENCE_LOADING,
   GET_PRESENCE_SUCCESS,
+  SET_DISABLE_PRESENCE,
   SET_PRESENCE,
   SET_PRESENCE_ERROR,
   SET_PRESENCE_LOADING,
@@ -35,109 +36,30 @@ export const absen =
   (uid: any, data: any, dataAkun: any, dataSetting: any) =>
   async (dispatch: any) => {
     dispatch(setPresenceLoading(true));
-    // const mulaiJamMasuk = moment(dataSetting.mulaiMasuk, 'HH:mm');
-    // const batasJamMasuk = moment(dataSetting.batasMasuk, 'HH:mm');
-    // const mulaiJamPulang = moment(dataSetting?.mulaiPulang, 'HH:mm');
-    // const batasJamPulang = moment(dataSetting?.batasPulang, 'HH:mm');
-
-    // if (moment().isBetween(mulaiJamMasuk, batasJamMasuk)) {
-    //   await usersRef()
-    //     .doc(`${uid}`)
-    //     .get()
-    //     .then(async doc => {
-    //       if (doc.exists) {
-    //         await usersRef()
-    //           .doc(`${uid}/presence/${moment().format('YYYY')}`)
-    //           .collection(`${moment().format('MM')}`)
-    //           .doc(`${moment().format('DD')}`)
-    //           .set({date: data.date, masuk: data})
-    //           .then(() => {
-    //             setPresence('keluar');
-    //             showSuccess('Berhasil Absen Masuk');
-    //           });
-    //       } else {
-    //         await usersRef()
-    //           .doc(`${uid}`)
-    //           .set(dataAkun)
-    //           .then(async () => {
-    //             await usersRef()
-    //               .doc(`${uid}/presence/${moment().format('YYYY')}`)
-    //               .collection(`${moment().format('MM')}`)
-    //               .doc(`${moment().format('DD')}`)
-    //               .set({date: data.date, masuk: data})
-    //               .then(() => {
-    //                 setPresence('keluar');
-    //                 showSuccess('Berhasil Absen Masuk');
-    //               });
-    //           });
-    //       }
-    //     });
-    // }
-
-    // if (moment().isBetween(mulaiJamPulang, batasJamPulang)) {
-    //   await usersRef()
-    //     .doc(`${uid}/presence/${moment().format('YYYY')}`)
-    //     .collection(`${moment().format('MM')}`)
-    //     .doc(`${moment().format('DD')}`)
-    //     .get()
-    //     .then(async doc => {
-    //       if (doc.exists) {
-    //         await usersRef()
-    //           .doc(`${uid}/presence/${moment().format('YYYY')}`)
-    //           .collection(`${moment().format('MM')}`)
-    //           .doc(`${moment().format('DD')}`)
-    //           .update({keluar: data})
-    //           .then(() => {
-    //             setPresence('alreadyPresence');
-    //             showSuccess('Berhasil Absen Keluar');
-    //           });
-    //       } else if (data.status) {
-    //         await usersRef()
-    //           .doc(`${uid}/presence/${moment().format('YYYY')}`)
-    //           .collection(`${moment().format('MM')}`)
-    //           .doc(`${moment().format('DD')}`)
-    //           .set({date: data.date, status: data.status});
-    //       } else {
-    //         await usersRef()
-    //           .doc(`${uid}/presence/${moment().format('YYYY')}`)
-    //           .collection(`${moment().format('MM')}`)
-    //           .doc(`${moment().format('DD')}`)
-    //           .set({keluar: data})
-    //           .then(() => {
-    //             setPresence('alreadyPresence');
-    //             showSuccess('Berhasil Absen Keluar');
-    //           });
-    //       }
-    //     });
-    // }
+    const mulaiJamMasuk = moment(dataSetting?.mulaiMasuk, 'HH:mm');
+    const batasJamMasuk = moment(dataSetting?.batasMasuk, 'HH:mm');
+    const mulaiJamPulang = moment(dataSetting?.mulaiPulang, 'HH:mm');
+    const batasJamPulang = moment(dataSetting?.batasPulang, 'HH:mm');
     await usersRef()
-      .doc(`${uid}/presence/${moment().format('YYYY')}`)
-      .collection(`${moment().format('MM')}`)
-      .doc(`${moment().format('DD')}`)
+      .doc(`${uid}`)
       .get()
       .then(async doc => {
-        if (doc.exists) {
-          await usersRef()
-            .doc(`${uid}/presence/${moment().format('YYYY')}`)
-            .collection(`${moment().format('MM')}`)
-            .doc(`${moment().format('DD')}`)
-            .update({keluar: data})
-            .then(() => {
-              setPresence('alreadyPresence');
-              showSuccess('Berhasil Absen Keluar');
-            });
-        } else if (data.status) {
-          await usersRef()
-            .doc(`${uid}/presence/${moment().format('YYYY')}`)
-            .collection(`${moment().format('MM')}`)
-            .doc(`${moment().format('DD')}`)
-            .set({date: data.date, status: data.status});
-        } else {
-          await usersRef()
-            .doc(`${uid}`)
-            .get()
-            .then(async doc => {
-              if (doc.exists) {
+        if (moment().isBetween(mulaiJamMasuk, batasJamMasuk)) {
+          if (doc.exists) {
+            await usersRef()
+              .doc(`${uid}/presence/${moment().format('YYYY')}`)
+              .collection(`${moment().format('MM')}`)
+              .doc(`${moment().format('DD')}`)
+              .set({date: data.date, masuk: data})
+              .then(() => {
+                setPresence('keluar');
+                showSuccess('Berhasil Absen Masuk');
+              });
+          } else {
+            await usersRef()
+              .doc(`${uid}`)
+              .set(dataAkun)
+              .then(async () => {
                 await usersRef()
                   .doc(`${uid}/presence/${moment().format('YYYY')}`)
                   .collection(`${moment().format('MM')}`)
@@ -147,25 +69,51 @@ export const absen =
                     setPresence('keluar');
                     showSuccess('Berhasil Absen Masuk');
                   });
+              });
+          }
+        }
+        if (moment().isBetween(mulaiJamPulang, batasJamPulang)) {
+          await usersRef()
+            .doc(`${uid}/presence/${moment().format('YYYY')}`)
+            .collection(`${moment().format('MM')}`)
+            .doc(`${moment().format('DD')}`)
+            .get()
+            .then(async doc => {
+              if (doc.exists) {
+                await usersRef()
+                  .doc(`${uid}/presence/${moment().format('YYYY')}`)
+                  .collection(`${moment().format('MM')}`)
+                  .doc(`${moment().format('DD')}`)
+                  .update({keluar: data})
+                  .then(() => {
+                    setPresence('alreadyPresence');
+                    showSuccess('Berhasil Absen Keluar');
+                  });
               } else {
                 await usersRef()
-                  .doc(`${uid}`)
-                  .set(dataAkun)
-                  .then(async () => {
-                    await usersRef()
-                      .doc(`${uid}/presence/${moment().format('YYYY')}`)
-                      .collection(`${moment().format('MM')}`)
-                      .doc(`${moment().format('DD')}`)
-                      .set({date: data.date, masuk: data})
-                      .then(() => {
-                        setPresence('keluar');
-                        showSuccess('Berhasil Absen Masuk');
-                      });
+                  .doc(`${uid}/presence/${moment().format('YYYY')}`)
+                  .collection(`${moment().format('MM')}`)
+                  .doc(`${moment().format('DD')}`)
+                  .set({date: data.date, keluar: data})
+                  .then(() => {
+                    setPresence('alreadyPresence');
+                    showSuccess('Berhasil Absen Keluar');
                   });
               }
             });
+        } else if (data.status) {
+          await usersRef()
+            .doc(`${uid}/presence/${moment().format('YYYY')}`)
+            .collection(`${moment().format('MM')}`)
+            .doc(`${moment().format('DD')}`)
+            .set({
+              date: data.date,
+              status: data.status,
+              photoBukti: data.photoBukti,
+            });
         }
       });
+
     dispatch(setPresenceLoading(false));
     dispatch(setPresenceSuccess(true));
   };
@@ -190,29 +138,41 @@ export const setPresence = (presence: any) => ({
   presence,
 });
 
-export const getPresence = (uid: any) => async (dispatch: any) => {
-  dispatch(getPresenceLoading(true));
-  await usersRef()
-    .doc(`${uid}/presence/${moment().format('YYYY')}`)
-    .collection(`${moment().format('MM')}`)
-    .doc(`${moment().format('DD')}`)
-    .get()
-    .then(async (doc: any) => {
-      if (doc.exists) {
-        dispatch(getPresenceSuccess(doc.data()));
-        if (doc.data().status) {
-          dispatch(setPresence('alreadyPresence'));
-        } else if (doc.data().keluar && doc.data().masuk) {
-          dispatch(setPresence('alreadyPresence'));
-        } else if (doc.data().masuk) {
-          dispatch(setPresence('keluar'));
+export const setDisablePresence = (disable: any) => ({
+  type: SET_DISABLE_PRESENCE,
+  disable,
+});
+
+export const getPresence =
+  (uid: any, dataSetting: any) => async (dispatch: any) => {
+    dispatch(getPresenceLoading(true));
+    const mulaiJamMasuk = moment(dataSetting.mulaiMasuk, 'HH:mm');
+    const batasJamMasuk = moment(dataSetting.batasMasuk, 'HH:mm');
+    const mulaiJamPulang = moment(dataSetting?.mulaiPulang, 'HH:mm');
+    const batasJamPulang = moment(dataSetting?.batasPulang, 'HH:mm');
+    await usersRef()
+      .doc(`${uid}/presence/${moment().format('YYYY')}`)
+      .collection(`${moment().format('MM')}`)
+      .doc(`${moment().format('DD')}`)
+      .get()
+      .then(async (doc: any) => {
+        if (doc.exists) {
+          dispatch(getPresenceSuccess(doc.data()));
+          if (doc.data().status) {
+            dispatch(setPresence('alreadyPresence'));
+          } else if (doc.data().keluar && doc.data().masuk) {
+            dispatch(setPresence('alreadyPresence'));
+          } else if (doc.data().masuk) {
+            dispatch(setPresence('keluar'));
+          } else if (doc.data().keluar) {
+            dispatch(setPresence('alreadyPresence'));
+          }
+        } else {
+          dispatch(getPresenceSuccess(false));
         }
-      } else {
-        dispatch(getPresenceSuccess(false));
-      }
-    });
-  dispatch(getPresenceLoading(false));
-};
+      });
+    dispatch(getPresenceLoading(false));
+  };
 
 export const getAllPresenceLoading = (loading: any) => ({
   type: GET_ALL_PRESENCE_LOADING,

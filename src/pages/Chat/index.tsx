@@ -105,16 +105,19 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 16,
   },
-  emptyText: {
-    fontSize: SIZE.font14,
-    color: COLORS.text.subtitle,
-    fontFamily: FONTS.primary[400],
-  },
+
   empty: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 16,
+  },
+
+  emptyText: {
+    fontSize: SIZE.font16,
+    color: COLORS.text.primary,
+    fontFamily: FONTS.primary[600],
+    bottom: 30,
   },
 
   image: {
