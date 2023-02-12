@@ -1,7 +1,12 @@
 import moment from 'moment';
 import React, {useEffect, useRef} from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
-import MapView, {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {
+  Callout,
+  Circle,
+  Marker,
+  PROVIDER_GOOGLE,
+} from 'react-native-maps';
 import {Image as ImageSvg, Svg} from 'react-native-svg';
 import {ILNullPhoto} from '../../../assets';
 import {Headers} from '../../../components';
@@ -14,9 +19,13 @@ import {
 } from '../../../reduxx';
 import {COLORS, FONTS, windowWidth} from '../../../theme';
 
-const TrackingAdmin = ({navigation}: any) => {
-  const {dataTrackingLocation} = useTrackingLocation();
+const TrackingAdmin = ({navigation, route}: any) => {
   const dispatch = useAppDispatch();
+
+  const {latitude, longitude} = route.params;
+
+  const {dataTrackingLocation} = useTrackingLocation();
+
   const {location} = useAppSelector((state: RootState) => state.dataLocation);
   const mapRef = useRef(null);
   useEffect(() => {
@@ -121,6 +130,16 @@ const TrackingAdmin = ({navigation}: any) => {
             </Marker>
           );
         })}
+        <Circle
+          center={{
+            latitude: latitude,
+            longitude: longitude,
+          }}
+          radius={100}
+          strokeWidth={1}
+          strokeColor="rgba(0,0,255,0.5)"
+          fillColor="rgba(0,0,255,0.5)"
+        />
       </MapView>
     </View>
   );

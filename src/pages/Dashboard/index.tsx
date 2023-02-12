@@ -398,7 +398,7 @@ const Dashboard = ({navigation}: any) => {
                     dispatch(getRequest(dataAkun.uid));
                     dispatch(getNotif(dataAkun.uid));
                     dispatch(getDataSetting());
-                    // checkBatasJamAbsen();
+                    checkBatasJamAbsen();
                     setRefreshing(false);
                   }}
                 />

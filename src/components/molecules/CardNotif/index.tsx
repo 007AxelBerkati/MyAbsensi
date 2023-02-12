@@ -50,6 +50,8 @@ const CardNotif = ({
           return 'User Izin Sakit';
         case 'Cuti':
           return 'User Izin Cuti';
+        case 'Dinas':
+          return 'User Izin Dinas';
         default:
           return;
       }
@@ -103,6 +105,8 @@ const CardNotif = ({
           return <BadgeStatus type="pending" text="Sakit" />;
         case 'Cuti':
           return <BadgeStatus type="pending" text="Cuti" />;
+        case 'Dinas':
+          return <BadgeStatus type="pending" text="Dinas" />;
         case 'declined':
           return <BadgeStatus type="declined" text="Declined" />;
       }

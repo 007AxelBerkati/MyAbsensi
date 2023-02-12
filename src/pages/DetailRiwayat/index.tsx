@@ -29,27 +29,41 @@ const DetailRiwayat = ({navigation, route}: any) => {
         ) : (
           <View>
             <CardDetailPresensi
-              date={moment(detailPresence?.masuk.date).format(
-                'dddd, DD MMMM YYYY'
-              )}
-              time={moment(detailPresence?.masuk.date).format('HH:mm')}
-              status={
-                detailPresence?.masuk.in_area
-                  ? 'Absen Di Lokasi Sekolah'
-                  : 'Absen Di Luar Lokasi Sekolah'
+              date={
+                detailPresence?.masuk?.date
+                  ? moment(detailPresence?.masuk?.date).format(
+                      'dddd, DD MMMM YYYY'
+                    )
+                  : '-'
               }
-              address={detailPresence?.masuk.address}
+              time={
+                detailPresence?.masuk?.date
+                  ? moment(detailPresence?.masuk?.date).format('HH:mm')
+                  : '--:--'
+              }
+              status={
+                detailPresence?.masuk
+                  ? detailPresence?.masuk?.in_area
+                    ? 'Absen Di Lokasi Sekolah'
+                    : 'Absen Di Luar Lokasi Sekolah'
+                  : 'Belum Melakukan Absen'
+              }
+              address={
+                detailPresence?.masuk?.address
+                  ? detailPresence?.masuk?.address
+                  : '-'
+              }
               statusAbsensi={detailPresence?.status}
               type="masuk"
             />
             {detailPresence?.keluar && (
               <CardDetailPresensi
-                date={moment(detailPresence?.keluar.date).format(
+                date={moment(detailPresence?.keluar?.date).format(
                   'dddd, DD MMMM YYYY'
                 )}
-                time={moment(detailPresence?.keluar.date).format('HH:mm')}
+                time={moment(detailPresence?.keluar?.date).format('HH:mm')}
                 status={
-                  detailPresence?.keluar.in_area
+                  detailPresence?.keluar?.in_area
                     ? 'Absen Di Lokasi Sekolah'
                     : 'Absen Di Luar Lokasi Sekolah'
                 }

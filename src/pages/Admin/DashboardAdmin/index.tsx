@@ -14,6 +14,7 @@ import useUser from '../../../hooks/useUser';
 import {databaseRef, getData} from '../../../plugins';
 import {
   getAkun,
+  getDataSetting,
   getPresenceAllUser,
   getRequest,
   RootState,
@@ -29,6 +30,9 @@ const DashboardAdmin = ({navigation}: any) => {
   const {allPresence, loading, total} = useAppSelector(
     (state: RootState) => state.dataPresence
   );
+
+  const {dataSetting} = useAppSelector((state: RootState) => state.dataSetting);
+
   const {totalUser} = useUser();
 
   const [refreshing, setRefreshing] = useState(false);
@@ -38,6 +42,7 @@ const DashboardAdmin = ({navigation}: any) => {
       dispatch(getAkun(res.uid));
       dispatch(getRequest(res.uid));
       dispatch(getPresenceAllUser());
+      dispatch(getDataSetting());
     });
   }, []);
 
@@ -47,6 +52,7 @@ const DashboardAdmin = ({navigation}: any) => {
       dispatch(getAkun(res.uid));
       dispatch(getRequest(res.uid));
       dispatch(getPresenceAllUser());
+      dispatch(getDataSetting());
     });
     setRefreshing(false);
   }, []);
@@ -145,7 +151,11 @@ const DashboardAdmin = ({navigation}: any) => {
                     : '--:--'
                 }
                 onPress={() =>
-                  item?.masuk
+                  item?.status
+                    ? navigation.navigate('DetailRiwayat', {
+                        detailPresence: item,
+                      })
+                    : item?.masuk
                     ? navigation.navigate('DetailRiwayat', {
                         detailPresence: item,
                       })
@@ -186,7 +196,11 @@ const DashboardAdmin = ({navigation}: any) => {
                     : '--:--'
                 }
                 onPress={() =>
-                  item?.keluar
+                  item?.status
+                    ? navigation.navigate('DetailRiwayat', {
+                        detailPresence: item,
+                      })
+                    : item?.keluar
                     ? navigation.navigate('DetailRiwayat', {
                         detailPresence: item,
                       })
@@ -213,7 +227,10 @@ const DashboardAdmin = ({navigation}: any) => {
         type="floating-btn"
         color={COLORS.secondary}
         onPress={() => {
-          navigation.navigate('TrackingAdmin');
+          navigation.navigate('TrackingAdmin', {
+            latitude: dataSetting?.latitudeSekolah,
+            longitude: dataSetting?.longitudeSekolah,
+          });
         }}
       />
     </View>

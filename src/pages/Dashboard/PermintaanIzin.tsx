@@ -128,6 +128,7 @@ const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
                 {label: 'Izin', value: 'Izin'},
                 {label: 'Sakit', value: 'Sakit'},
                 {label: 'Cuti', value: 'Cuti'},
+                {label: 'Dinas Luar', value: 'Dinas'},
               ]}
               setFieldValue={setFieldValue}
               value={values.jenis_izin}

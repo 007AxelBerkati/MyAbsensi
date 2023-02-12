@@ -1,10 +1,9 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
-import MapView, {Circle, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import {StyleSheet, Text, View} from 'react-native';
+import MapView, {Circle, PROVIDER_GOOGLE} from 'react-native-maps';
 import {Headers} from '../../components';
 import {RootState, useAppSelector} from '../../reduxx';
 import {COLORS, FONTS, SIZE, windowWidth} from '../../theme';
-import {dummyData} from '../../utils';
 
 const Location = ({navigation, route}: any) => {
   const {latitude, longitude} = route.params;
