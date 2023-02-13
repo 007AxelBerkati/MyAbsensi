@@ -84,6 +84,8 @@ const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
       return 'Loading...';
     } else if (dataPresence) {
       return 'Anda tidak bisa mengajukan izin, jika telah absen';
+    } else if (moment().day() === 0) {
+      return 'Anda tidak bisa mengajukan izin, jika hari minggu';
     } else {
       return 'Ajukan Izin';
     }
@@ -176,11 +178,12 @@ const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
                   !dirty ||
                   loading ||
                   isRequestPending ||
-                  dataPresence
+                  dataPresence ||
+                  moment().day() === 0
                 }
               />
             </View>
-            <Gap height={windowHeight * 0.05} />
+            <Gap height={windowHeight * 0.1} />
           </ScrollView>
         )}
       </Formik>

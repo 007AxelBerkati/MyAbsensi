@@ -47,6 +47,7 @@ import {
   absen,
   getAkun,
   getDataSetting,
+  getLocation,
   getNotif,
   getPresence,
   getRequest,
@@ -69,7 +70,10 @@ const Dashboard = ({navigation}: any) => {
 
   const [isModalVisible, setisModalVisible] = useState(false);
 
-  const [isTimeForPresence, setIsTimeForPresence] = useState(true);
+  const [isTimeForPresence, setIsTimeForPresence] = useState({
+    isTime: false,
+    message: '',
+  });
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -219,7 +223,7 @@ const Dashboard = ({navigation}: any) => {
           <CardService
             icon="clock-check-outline"
             title="Jam Pulang"
-            clock={'19:10'}
+            clock={dataSetting?.batasPulang || '--:--'}
           />
         </View>
       );
@@ -231,15 +235,23 @@ const Dashboard = ({navigation}: any) => {
   }, [renderInfoAttendance]);
 
   const renderTitlePresence = () => {
-    switch (presence) {
-      case 'masuk':
-        return 'Absen Masuk';
-      case 'keluar':
-        return 'Absen Keluar';
-      case 'alreadyPresence':
-        return 'Anda sudah absen';
-      default:
-        return 'Absen Masuk';
+    if (isTimeForPresence.message) {
+      return isTimeForPresence.message;
+    }
+    if (presence === 'masuk') {
+      return 'Absen Masuk';
+    }
+    if (presence === 'keluar') {
+      return 'Absen Keluar';
+    }
+    if (presence === 'alreadyPresence') {
+      return 'Anda sudah absen';
+    }
+
+    if (isTimeForPresence.message) {
+      return isTimeForPresence.message;
+    } else {
+      return 'Absen Masuk';
     }
   };
 
@@ -345,16 +357,40 @@ const Dashboard = ({navigation}: any) => {
       const batasJamMasuk = moment(dataSetting?.batasMasuk, 'HH:mm');
       const mulaiJamPulang = moment(dataSetting?.mulaiPulang, 'HH:mm');
       const batasJamPulang = moment(dataSetting?.batasPulang, 'HH:mm');
+
+      if (moment(currTime).day() === 0) {
+        setIsTimeForPresence({
+          isTime: false,
+          message: 'Hari Minggu, tidak ada absen',
+        });
+        return;
+      }
+
+      if (distance > 0.1) {
+        setIsTimeForPresence({
+          isTime: false,
+          message: 'Belum Di Lokasi',
+        });
+        return;
+      }
       if (presence === 'masuk' || presence === 'keluar') {
         if (currTime.isBetween(mulaiJamMasuk, batasJamMasuk)) {
           dispatch(setPresence('masuk'));
-          setIsTimeForPresence(true);
+          setIsTimeForPresence({
+            isTime: true,
+            message: 'Absen Masuk',
+          });
         } else if (currTime.isBetween(mulaiJamPulang, batasJamPulang)) {
           dispatch(setPresence('keluar'));
-          setIsTimeForPresence(true);
+          setIsTimeForPresence({
+            isTime: true,
+            message: 'Absen Keluar',
+          });
         } else {
-          console.log('tidak ada');
-          setIsTimeForPresence(false);
+          setIsTimeForPresence({
+            isTime: false,
+            message: 'Tidak ada absen',
+          });
         }
       }
     } catch {
@@ -370,14 +406,14 @@ const Dashboard = ({navigation}: any) => {
   }, []);
 
   // to get distance and data location
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     dispatch(
-  //       getLocation(dataSetting?.latitudeSekolah, dataSetting?.longitudeSekolah)
-  //     );
-  //   }, 3000);
-  //   return () => clearInterval(interval);
-  // }, [location]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      dispatch(
+        getLocation(dataSetting?.latitudeSekolah, dataSetting?.longitudeSekolah)
+      );
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [location]);
 
   if (loading) {
     return <Loading type="full" />;
@@ -452,7 +488,7 @@ const Dashboard = ({navigation}: any) => {
                     isLoadingPresence ? 'Loading...' : renderTitlePresenceMemo
                   }
                   absen={presence}
-                  disable={isLoadingPresence || !isTimeForPresence}
+                  disable={isLoadingPresence || !isTimeForPresence.isTime}
                   onPress={async () => {
                     attendance();
                   }}

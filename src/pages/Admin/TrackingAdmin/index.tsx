@@ -31,7 +31,6 @@ const TrackingAdmin = ({navigation, route}: any) => {
   useEffect(() => {
     dispatch(getLocation(location.latitude, location.longitude));
   }, []);
-  // let myMap: any;
 
   return (
     <View style={styles.pages}>

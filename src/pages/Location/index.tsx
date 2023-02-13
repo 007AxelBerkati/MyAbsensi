@@ -42,7 +42,7 @@ const Location = ({navigation, route}: any) => {
               color: COLORS.text.secondary,
               textAlign: 'center',
             }}>
-            {distance.toFixed(2)} KM lagi menuju sekolah
+            {(distance - 0.1).toFixed(2)} KM lagi menuju sekolah
           </Text>
         )}
       </View>
