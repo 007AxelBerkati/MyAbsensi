@@ -123,79 +123,80 @@ const Dashboard = ({navigation}: any) => {
 
   const attendance = async () => {
     setIsLoadingPresence(true);
-    try {
-      const {isLocationMocked} = await isMockingLocation();
-      if (isLocationMocked) {
+    // try {
+    //   const {isLocationMocked} = await isMockingLocation();
+    //   if (isLocationMocked) {
+    //     Alert.alert(
+    //       'Detected Location Spoofing',
+    //       'Please turn off location spoofing',
+    //       [{text: 'OK'}],
+    //       {cancelable: false}
+    //     );
+    //   } else {
+    if (presence === 'alreadyPresence') {
+      showInfo('You have already checked in today', () => {});
+    } else {
+      if (
+        dataAkun.address &&
+        dataAkun.birth_date &&
+        dataAkun.phone_number &&
+        dataAkun.tempat_lahir
+      ) {
+        TouchID.isSupported(optionalConfigObject)
+          .then(biometryType => {
+            if (biometryType === 'FaceID') {
+              Alert.alert('This device supports FaceID');
+            } else {
+              TouchID.authenticate('Lakukan Absen', optionalConfigObject)
+                .then(() => {
+                  dataForPresence();
+                  dispatch(getPresence(dataAkun.uid, dataSetting));
+                })
+                .catch((error: any) => {
+                  showError(error.message);
+                });
+            }
+          })
+          .catch(err => {
+            showInfo(
+              'Device Tidak Support Touch Id, Silahkan login dengan mengisikan akun dan password anda',
+              () => {}
+            );
+            setisModalVisible(true);
+          });
+      } else {
         Alert.alert(
-          'Detected Location Spoofing',
-          'Please turn off location spoofing',
-          [{text: 'OK'}],
+          'Profile data is incomplete',
+          'Please complete your profile data first',
+          [
+            {text: 'No', style: 'cancel'},
+            {
+              text: 'Update Profile',
+              onPress: () => navigation.navigate('EditProfile'),
+            },
+          ],
           {cancelable: false}
         );
-      } else {
-        if (presence === 'alreadyPresence') {
-          showInfo('You have already checked in today', () => {});
-        } else {
-          if (
-            dataAkun.address &&
-            dataAkun.birth_date &&
-            dataAkun.phone_number &&
-            dataAkun.tempat_lahir
-          ) {
-            TouchID.isSupported(optionalConfigObject)
-              .then(biometryType => {
-                if (biometryType === 'FaceID') {
-                  Alert.alert('This device supports FaceID');
-                } else {
-                  TouchID.authenticate('Lakukan Absen', optionalConfigObject)
-                    .then(() => {
-                      dataForPresence();
-                      dispatch(getPresence(dataAkun.uid, dataSetting));
-                    })
-                    .catch((error: any) => {
-                      showError(error.message);
-                    });
-                }
-              })
-              .catch(err => {
-                showInfo(
-                  'Device Tidak Support Touch Id, Silahkan login dengan mengisikan akun dan password anda',
-                  () => {}
-                );
-                setisModalVisible(true);
-              });
-          } else {
-            Alert.alert(
-              'Profile data is incomplete',
-              'Please complete your profile data first',
-              [
-                {text: 'No', style: 'cancel'},
-                {
-                  text: 'Update Profile',
-                  onPress: () => navigation.navigate('EditProfile'),
-                },
-              ],
-              {cancelable: false}
-            );
-          }
-        }
       }
-    } catch (error: any) {
-      switch (error.code) {
-        case MockLocationDetectorErrorCode.GPSNotEnabled: {
-          Alert.alert('GPS Not Enabled', 'Please enable GPS');
-          return;
-        }
-        case MockLocationDetectorErrorCode.CantDetermine: {
-          Alert.alert(
-            'Cannot determine if mock location is enabled',
-            'Please try again'
-          );
-        }
-      }
-    } finally {
-      setIsLoadingPresence(false);
     }
+    setIsLoadingPresence(false);
+
+    // } catch (error: any) {
+    //   switch (error.code) {
+    //     case MockLocationDetectorErrorCode.GPSNotEnabled: {
+    //       Alert.alert('GPS Not Enabled', 'Please enable GPS');
+    //       return;
+    //     }
+    //     case MockLocationDetectorErrorCode.CantDetermine: {
+    //       Alert.alert(
+    //         'Cannot determine if mock location is enabled',
+    //         'Please try again'
+    //       );
+    //     }
+    //   }
+    // } finally {
+    //   setIsLoadingPresence(false);
+    // }
   };
 
   const renderInfoAttendance = useCallback(() => {
@@ -358,21 +359,21 @@ const Dashboard = ({navigation}: any) => {
       const mulaiJamPulang = moment(dataSetting?.mulaiPulang, 'HH:mm');
       const batasJamPulang = moment(dataSetting?.batasPulang, 'HH:mm');
 
-      if (moment(currTime).day() === 0) {
-        setIsTimeForPresence({
-          isTime: false,
-          message: 'Hari Minggu, tidak ada absen',
-        });
-        return;
-      }
+      // if (moment(currTime).day() === 0) {
+      //   setIsTimeForPresence({
+      //     isTime: false,
+      //     message: 'Hari Minggu, tidak ada absen',
+      //   });
+      //   return;
+      // }
 
-      if (distance > 0.1) {
-        setIsTimeForPresence({
-          isTime: false,
-          message: 'Belum Di Lokasi',
-        });
-        return;
-      }
+      // if (distance > 0.1) {
+      //   setIsTimeForPresence({
+      //     isTime: false,
+      //     message: 'Belum Di Lokasi',
+      //   });
+      //   return;
+      // }
       if (presence === 'masuk' || presence === 'keluar') {
         if (currTime.isBetween(mulaiJamMasuk, batasJamMasuk)) {
           dispatch(setPresence('masuk'));
