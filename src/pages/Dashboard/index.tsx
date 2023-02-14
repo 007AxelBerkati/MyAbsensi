@@ -70,10 +70,7 @@ const Dashboard = ({navigation}: any) => {
 
   const [isModalVisible, setisModalVisible] = useState(false);
 
-  const [isTimeForPresence, setIsTimeForPresence] = useState({
-    isTime: false,
-    message: '',
-  });
+  const [isTimeForPresence, setIsTimeForPresence] = useState(false);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -117,86 +114,85 @@ const Dashboard = ({navigation}: any) => {
           pekerjaan: dataAkun.pekerjaan,
         };
         await dispatch(absen(dataAkun.uid, dataAbsen, dataUser, dataSetting));
-        dispatch(getPresence(dataAkun.uid, dataSetting));
+        dispatch(getPresence(dataAkun.uid));
       });
   };
 
   const attendance = async () => {
     setIsLoadingPresence(true);
-    // try {
-    //   const {isLocationMocked} = await isMockingLocation();
-    //   if (isLocationMocked) {
-    //     Alert.alert(
-    //       'Detected Location Spoofing',
-    //       'Please turn off location spoofing',
-    //       [{text: 'OK'}],
-    //       {cancelable: false}
-    //     );
-    //   } else {
-    if (presence === 'alreadyPresence') {
-      showInfo('You have already checked in today', () => {});
-    } else {
-      if (
-        dataAkun.address &&
-        dataAkun.birth_date &&
-        dataAkun.phone_number &&
-        dataAkun.tempat_lahir
-      ) {
-        TouchID.isSupported(optionalConfigObject)
-          .then(biometryType => {
-            if (biometryType === 'FaceID') {
-              Alert.alert('This device supports FaceID');
-            } else {
-              TouchID.authenticate('Lakukan Absen', optionalConfigObject)
-                .then(() => {
-                  dataForPresence();
-                  dispatch(getPresence(dataAkun.uid, dataSetting));
-                })
-                .catch((error: any) => {
-                  showError(error.message);
-                });
-            }
-          })
-          .catch(err => {
-            showInfo(
-              'Device Tidak Support Touch Id, Silahkan login dengan mengisikan akun dan password anda',
-              () => {}
-            );
-            setisModalVisible(true);
-          });
-      } else {
+    try {
+      const {isLocationMocked} = await isMockingLocation();
+      if (isLocationMocked) {
         Alert.alert(
-          'Profile data is incomplete',
-          'Please complete your profile data first',
-          [
-            {text: 'No', style: 'cancel'},
-            {
-              text: 'Update Profile',
-              onPress: () => navigation.navigate('EditProfile'),
-            },
-          ],
+          'Detected Location Spoofing',
+          'Please turn off location spoofing',
+          [{text: 'OK'}],
           {cancelable: false}
         );
+      } else {
+        if (presence === 'alreadyPresence') {
+          showInfo('You have already checked in today', () => {});
+        } else {
+          if (
+            dataAkun.address &&
+            dataAkun.birth_date &&
+            dataAkun.phone_number &&
+            dataAkun.tempat_lahir
+          ) {
+            TouchID.isSupported(optionalConfigObject)
+              .then(biometryType => {
+                if (biometryType === 'FaceID') {
+                  Alert.alert('This device supports FaceID');
+                } else {
+                  TouchID.authenticate('Lakukan Absen', optionalConfigObject)
+                    .then(() => {
+                      dataForPresence();
+                      dispatch(getPresence(dataAkun.uid));
+                    })
+                    .catch((error: any) => {
+                      showError(error.message);
+                    });
+                }
+              })
+              .catch(err => {
+                showInfo(
+                  'Device Tidak Support Touch Id, Silahkan login dengan mengisikan akun dan password anda',
+                  () => {}
+                );
+                setisModalVisible(true);
+              });
+          } else {
+            Alert.alert(
+              'Profile data is incomplete',
+              'Please complete your profile data first',
+              [
+                {text: 'No', style: 'cancel'},
+                {
+                  text: 'Update Profile',
+                  onPress: () => navigation.navigate('EditProfile'),
+                },
+              ],
+              {cancelable: false}
+            );
+          }
+        }
       }
+    } catch (error: any) {
+      switch (error.code) {
+        case MockLocationDetectorErrorCode.GPSNotEnabled: {
+          Alert.alert('GPS Not Enabled', 'Please enable GPS');
+          return;
+        }
+        case MockLocationDetectorErrorCode.CantDetermine: {
+          Alert.alert(
+            'Cannot determine if mock location is enabled',
+            'Please try again'
+          );
+        }
+      }
+    } finally {
+      setIsLoadingPresence(false);
     }
-    setIsLoadingPresence(false);
-
-    // } catch (error: any) {
-    //   switch (error.code) {
-    //     case MockLocationDetectorErrorCode.GPSNotEnabled: {
-    //       Alert.alert('GPS Not Enabled', 'Please enable GPS');
-    //       return;
-    //     }
-    //     case MockLocationDetectorErrorCode.CantDetermine: {
-    //       Alert.alert(
-    //         'Cannot determine if mock location is enabled',
-    //         'Please try again'
-    //       );
-    //     }
-    //   }
-    // } finally {
-    //   setIsLoadingPresence(false);
-    // }
   };
 
   const renderInfoAttendance = useCallback(() => {
@@ -236,9 +232,6 @@ const Dashboard = ({navigation}: any) => {
   }, [renderInfoAttendance]);
 
   const renderTitlePresence = () => {
-    if (isTimeForPresence.message) {
-      return isTimeForPresence.message;
-    }
     if (presence === 'masuk') {
       return 'Absen Masuk';
     }
@@ -247,10 +240,6 @@ const Dashboard = ({navigation}: any) => {
     }
     if (presence === 'alreadyPresence') {
       return 'Anda sudah absen';
-    }
-
-    if (isTimeForPresence.message) {
-      return isTimeForPresence.message;
     } else {
       return 'Absen Masuk';
     }
@@ -359,39 +348,38 @@ const Dashboard = ({navigation}: any) => {
       const mulaiJamPulang = moment(dataSetting?.mulaiPulang, 'HH:mm');
       const batasJamPulang = moment(dataSetting?.batasPulang, 'HH:mm');
 
-      // if (moment(currTime).day() === 0) {
-      //   setIsTimeForPresence({
-      //     isTime: false,
-      //     message: 'Hari Minggu, tidak ada absen',
-      //   });
-      //   return;
-      // }
+      if (moment(currTime).day() === 0) {
+        setIsTimeForPresence(false);
+        return;
+      }
 
-      // if (distance > 0.1) {
-      //   setIsTimeForPresence({
-      //     isTime: false,
-      //     message: 'Belum Di Lokasi',
-      //   });
-      //   return;
-      // }
-      if (presence === 'masuk' || presence === 'keluar') {
+      if (distance > 0.1) {
+        setIsTimeForPresence(false);
+        return;
+      }
+
+      if (dataPresence?.status) {
+        setIsTimeForPresence(false);
+        dispatch(setPresence('alreadyPresence'));
+      }
+
+      if (dataPresence?.masuk) {
+        setIsTimeForPresence(false);
+        dispatch(setPresence('keluar'));
+      } else {
         if (currTime.isBetween(mulaiJamMasuk, batasJamMasuk)) {
+          setIsTimeForPresence(true);
           dispatch(setPresence('masuk'));
-          setIsTimeForPresence({
-            isTime: true,
-            message: 'Absen Masuk',
-          });
-        } else if (currTime.isBetween(mulaiJamPulang, batasJamPulang)) {
+        }
+      }
+
+      if (dataPresence?.keluar) {
+        setIsTimeForPresence(false);
+        dispatch(setPresence('alreadyPresence'));
+      } else {
+        if (currTime.isBetween(mulaiJamPulang, batasJamPulang)) {
+          setIsTimeForPresence(true);
           dispatch(setPresence('keluar'));
-          setIsTimeForPresence({
-            isTime: true,
-            message: 'Absen Keluar',
-          });
-        } else {
-          setIsTimeForPresence({
-            isTime: false,
-            message: 'Tidak ada absen',
-          });
         }
       }
     } catch {
@@ -401,7 +389,7 @@ const Dashboard = ({navigation}: any) => {
   // to get data presence
   useEffect(() => {
     getData('user').then((res: any) => {
-      dispatch(getPresence(res.uid, dataSetting));
+      dispatch(getPresence(res.uid));
       checkBatasJamAbsen();
     });
   }, []);
@@ -412,7 +400,8 @@ const Dashboard = ({navigation}: any) => {
       dispatch(
         getLocation(dataSetting?.latitudeSekolah, dataSetting?.longitudeSekolah)
       );
-    }, 3000);
+      checkBatasJamAbsen();
+    }, 1000);
     return () => clearInterval(interval);
   }, [location]);
 
@@ -489,7 +478,7 @@ const Dashboard = ({navigation}: any) => {
                     isLoadingPresence ? 'Loading...' : renderTitlePresenceMemo
                   }
                   absen={presence}
-                  disable={isLoadingPresence || !isTimeForPresence.isTime}
+                  disable={isLoadingPresence || !isTimeForPresence}
                   onPress={async () => {
                     attendance();
                   }}

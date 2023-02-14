@@ -1,19 +1,22 @@
 import moment from 'moment';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
   FlatList,
   Image,
   ImageBackground,
+  RefreshControl,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 import {Bg, ILNullPhoto, PermintaanNull} from '../../../assets';
 import {CardNotif, EmptySkeletonNotif, Headers} from '../../../components';
+import {getData} from '../../../plugins';
 import {
   absen,
   deleteRequest,
+  getDataSetting,
   getRequest,
   RootState,
   updateNotif,
@@ -29,6 +32,10 @@ const Notif = ({navigation}: any) => {
     (state: RootState) => state.dataRequest
   );
 
+  const {dataSetting} = useAppSelector((state: RootState) => state.dataSetting);
+
+  const [refreshing, setRefreshing] = useState(false);
+
   const {dataAkun} = useAppSelector((state: RootState) => state.dataAkun);
 
   const onClickCardNotif = (item: any) => {
@@ -39,6 +46,14 @@ const Notif = ({navigation}: any) => {
     navigation.navigate('DetailNotif', {item, titleHeader: 'Permintaan'});
   };
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getData('user').then((res: any) => {
+      dispatch(getRequest(res.uid));
+    });
+    setRefreshing(false);
+  }, []);
+
   const emptyComponent = () => (
     <View style={styles.empty}>
       <Image source={PermintaanNull} style={styles.image} />
@@ -48,6 +63,7 @@ const Notif = ({navigation}: any) => {
 
   useEffect(() => {
     dispatch(getRequest(null));
+    dispatch(getDataSetting());
   }, []);
 
   const renderItem = ({item}: any) =>
@@ -90,11 +106,11 @@ const Notif = ({navigation}: any) => {
 
                   const dataAbsen = {
                     date: moment().format(''),
-                    status: item.jenis_izin,
-                    photoBukti: item.photo,
+                    status: item?.jenis_izin,
+                    photoBukti: item?.photo ? item?.photo : null,
                   };
 
-                  dispatch(absen(item.id_user, dataAbsen, {}));
+                  dispatch(absen(item.id_user, dataAbsen, null, null));
                   dispatch(deleteRequest(item.id_user));
                   dispatch(getRequest(null));
                 },
@@ -144,6 +160,9 @@ const Notif = ({navigation}: any) => {
         <Headers title="Permintaan" />
         <FlatList
           data={dataRequest}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           keyExtractor={item => item.uid}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
