@@ -72,6 +72,8 @@ const Dashboard = ({navigation}: any) => {
 
   const [isTimeForPresence, setIsTimeForPresence] = useState(false);
 
+  const [titlePresence, setTitlePresence] = useState('');
+
   const [refreshing, setRefreshing] = useState(false);
 
   const {dataSetting} = useAppSelector((state: RootState) => state.dataSetting);
@@ -232,22 +234,31 @@ const Dashboard = ({navigation}: any) => {
   }, [renderInfoAttendance]);
 
   const renderTitlePresence = () => {
-    if (presence === 'masuk') {
-      return 'Absen Masuk';
-    }
-    if (presence === 'keluar') {
-      return 'Absen Keluar';
-    }
-    if (presence === 'alreadyPresence') {
-      return 'Anda sudah absen';
+    if (titlePresence) {
+      if (titlePresence === 'minggu') {
+        return 'Tidak Ada Absen';
+      }
+      if (titlePresence === 'notInLocation') {
+        return 'Tidak berada di lokasi';
+      }
     } else {
-      return 'Absen Masuk';
+      if (presence === 'masuk') {
+        return 'Absen Masuk';
+      }
+      if (presence === 'keluar') {
+        return 'Absen Keluar';
+      }
+      if (presence === 'alreadyPresence') {
+        return 'Anda sudah absen';
+      } else {
+        return 'Absen Masuk';
+      }
     }
   };
 
   const renderTitlePresenceMemo = useMemo(() => {
     return renderTitlePresence();
-  }, [presence]);
+  }, [presence, titlePresence]);
 
   // code to handle bottom sheet for dashboard
   const bottomSheetRef = useRef(null);
@@ -350,11 +361,7 @@ const Dashboard = ({navigation}: any) => {
 
       if (moment(currTime).day() === 0) {
         setIsTimeForPresence(false);
-        return;
-      }
-
-      if (distance > 0.1) {
-        setIsTimeForPresence(false);
+        setTitlePresence('minggu');
         return;
       }
 
@@ -368,8 +375,14 @@ const Dashboard = ({navigation}: any) => {
         dispatch(setPresence('keluar'));
       } else {
         if (currTime.isBetween(mulaiJamMasuk, batasJamMasuk)) {
-          setIsTimeForPresence(true);
           dispatch(setPresence('masuk'));
+
+          if (distance > 0.1) {
+            setIsTimeForPresence(false);
+            setTitlePresence('notInLocation');
+            return;
+          }
+          setIsTimeForPresence(true);
         }
       }
 
@@ -378,8 +391,13 @@ const Dashboard = ({navigation}: any) => {
         dispatch(setPresence('alreadyPresence'));
       } else {
         if (currTime.isBetween(mulaiJamPulang, batasJamPulang)) {
-          setIsTimeForPresence(true);
           dispatch(setPresence('keluar'));
+          if (distance > 0.1) {
+            setIsTimeForPresence(false);
+            setTitlePresence('notInLocation');
+            return;
+          }
+          setIsTimeForPresence(true);
         }
       }
     } catch {
