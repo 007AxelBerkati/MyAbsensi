@@ -72,7 +72,7 @@ const Dashboard = ({navigation}: any) => {
 
   const [isTimeForPresence, setIsTimeForPresence] = useState(false);
 
-  const [titlePresence, setTitlePresence] = useState('');
+  const [titlePresence, setTitlePresence] = useState('wait');
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -228,8 +228,11 @@ const Dashboard = ({navigation}: any) => {
       }
       if (presence === 'alreadyPresence') {
         return 'Anda sudah absen';
+      }
+      if (presence === 'izin') {
+        return 'Anda Telah Izin';
       } else {
-        return 'Absen Masuk';
+        return 'Tunggu Sebentar';
       }
     }
   };
@@ -345,7 +348,7 @@ const Dashboard = ({navigation}: any) => {
 
       if (dataPresence?.status) {
         setIsTimeForPresence(false);
-        dispatch(setPresence('alreadyPresence'));
+        dispatch(setPresence('izin'));
       }
 
       if (dataPresence?.masuk) {
@@ -353,8 +356,7 @@ const Dashboard = ({navigation}: any) => {
         dispatch(setPresence('keluar'));
       } else {
         if (currTime.isBetween(mulaiJamMasuk, batasJamMasuk)) {
-          dispatch(setPresence('masuk'));
-
+          // dispatch(setPresence('masuk'));
           if (distance > 0.1) {
             setIsTimeForPresence(false);
             setTitlePresence('notInLocation');
@@ -367,6 +369,7 @@ const Dashboard = ({navigation}: any) => {
       if (dataPresence?.keluar) {
         setIsTimeForPresence(false);
         dispatch(setPresence('alreadyPresence'));
+        setIsTimeForPresence(true);
       } else {
         if (currTime.isBetween(mulaiJamPulang, batasJamPulang)) {
           dispatch(setPresence('keluar'));
@@ -378,6 +381,8 @@ const Dashboard = ({navigation}: any) => {
           setIsTimeForPresence(true);
         }
       }
+
+      setTitlePresence('');
     } catch {
       console.log('error');
     }

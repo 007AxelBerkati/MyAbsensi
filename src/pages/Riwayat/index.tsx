@@ -70,8 +70,10 @@ const Riwayat = ({navigation, route}: any) => {
         jamKeluar={
           item?.keluar ? moment(item?.keluar?.date).format('HH:mm') : '--:--'
         }
-        jamMasuk={moment(item?.masuk?.date).format('HH:mm')}
-        tanggal={moment(item?.masuk?.date).format('DD MMMM YYYY')}
+        jamMasuk={
+          item?.masuk ? moment(item?.masuk?.date).format('HH:mm') : '--:--'
+        }
+        tanggal={item?.date ? moment(item?.date).format('DD MMMM YYYY') : '-'}
         onPress={() => {
           navigation.navigate('DetailRiwayat', {detailPresence: item});
         }}

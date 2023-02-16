@@ -46,6 +46,8 @@ function EditProfile({navigation}: any) {
   const onConfirmSingle = useCallback(
     (params: any, setFieldValue: any) => {
       setOpen(false);
+      console.log(params);
+
       setDate(params.date);
       setFieldValue('birth_date', moment(params.date).format('DD/MM/YYYY'));
     },
@@ -68,7 +70,7 @@ function EditProfile({navigation}: any) {
             birth_date: dataAkun?.birth_date,
             address: dataAkun?.address,
             phone_number: dataAkun?.phone_number,
-            photo: dataAkun?.photo,
+            photo: dataAkun?.photo ? dataAkun?.photo : '',
             tempat_lahir: dataAkun?.tempat_lahir,
             email: dataAkun?.email,
             pekerjaan: dataAkun?.pekerjaan,
@@ -116,6 +118,7 @@ function EditProfile({navigation}: any) {
                     value={values.birth_date}
                     label="Tanggal Lahir (DD/MM/YYYY)"
                     rightIcon="calendar"
+                    onChangeText={handleChange('birth_date')}
                     onPressIn={() => setOpen(true)}
                   />
                   <DatePickerModal
@@ -124,18 +127,10 @@ function EditProfile({navigation}: any) {
                     visible={open}
                     onDismiss={onDismissSingle}
                     date={date}
-                    onConfirm={() => onConfirmSingle({date}, setFieldValue)}
+                    onConfirm={date => onConfirmSingle(date, setFieldValue)}
                     startYear={1960} // optional, default is 1800
                     endYear={2100} // optional, default is 2200
-                    // onChange={} // same props as onConfirm but triggered without confirmed by user
-                    // saveLabel="Save" // optional
-                    // saveLabelDisabled={true} // optional, default is false
-                    // uppercase={false} // optional, default is true
                     label="Pilih Tanggal" // optional
-                    // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
-                    // closeIcon="close" // optional, default is "close"
-                    // editIcon="pencil" // optional, default is "pencil"
-                    // calendarIcon="calendar" // optional, default is "calendar"
                   />
                   {errors.birth_date && touched.birth_date && (
                     <HelperText text={errors.birth_date} />
@@ -183,7 +178,9 @@ function EditProfile({navigation}: any) {
 
                   <CustomButton
                     title="Simpan"
-                    onPress={handleSubmit}
+                    onPress={() => {
+                      handleSubmit();
+                    }}
                     disable={!isValid || loading}
                   />
                   <Gap height={windowHeight * 0.05} />

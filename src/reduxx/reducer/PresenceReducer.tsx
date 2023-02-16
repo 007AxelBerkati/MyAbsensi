@@ -28,7 +28,7 @@ const initialPresence: initialPropsPresence = {
   loading: false,
   error: null,
   dataPresence: null,
-  presence: 'masuk',
+  presence: 'wait',
   allPresence: null,
   total: 0,
 };
