@@ -356,7 +356,7 @@ const Dashboard = ({navigation}: any) => {
         dispatch(setPresence('keluar'));
       } else {
         if (currTime.isBetween(mulaiJamMasuk, batasJamMasuk)) {
-          // dispatch(setPresence('masuk'));
+          dispatch(setPresence('masuk'));
           if (distance > 0.1) {
             setIsTimeForPresence(false);
             setTitlePresence('notInLocation');
