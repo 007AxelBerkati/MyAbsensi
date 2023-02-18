@@ -123,53 +123,75 @@ const Dashboard = ({navigation}: any) => {
   const attendance = async () => {
     setIsLoadingPresence(true);
     try {
-      if (presence === 'alreadyPresence') {
-        showInfo('You have already checked in today', () => {});
+      const {isLocationMocked} = await isMockingLocation();
+      if (isLocationMocked) {
+        Alert.alert(
+          'Detected Location Spoofing',
+          'Please turn off location spoofing',
+          [{text: 'OK'}],
+          {cancelable: false}
+        );
       } else {
-        if (
-          dataAkun.address &&
-          dataAkun.birth_date &&
-          dataAkun.phone_number &&
-          dataAkun.tempat_lahir
-        ) {
-          TouchID.isSupported(optionalConfigObject)
-            .then(biometryType => {
-              if (biometryType === 'FaceID') {
-                Alert.alert('This device supports FaceID');
-              } else {
-                TouchID.authenticate('Lakukan Absen', optionalConfigObject)
-                  .then(() => {
-                    dataForPresence();
-                    dispatch(getPresence(dataAkun.uid));
-                  })
-                  .catch((error: any) => {
-                    showError(error.message);
-                  });
-              }
-            })
-            .catch(err => {
-              showInfo(
-                'Device Tidak Support Touch Id, Silahkan login dengan mengisikan akun dan password anda',
-                () => {}
-              );
-              setisModalVisible(true);
-            });
+        if (presence === 'alreadyPresence') {
+          showInfo('You have already checked in today', () => {});
         } else {
-          Alert.alert(
-            'Profile data is incomplete',
-            'Please complete your profile data first',
-            [
-              {text: 'No', style: 'cancel'},
-              {
-                text: 'Update Profile',
-                onPress: () => navigation.navigate('EditProfile'),
-              },
-            ],
-            {cancelable: false}
-          );
+          if (
+            dataAkun.address &&
+            dataAkun.birth_date &&
+            dataAkun.phone_number &&
+            dataAkun.tempat_lahir
+          ) {
+            TouchID.isSupported(optionalConfigObject)
+              .then(biometryType => {
+                if (biometryType === 'FaceID') {
+                  Alert.alert('This device supports FaceID');
+                } else {
+                  TouchID.authenticate('Lakukan Absen', optionalConfigObject)
+                    .then(() => {
+                      dataForPresence();
+                      dispatch(getPresence(dataAkun.uid));
+                    })
+                    .catch((error: any) => {
+                      showError(error.message);
+                    });
+                }
+              })
+              .catch(err => {
+                showInfo(
+                  'Device Tidak Support Touch Id, Silahkan login dengan mengisikan akun dan password anda',
+                  () => {}
+                );
+                setisModalVisible(true);
+              });
+          } else {
+            Alert.alert(
+              'Profile data is incomplete',
+              'Please complete your profile data first',
+              [
+                {text: 'No', style: 'cancel'},
+                {
+                  text: 'Update Profile',
+                  onPress: () => navigation.navigate('EditProfile'),
+                },
+              ],
+              {cancelable: false}
+            );
+          }
         }
       }
     } catch (error: any) {
+      switch (error.code) {
+        case MockLocationDetectorErrorCode.GPSNotEnabled: {
+          Alert.alert('GPS Not Enabled', 'Please enable GPS');
+          return;
+        }
+        case MockLocationDetectorErrorCode.CantDetermine: {
+          Alert.alert(
+            'Cannot determine if mock location is enabled',
+            'Please try again'
+          );
+        }
+      }
     } finally {
       setIsLoadingPresence(false);
     }
