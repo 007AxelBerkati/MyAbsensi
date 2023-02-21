@@ -362,23 +362,29 @@ const Dashboard = ({navigation}: any) => {
       const mulaiJamPulang = moment(dataSetting?.mulaiPulang, 'HH:mm');
       const batasJamPulang = moment(dataSetting?.batasPulang, 'HH:mm');
 
+      // If it's Sunday then set isTimeForPresence to false and titlePresence to "minggu"
       if (moment(currTime).day() === 0) {
         setIsTimeForPresence(false);
         setTitlePresence('minggu');
         return;
       }
 
+      // If user has a status set to izin then set isTimeForPresence to false
       if (dataPresence?.status) {
         setIsTimeForPresence(false);
         dispatch(setPresence('izin'));
+        return;
       }
 
+      // If user already clocked in then set isTimeForPresence false and set status as keluar
       if (dataPresence?.masuk) {
         setIsTimeForPresence(false);
         dispatch(setPresence('keluar'));
       } else {
+        // If current time is between start and end of check-in time
         if (currTime.isBetween(mulaiJamMasuk, batasJamMasuk)) {
           dispatch(setPresence('masuk'));
+          // If user is too far from location then set isTimeForPresence to false and titlePresence as "notInLocation"
           if (distance > 0.1) {
             setIsTimeForPresence(false);
             setTitlePresence('notInLocation');
@@ -388,13 +394,16 @@ const Dashboard = ({navigation}: any) => {
         }
       }
 
+      // If user already clocked out then set isTimeForPresence false and set status as alreadyPresence
       if (dataPresence?.keluar) {
         setIsTimeForPresence(false);
         dispatch(setPresence('alreadyPresence'));
         setIsTimeForPresence(true);
       } else {
+        //If current time is between start and end of checkout time
         if (currTime.isBetween(mulaiJamPulang, batasJamPulang)) {
           dispatch(setPresence('keluar'));
+          // If user is too far from location then set isTimeForPresence to false and titlePresence as "notInLocation"
           if (distance > 0.1) {
             setIsTimeForPresence(false);
             setTitlePresence('notInLocation');
@@ -404,6 +413,7 @@ const Dashboard = ({navigation}: any) => {
         }
       }
 
+      // Finally set titlePresence empty
       setTitlePresence('');
     } catch {
       console.log('error');
@@ -501,7 +511,7 @@ const Dashboard = ({navigation}: any) => {
                     isLoadingPresence ? 'Loading...' : renderTitlePresenceMemo
                   }
                   absen={presence}
-                  disable={isLoadingPresence || !isTimeForPresence}
+                  disable={isLoadingPresence || isTimeForPresence === false}
                   onPress={async () => {
                     attendance();
                   }}
