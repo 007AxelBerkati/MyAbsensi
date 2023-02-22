@@ -29,11 +29,13 @@ const circleButton = (absen: string, disable: boolean): ViewStyle => ({
   borderRadius: (windowWidth * 0.5) / 2,
   backgroundColor: disable
     ? COLORS.background.disable
+    : absen === 'masuk'
+    ? COLORS.background.tertiary
     : absen === 'keluar'
     ? COLORS.warning
     : absen === 'alreadyPresence'
     ? COLORS.background.disable
-    : COLORS.background.disable,
+    : COLORS.background.tertiary,
 
   alignItems: 'center',
   justifyContent: 'center',
