@@ -67,9 +67,9 @@ const MainApp = () => {
 const App = () => {
   return (
     <Provider store={Store}>
-      <PersistGate loading={null} persistor={Persistore}>
-        <MainApp />
-      </PersistGate>
+      {/* <PersistGate loading={null} persistor={Persistore}> */}
+      <MainApp />
+      {/* </PersistGate> */}
     </Provider>
   );
 };

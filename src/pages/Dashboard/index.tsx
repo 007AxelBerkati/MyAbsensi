@@ -367,14 +367,13 @@ const Dashboard = ({navigation}: any) => {
         setIsTimeForPresence(false);
         setTitlePresence('minggu');
         return;
-      }
-
-      // If user has a status set to izin then set isTimeForPresence to false
-      if (dataPresence?.status) {
+      } else if (dataPresence?.status) {
         setIsTimeForPresence(false);
         dispatch(setPresence('izin'));
         return;
       }
+
+      // If user has a status set to izin then set isTimeForPresence to false
 
       // If user already clocked in then set isTimeForPresence false and set status as keluar
       if (dataPresence?.masuk) {
@@ -457,6 +456,7 @@ const Dashboard = ({navigation}: any) => {
                     dispatch(getRequest(dataAkun.uid));
                     dispatch(getNotif(dataAkun.uid));
                     dispatch(getDataSetting());
+                    dispatch(getPresence(dataAkun.uid));
                     checkBatasJamAbsen();
                     setRefreshing(false);
                   }}
