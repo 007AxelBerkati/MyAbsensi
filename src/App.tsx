@@ -28,7 +28,6 @@ const MainApp = () => {
   );
 
   const dispatch = useAppDispatch();
-
   useEffect(() => {
     requestPermissions();
   }, []);
