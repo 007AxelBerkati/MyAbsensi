@@ -33,7 +33,7 @@ import {COLORS, FONTS, SIZE, windowHeight} from '../../theme';
 const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
   const dispatch = useAppDispatch();
   const {loading} = useAppSelector((state: RootState) => state.dataRequest);
-  const {dataPresence} = useAppSelector(
+  const {dataPresence, bisaIzin} = useAppSelector(
     (state: RootState) => state.dataPresence
   );
 
@@ -86,6 +86,8 @@ const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
       return 'Anda tidak bisa mengajukan izin, jika telah absen';
     } else if (moment().day() === 0) {
       return 'Anda tidak bisa mengajukan izin, jika hari minggu';
+    } else if (!bisaIzin) {
+      return 'Telah izin 2 kali berturut-turut';
     } else {
       return 'Ajukan Izin';
     }
@@ -179,7 +181,8 @@ const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
                   loading ||
                   isRequestPending ||
                   dataPresence ||
-                  moment().day() === 0
+                  moment().day() === 0 ||
+                  !bisaIzin
                 }
               />
             </View>

@@ -1,6 +1,7 @@
 import moment from 'moment';
-import {showSuccess, usersRef} from '../../plugins';
+import {showError, showSuccess, usersRef} from '../../plugins';
 import {
+  CHECK_DATA_IZIN_SUCCESS,
   GET_ALL_PRESENCE_ERROR,
   GET_ALL_PRESENCE_LOADING,
   GET_ALL_PRESENCE_SUCCESS,
@@ -203,8 +204,6 @@ export const getAllPresence =
     dispatch(getAllPresenceLoading(true));
     if (range) {
       const data: any = [];
-
-      console.log(range);
       usersRef()
         .doc(uid)
         .collection('presence')
@@ -329,5 +328,37 @@ export const getPresenceAllUser = () => async (dispatch: any) => {
     })
     .catch((error: any) => {
       dispatch(getPresenceAllUserError(error));
+    });
+};
+
+export const checkDataIzinSuccess = (success: any) => ({
+  type: CHECK_DATA_IZIN_SUCCESS,
+  success,
+});
+
+export const checkDataIzin = (uid: any) => async (dispatch: any) => {
+  await usersRef()
+    .doc(uid)
+    .collection('presence')
+    .doc(`${moment().format('YYYY')}`)
+    .collection(`${moment().format('MM')}`)
+    .where('date', '>=', moment().subtract(3, 'days').format('YYYY-MM-DD'))
+    .get()
+    .then(async (querySnapshot: any) => {
+      const data: any = [];
+      await querySnapshot.forEach((doc: any) => {
+        if (doc.data().status === 'Sakit' || 'Izin' || 'Cuti') {
+          data.push(doc.data());
+        }
+      });
+      if (data.length === 3) {
+        dispatch(checkDataIzinSuccess(false));
+      } else {
+        dispatch(checkDataIzinSuccess(true));
+      }
+    })
+    .catch((err: any) => {
+      showError('Terjadi kesalahan, Saat pengecekan data Izin');
+      console.log('err', err);
     });
 };

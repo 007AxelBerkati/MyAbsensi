@@ -45,6 +45,7 @@ import {
 } from '../../plugins';
 import {
   absen,
+  checkDataIzin,
   getAkun,
   getDataSetting,
   getLocation,
@@ -59,6 +60,7 @@ import {
 } from '../../reduxx';
 import {COLORS, FONTS, RADIUS, SIZE, windowHeight} from '../../theme';
 import PermintaanIzin from './PermintaanIzin';
+import Holiday from 'date-holidays';
 
 const Dashboard = ({navigation}: any) => {
   const dispatch = useAppDispatch();
@@ -66,6 +68,8 @@ const Dashboard = ({navigation}: any) => {
   const {isRequestPending, loading} = useAppSelector(
     (state: RootState) => state.dataRequest
   );
+
+  const newHD = new Holiday('ID');
 
   const [isLoadingPresence, setIsLoadingPresence] = useState(false);
 
@@ -242,6 +246,9 @@ const Dashboard = ({navigation}: any) => {
       if (titlePresence === 'notInLocation') {
         return 'Tidak berada di lokasi';
       }
+      if (titlePresence === 'libur') {
+        return 'Libur';
+      }
     } else {
       if (presence === 'masuk') {
         return 'Absen Masuk';
@@ -354,6 +361,7 @@ const Dashboard = ({navigation}: any) => {
       dispatch(getDataSetting());
       startTask();
       dispatch(getLocationPresence());
+      dispatch(checkDataIzin(res.uid));
     });
   }, []);
 
@@ -368,6 +376,10 @@ const Dashboard = ({navigation}: any) => {
       if (moment(currTime).day() === 0) {
         setIsTimeForPresence(false);
         setTitlePresence('minggu');
+        return;
+      } else if (newHD.isHoliday(new Date())) {
+        setIsTimeForPresence(false);
+        setTitlePresence('libur');
         return;
       } else if (dataPresence?.status) {
         setIsTimeForPresence(false);
@@ -429,13 +441,13 @@ const Dashboard = ({navigation}: any) => {
   }, []);
 
   // to get distance and data location
-  useEffect(() => {
-    const interval = setInterval(() => {
-      dispatch(getLocation(locationPresence));
-      checkBatasJamAbsen();
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [location]);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     dispatch(getLocation(locationPresence));
+  //     checkBatasJamAbsen();
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, [location]);
 
   if (loading) {
     return <Loading type="full" />;

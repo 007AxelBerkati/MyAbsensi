@@ -1,4 +1,5 @@
 import {
+  CHECK_DATA_IZIN_SUCCESS,
   GET_ALL_PRESENCE_ERROR,
   GET_ALL_PRESENCE_LOADING,
   GET_ALL_PRESENCE_SUCCESS,
@@ -22,6 +23,7 @@ type initialPropsPresence = {
   presence: string;
   allPresence: any;
   total: number;
+  bisaIzin: boolean;
 };
 
 const initialPresence: initialPropsPresence = {
@@ -31,6 +33,7 @@ const initialPresence: initialPropsPresence = {
   presence: 'wait',
   allPresence: null,
   total: 0,
+  bisaIzin: true,
 };
 
 export const PresenceReducer = (state = initialPresence, action: any) => {
@@ -115,6 +118,12 @@ export const PresenceReducer = (state = initialPresence, action: any) => {
       return {
         ...state,
         presence: action.presence,
+      };
+
+    case CHECK_DATA_IZIN_SUCCESS:
+      return {
+        ...state,
+        bisaIzin: action.success,
       };
 
     case SET_SIGNOUT_SUCCESS:

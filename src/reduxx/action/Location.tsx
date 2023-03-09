@@ -98,12 +98,12 @@ export const getLocationPresence = () => async (dispatch: any) => {
       const list: any = [];
       const data: any = [];
 
-      await querySnapshot.forEach((documentSnapshot: any) => {
+      await querySnapshot?.forEach((documentSnapshot: any) => {
         list.push({
           uid: documentSnapshot.id,
         });
       });
-      await list.forEach((item: any) => {
+      await list?.forEach((item: any) => {
         locationPresenceRef()
           .doc(item.uid)
           .get()
@@ -127,49 +127,3 @@ export const getLocationPresence = () => async (dispatch: any) => {
       showError(err.message);
     });
 };
-
-// usersRef()
-//   .get()
-//   .then(async querySnapshot => {
-//     const list: any = [];
-//     const data: any = [];
-//     var total = 0;
-
-//     await querySnapshot.forEach(documentSnapshot => {
-//       list.push({
-//         ...documentSnapshot.data(),
-//         uid: documentSnapshot.id,
-//       });
-//     });
-
-//     await list.forEach((item: any) => {
-//       usersRef()
-//         .doc(item.uid)
-//         .collection('presence')
-//         .doc(`${moment().format('YYYY')}`)
-//         .collection(`${moment().format('MM')}`)
-//         .doc(`${moment().format('DD')}`)
-//         .get()
-//         .then(async (doc: any) => {
-//           if (doc.exists) {
-//             total = total + 1;
-//             data.push({
-//               ...item,
-//               ...doc.data(),
-//             });
-//           } else {
-//             data.push({
-//               ...item,
-//             });
-//           }
-//           dispatch(getPresenceAllUserSuccess(data, total));
-//         })
-//         .catch((error: any) => {
-//           dispatch(getPresenceAllUserError(error));
-//         });
-//     });
-//     dispatch(getPresenceAllUserLoading(false));
-//   })
-//   .catch((error: any) => {
-//     dispatch(getPresenceAllUserError(error));
-//   });
