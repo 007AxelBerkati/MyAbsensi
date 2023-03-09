@@ -1,6 +1,9 @@
 import {
   GET_LOCATION_ERROR,
   GET_LOCATION_LOADING,
+  GET_LOCATION_PRESENCE_ERROR,
+  GET_LOCATION_PRESENCE_LOADING,
+  GET_LOCATION_PRESENCE_SUCCESS,
   GET_LOCATION_SUCCESS,
   SET_DISTANCE,
 } from '../types';
@@ -10,6 +13,7 @@ type initialLocationState = {
   loading: boolean;
   error: any;
   distance: number;
+  locationPresence: any;
 };
 
 const initialLocation: initialLocationState = {
@@ -22,6 +26,7 @@ const initialLocation: initialLocationState = {
   loading: false,
   error: null,
   distance: 0,
+  locationPresence: null,
 };
 
 export const LocationReducer = (state = initialLocation, action: any) => {
@@ -42,6 +47,25 @@ export const LocationReducer = (state = initialLocation, action: any) => {
         ...state,
         location: {...state.location, ...action.location},
         loading: false,
+      };
+
+    case GET_LOCATION_PRESENCE_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      };
+    case GET_LOCATION_PRESENCE_SUCCESS:
+      return {
+        ...state,
+        locationPresence: action.locationPresence,
+        loading: false,
+      };
+
+    case GET_LOCATION_PRESENCE_LOADING:
+      return {
+        ...state,
+        loading: action.loading,
       };
 
     case SET_DISTANCE:

@@ -10,7 +10,7 @@ const useTrackingLocation = () => {
       trackingLocationRef()
         .get()
         .then(res => {
-          const data = res.docs.map(doc => ({
+          const data: any = res.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
           }));

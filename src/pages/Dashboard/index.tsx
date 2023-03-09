@@ -48,6 +48,7 @@ import {
   getAkun,
   getDataSetting,
   getLocation,
+  getLocationPresence,
   getNotif,
   getPresence,
   getRequest,
@@ -78,7 +79,7 @@ const Dashboard = ({navigation}: any) => {
 
   const {dataSetting} = useAppSelector((state: RootState) => state.dataSetting);
 
-  const {location, distance} = useAppSelector(
+  const {location, distance, locationPresence} = useAppSelector(
     (state: RootState) => state.dataLocation
   );
   const {dataAkun} = useAppSelector((state: RootState) => state.dataAkun);
@@ -352,6 +353,7 @@ const Dashboard = ({navigation}: any) => {
       dispatch(getNotif(res.uid));
       dispatch(getDataSetting());
       startTask();
+      dispatch(getLocationPresence());
     });
   }, []);
 
@@ -403,7 +405,7 @@ const Dashboard = ({navigation}: any) => {
         if (currTime.isBetween(mulaiJamPulang, batasJamPulang)) {
           dispatch(setPresence('keluar'));
           // If user is too far from location then set isTimeForPresence to false and titlePresence as "notInLocation"
-          if (distance > 0.1) {
+          if (distance > 0.5) {
             setIsTimeForPresence(false);
             setTitlePresence('notInLocation');
             return;
@@ -429,9 +431,7 @@ const Dashboard = ({navigation}: any) => {
   // to get distance and data location
   useEffect(() => {
     const interval = setInterval(() => {
-      dispatch(
-        getLocation(dataSetting?.latitudeSekolah, dataSetting?.longitudeSekolah)
-      );
+      dispatch(getLocation(locationPresence));
       checkBatasJamAbsen();
     }, 1000);
     return () => clearInterval(interval);
@@ -497,10 +497,7 @@ const Dashboard = ({navigation}: any) => {
                     type="maps"
                     text="Buka Maps"
                     onPress={() =>
-                      navigation.navigate('Location', {
-                        latitude: dataSetting?.latitudeSekolah,
-                        longitude: dataSetting?.longitudeSekolah,
-                      })
+                      navigation.navigate('Location', {locationPresence})
                     }
                   />
                 </View>

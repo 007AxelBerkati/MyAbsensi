@@ -6,7 +6,7 @@ import {RootState, useAppSelector} from '../../reduxx';
 import {COLORS, FONTS, SIZE, windowWidth} from '../../theme';
 
 const Location = ({navigation, route}: any) => {
-  const {latitude, longitude} = route.params;
+  const {locationPresence} = route.params;
   const {location, distance} = useAppSelector(
     (state: RootState) => state.dataLocation
   );
@@ -49,7 +49,7 @@ const Location = ({navigation, route}: any) => {
     );
   };
 
-  return location.latitude ? (
+  return (
     <View style={styles.pages}>
       <View style={{paddingHorizontal: 16}}>
         <Headers
@@ -63,20 +63,26 @@ const Location = ({navigation, route}: any) => {
         style={styles.map}
         initialRegion={location}
         showsUserLocation>
-        <Circle
-          center={{
-            latitude: latitude,
-            longitude: longitude,
-          }}
-          radius={100}
-          strokeWidth={1}
-          strokeColor="rgba(0,0,255,0.5)"
-          fillColor="rgba(0,0,255,0.5)"
-        />
+        {locationPresence &&
+          locationPresence.map((item: any, index: any) => {
+            return (
+              <Circle
+                key={index}
+                center={{
+                  latitude: item.location.latitude,
+                  longitude: item.location.longitude,
+                }}
+                radius={item.radius}
+                strokeWidth={1}
+                strokeColor="rgba(0,0,255,0.5)"
+                fillColor="rgba(0,0,255,0.5)"
+              />
+            );
+          })}
       </MapView>
       {renderDistanceLocation()}
     </View>
-  ) : null;
+  );
 };
 
 export default Location;
