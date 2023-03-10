@@ -75,6 +75,8 @@ const Dashboard = ({navigation}: any) => {
 
   const [isModalVisible, setisModalVisible] = useState(false);
 
+  const [isInfoAbsen, setIsInfoAbsen] = useState(false);
+
   const [isTimeForPresence, setIsTimeForPresence] = useState(false);
 
   const [titlePresence, setTitlePresence] = useState('wait');
@@ -225,7 +227,7 @@ const Dashboard = ({navigation}: any) => {
             }
           />
           <CardService
-            icon="clock-check-outline"
+            icon="clock-check"
             title="Jam Pulang"
             clock={dataSetting?.batasPulang || '--:--'}
           />
@@ -441,13 +443,13 @@ const Dashboard = ({navigation}: any) => {
   }, []);
 
   // to get distance and data location
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     dispatch(getLocation(locationPresence));
-  //     checkBatasJamAbsen();
-  //   }, 1000);
-  //   return () => clearInterval(interval);
-  // }, [location]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      dispatch(getLocation(locationPresence));
+      checkBatasJamAbsen();
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [location]);
 
   if (loading) {
     return <Loading type="full" />;
@@ -543,6 +545,14 @@ const Dashboard = ({navigation}: any) => {
                     navigation.navigate('Riwayat', {uid: dataAkun?.uid});
                   }}
                 />
+                <CardService
+                  icon="clock"
+                  title="Info Absen"
+                  onPress={() => {
+                    setIsInfoAbsen(true);
+                    setisModalVisible(true);
+                  }}
+                />
               </View>
 
               <Gap height={40} />
@@ -566,7 +576,10 @@ const Dashboard = ({navigation}: any) => {
           </ImageBackground>
           <Modal
             visible={isModalVisible}
-            onDismiss={() => setisModalVisible(false)}
+            onDismiss={() => {
+              setisModalVisible(false);
+              setIsInfoAbsen(false);
+            }}
             contentContainerStyle={{
               backgroundColor: 'white',
               padding: 20,
@@ -574,73 +587,111 @@ const Dashboard = ({navigation}: any) => {
               marginVertical: 100,
               borderRadius: 10,
             }}>
-            <View style={styles.bottomView}>
-              <Text style={styles.loginText}>Absen</Text>
-              <Formik
-                initialValues={{email: '', password: ''}}
-                onSubmit={values => {
-                  getDataSecure('userLogin').then((res: any) => {
-                    if (res) {
-                      if (
-                        res.email === values.email &&
-                        res.password === values.password
-                      ) {
-                        dataForPresence();
-                        setisModalVisible(false);
-                      } else {
-                        showInfo('Email atau Password salah', () => {});
-                      }
+            {isInfoAbsen ? (
+              <View style={styles.bottomView}>
+                <Text style={styles.loginText}>Info Absen</Text>
+                <Text style={styles.infoAbsenTitle}>Masuk :</Text>
+                <View style={styles.cardDashboard}>
+                  <CardDashboard
+                    title="Mulai Absen"
+                    text={
+                      dataSetting?.mulaiMasuk ? dataSetting?.mulaiMasuk : '-'
                     }
-                  });
-                }}
-                validationSchema={loginSchema}>
-                {({
-                  handleChange,
-                  handleBlur,
-                  handleSubmit,
-                  values,
-                  errors,
-                  touched,
-                  isValid,
-                  dirty,
-                }) => (
-                  <View>
-                    <Input
-                      leftIcon="email"
-                      label="Email"
-                      onChangeText={handleChange('email')}
-                      value={values.email}
-                      onBlur={handleBlur('email')}
-                      color={COLORS.text.tertiary}
-                    />
-                    {errors.email && touched.email ? (
-                      <HelperText text={errors.email} />
-                    ) : null}
+                  />
+                  <CardDashboard
+                    title="Batas Terlambat Absen Masuk"
+                    text={
+                      dataSetting?.batasMasuk ? dataSetting?.batasMasuk : '-'
+                    }
+                  />
+                </View>
+                {/* <Gap height={20} /> */}
+                <Text style={styles.infoAbsenTitle}>Pulang :</Text>
 
-                    <Input
-                      label="Password"
-                      onBlur={handleBlur('password')}
-                      onChangeText={handleChange('password')}
-                      value={values.password}
-                      secureTextEntry
-                      color={COLORS.text.tertiary}
-                      leftIcon="key"
-                    />
-                    {errors.password && touched.password ? (
-                      <HelperText text={errors.password} />
-                    ) : null}
+                <View style={styles.cardDashboard}>
+                  <CardDashboard
+                    title="Mulai Absen"
+                    text={
+                      dataSetting?.mulaiPulang ? dataSetting?.mulaiPulang : '-'
+                    }
+                  />
+                  <CardDashboard
+                    title="Batas Terlambat Absen Masuk"
+                    text={
+                      dataSetting?.batasPulang ? dataSetting?.batasPulang : '-'
+                    }
+                  />
+                </View>
+              </View>
+            ) : (
+              <View style={styles.bottomView}>
+                <Text style={styles.loginText}>Absen</Text>
+                <Formik
+                  initialValues={{email: '', password: ''}}
+                  onSubmit={values => {
+                    getDataSecure('userLogin').then((res: any) => {
+                      if (res) {
+                        if (
+                          res.email === values.email &&
+                          res.password === values.password
+                        ) {
+                          dataForPresence();
+                          setisModalVisible(false);
+                        } else {
+                          showInfo('Email atau Password salah', () => {});
+                        }
+                      }
+                    });
+                  }}
+                  validationSchema={loginSchema}>
+                  {({
+                    handleChange,
+                    handleBlur,
+                    handleSubmit,
+                    values,
+                    errors,
+                    touched,
+                    isValid,
+                    dirty,
+                  }) => (
+                    <View>
+                      <Input
+                        leftIcon="email"
+                        label="Email"
+                        onChangeText={handleChange('email')}
+                        value={values.email}
+                        onBlur={handleBlur('email')}
+                        color={COLORS.text.tertiary}
+                      />
+                      {errors.email && touched.email ? (
+                        <HelperText text={errors.email} />
+                      ) : null}
 
-                    <Gap height={30} />
-                    <CustomButton
-                      type={'primary'}
-                      title={loading ? 'Loading...' : 'Absen'}
-                      onPress={handleSubmit}
-                      disable={!(dirty && isValid) || loading}
-                    />
-                  </View>
-                )}
-              </Formik>
-            </View>
+                      <Input
+                        label="Password"
+                        onBlur={handleBlur('password')}
+                        onChangeText={handleChange('password')}
+                        value={values.password}
+                        secureTextEntry
+                        color={COLORS.text.tertiary}
+                        leftIcon="key"
+                      />
+                      {errors.password && touched.password ? (
+                        <HelperText text={errors.password} />
+                      ) : null}
+
+                      <Gap height={30} />
+                      <CustomButton
+                        type={'primary'}
+                        title={loading ? 'Loading...' : 'Absen'}
+                        onPress={handleSubmit}
+                        disable={!(dirty && isValid) || loading}
+                      />
+                    </View>
+                  )}
+                </Formik>
+              </View>
+            )}
           </Modal>
         </GestureHandlerRootView>
       </Portal>
@@ -706,7 +757,7 @@ const styles = StyleSheet.create({
 
   cardDashboard: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     marginTop: 20,
   },
 
@@ -722,10 +773,17 @@ const styles = StyleSheet.create({
   },
 
   loginText: {
-    fontFamily: FONTS.primary[600],
+    fontFamily: FONTS.primary[800],
     fontSize: 24,
     marginTop: 12,
     marginBottom: 4,
+    color: COLORS.text.primary,
+  },
+
+  infoAbsenTitle: {
+    fontFamily: FONTS.primary[800],
+    fontSize: 18,
+    marginTop: 12,
     color: COLORS.text.primary,
   },
 });

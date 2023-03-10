@@ -41,7 +41,7 @@ export const getLocation = (locationPresence: any) => async (dispatch: any) => {
 
       const data: any = [];
 
-      locationPresence.forEach((item: any) => {
+      locationPresence?.forEach((item: any) => {
         console.log('item', item);
 
         const distance = haversineDistance(
@@ -97,6 +97,7 @@ export const getLocationPresence = () => async (dispatch: any) => {
     .then(async (querySnapshot: any) => {
       const list: any = [];
       const data: any = [];
+      if (querySnapshot.empty) return;
 
       await querySnapshot?.forEach((documentSnapshot: any) => {
         list.push({

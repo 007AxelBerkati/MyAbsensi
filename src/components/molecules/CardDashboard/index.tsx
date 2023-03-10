@@ -83,13 +83,13 @@ const styles = StyleSheet.create({
     marginRight: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    width: windowWidth * 0.4,
+    width: windowWidth * 0.38,
   },
 
   image: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: windowWidth * 0.4,
+    width: windowWidth * 0.38,
     flex: 1,
     borderRadius: 10,
     padding: 16,
@@ -99,12 +99,14 @@ const styles = StyleSheet.create({
     fontSize: SIZE.font12,
     fontFamily: FONTS.primary[800],
     color: COLORS.text.primary,
+    textAlign: 'center',
   },
 
   textTitle: {
     fontSize: SIZE.font12,
     fontFamily: FONTS.primary[600],
     color: COLORS.text.subtitle,
+    textAlign: 'center',
   },
 
   text: {

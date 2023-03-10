@@ -235,7 +235,7 @@ export const getListChat = (uid: any) => async (dispatch: any) => {
 
           const dataMsgNotNull: any = [];
 
-          sortedArray.forEach((it: any) => {
+          sortedArray?.forEach((it: any) => {
             if (it.lastMsg !== '') {
               dataMsgNotNull.push(it);
             }

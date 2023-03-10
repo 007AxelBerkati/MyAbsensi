@@ -345,8 +345,9 @@ export const checkDataIzin = (uid: any) => async (dispatch: any) => {
     .where('date', '>=', moment().subtract(3, 'days').format('YYYY-MM-DD'))
     .get()
     .then(async (querySnapshot: any) => {
+      if (querySnapshot.empty) return;
       const data: any = [];
-      await querySnapshot.forEach((doc: any) => {
+      await querySnapshot?.forEach((doc: any) => {
         if (doc.data().status === 'Sakit' || 'Izin' || 'Cuti') {
           data.push(doc.data());
         }
