@@ -20,17 +20,12 @@ import {
 import {COLORS, FONTS, windowWidth} from '../../../theme';
 
 const TrackingAdmin = ({navigation, route}: any) => {
-  const dispatch = useAppDispatch();
-
-  const {latitude, longitude} = route.params;
+  const {locationPresence} = route.params;
 
   const {dataTrackingLocation} = useTrackingLocation();
 
   const {location} = useAppSelector((state: RootState) => state.dataLocation);
   const mapRef = useRef(null);
-  useEffect(() => {
-    dispatch(getLocation(location.latitude, location.longitude));
-  }, []);
 
   return (
     <View style={styles.pages}>
@@ -129,16 +124,22 @@ const TrackingAdmin = ({navigation, route}: any) => {
             </Marker>
           );
         })}
-        <Circle
-          center={{
-            latitude: latitude,
-            longitude: longitude,
-          }}
-          radius={100}
-          strokeWidth={1}
-          strokeColor="rgba(0,0,255,0.5)"
-          fillColor="rgba(0,0,255,0.5)"
-        />
+        {locationPresence &&
+          locationPresence.map((item: any, index: any) => {
+            return (
+              <Circle
+                key={index}
+                center={{
+                  latitude: item.location.latitude,
+                  longitude: item.location.longitude,
+                }}
+                radius={item.radius}
+                strokeWidth={1}
+                strokeColor="rgba(0,0,255,0.5)"
+                fillColor="rgba(0,0,255,0.5)"
+              />
+            );
+          })}
       </MapView>
     </View>
   );

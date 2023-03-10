@@ -15,6 +15,7 @@ import {databaseRef, getData} from '../../../plugins';
 import {
   getAkun,
   getDataSetting,
+  getLocationPresence,
   getPresenceAllUser,
   getRequest,
   RootState,
@@ -37,12 +38,16 @@ const DashboardAdmin = ({navigation}: any) => {
 
   const [refreshing, setRefreshing] = useState(false);
 
+  const {locationPresence} = useAppSelector(
+    (state: RootState) => state.dataLocation
+  );
+
   useEffect(() => {
     getData('user').then((res: any) => {
       dispatch(getAkun(res.uid));
       dispatch(getRequest(res.uid));
       dispatch(getPresenceAllUser());
-      dispatch(getDataSetting());
+      dispatch(getLocationPresence());
     });
   }, []);
 
@@ -232,8 +237,7 @@ const DashboardAdmin = ({navigation}: any) => {
           color={COLORS.secondary}
           onPress={() => {
             navigation.navigate('TrackingAdmin', {
-              latitude: dataSetting?.latitudeSekolah,
-              longitude: dataSetting?.longitudeSekolah,
+              locationPresence,
             });
           }}
         />

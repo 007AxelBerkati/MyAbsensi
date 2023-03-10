@@ -42,8 +42,6 @@ export const getLocation = (locationPresence: any) => async (dispatch: any) => {
       const data: any = [];
 
       locationPresence?.forEach((item: any) => {
-        console.log('item', item);
-
         const distance = haversineDistance(
           {latitude, longitude},
           {
