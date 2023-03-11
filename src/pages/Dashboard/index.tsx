@@ -105,7 +105,7 @@ const Dashboard = ({navigation}: any) => {
           address: dataLocation.display_name,
           date: moment().format(),
           distance: distance,
-          in_area: distance <= 0.1 ? true : false,
+          in_area: distance <= 0.0315 ? true : false,
           latitude: location.latitude,
           longitude: location.longitude,
         };
@@ -381,7 +381,7 @@ const Dashboard = ({navigation}: any) => {
         if (currTime.isBetween(mulaiJamMasuk, batasJamMasuk)) {
           dispatch(setPresence('masuk'));
           // If user is too far from location then set isTimeForPresence to false and titlePresence as "notInLocation"
-          if (distance > 0.1) {
+          if (distance > 0.0315) {
             setIsTimeForPresence(false);
             setTitlePresence('notInLocation');
             return;
@@ -400,7 +400,7 @@ const Dashboard = ({navigation}: any) => {
         if (currTime.isBetween(mulaiJamPulang, batasJamPulang)) {
           dispatch(setPresence('keluar'));
           // If user is too far from location then set isTimeForPresence to false and titlePresence as "notInLocation"
-          if (distance > 0.05) {
+          if (distance > 0.0315) {
             setIsTimeForPresence(false);
             setTitlePresence('notInLocation');
             return;
@@ -477,11 +477,11 @@ const Dashboard = ({navigation}: any) => {
                     text={
                       isNaN(distance)
                         ? 'wait'
-                        : distance.toFixed(2).toString() + ' KM'
+                        : (distance + 0.02).toFixed(2).toString() + ' KM'
                     }
                     onPress={() =>
                       showInfo(
-                        distance <= 0.05
+                        distance <= 0.0315
                           ? 'Anda sudah berada di lingkungan sekolah'
                           : 'Anda belum di lingkungan sekolah',
                         () => {}

@@ -25,7 +25,7 @@ const Location = ({navigation, route}: any) => {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        {distance <= 0.05 ? (
+        {distance <= 0.0315 ? (
           <Text
             style={{
               fontSize: SIZE.font16,
@@ -42,7 +42,7 @@ const Location = ({navigation, route}: any) => {
               color: COLORS.text.secondary,
               textAlign: 'center',
             }}>
-            {(distance - 0.1).toFixed(2)} KM lagi menuju sekolah
+            {(distance - 0.0315).toFixed(2)} KM lagi menuju sekolah
           </Text>
         )}
       </View>

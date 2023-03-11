@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {Fade, Placeholder, PlaceholderMedia} from 'rn-placeholder';
 import {version} from '../../../package.json';
-import {Bg, ILNullPhoto} from '../../assets';
+import {Bg, Exit, ILNullPhoto} from '../../assets';
 import {CardList, Headers, Profile, CustomButton} from '../../components';
 import {getData} from '../../plugins';
 import {
@@ -99,9 +99,7 @@ function AkunScreen({navigation}: any) {
           </Dialog.Title>
           <Dialog.Content>
             <LottieView
-              source={{
-                uri: 'https://assets5.lottiefiles.com/packages/lf20_0fwl68.json',
-              }}
+              source={Exit}
               autoPlay
               loop
               style={styles.imageAnimation}

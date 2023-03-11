@@ -21,6 +21,7 @@ import BcDashAdmin from './BcDashAdmin.png';
 import PermintaanNull from './permintaanNull.png';
 import PesanNull from './pesanNull.png';
 import NotifNull from './notifNull.png';
+import Exit from './Exit.json';
 
 export {
   IconsApp2,
@@ -46,4 +47,5 @@ export {
   PermintaanNull,
   PesanNull,
   NotifNull,
+  Exit,
 };

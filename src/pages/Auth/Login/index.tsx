@@ -99,8 +99,6 @@ function LoginScreen({navigation}: any) {
             loop
             style={styles.imageAnimation}
           />
-          {/* <Text style={styles.animationText}>"Absen Lebih Mudah</Text>
-          <Text style={styles.animationText}>Dengan My Absensi"</Text> */}
         </Animatable.View>
         <View style={styles.bottomView}>
           <Text style={styles.loginText}>Login</Text>
