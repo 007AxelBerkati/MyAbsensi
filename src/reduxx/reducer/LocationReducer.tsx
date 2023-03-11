@@ -14,6 +14,7 @@ type initialLocationState = {
   error: any;
   distance: number;
   locationPresence: any;
+  isMocked: boolean;
 };
 
 const initialLocation: initialLocationState = {
@@ -27,6 +28,7 @@ const initialLocation: initialLocationState = {
   error: null,
   distance: 0,
   locationPresence: null,
+  isMocked: false,
 };
 
 export const LocationReducer = (state = initialLocation, action: any) => {
@@ -46,6 +48,7 @@ export const LocationReducer = (state = initialLocation, action: any) => {
       return {
         ...state,
         location: {...state.location, ...action.location},
+        isMocked: action.mocked,
         loading: false,
       };
 

@@ -176,11 +176,9 @@ const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
                 title={renderTitleIzin()}
                 onPress={handleSubmit}
                 disable={
-                  !isValid ||
-                  !dirty ||
                   loading ||
                   isRequestPending ||
-                  dataPresence ||
+                  !!dataPresence ||
                   moment().day() === 0 ||
                   !bisaIzin
                 }

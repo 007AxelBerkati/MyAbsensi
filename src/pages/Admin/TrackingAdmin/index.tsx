@@ -1,6 +1,6 @@
 import moment from 'moment';
-import React, {useEffect, useRef} from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
+import React, {useRef} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 import MapView, {
   Callout,
   Circle,
@@ -11,12 +11,7 @@ import {Image as ImageSvg, Svg} from 'react-native-svg';
 import {ILNullPhoto} from '../../../assets';
 import {Headers} from '../../../components';
 import useTrackingLocation from '../../../hooks/useTrackingLocation';
-import {
-  RootState,
-  useAppDispatch,
-  useAppSelector,
-  getLocation,
-} from '../../../reduxx';
+import {RootState, useAppSelector} from '../../../reduxx';
 import {COLORS, FONTS, windowWidth} from '../../../theme';
 
 const TrackingAdmin = ({navigation, route}: any) => {

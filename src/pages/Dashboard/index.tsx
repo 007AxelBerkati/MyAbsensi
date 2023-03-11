@@ -1,5 +1,6 @@
 import BottomSheet from '@gorhom/bottom-sheet';
 import {Formik} from 'formik';
+import LottieView from 'lottie-react-native';
 import moment from 'moment';
 import 'moment/locale/id';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
@@ -9,19 +10,16 @@ import {
   RefreshControl,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import BackgroundService from 'react-native-background-actions';
 import Geolocation from 'react-native-geolocation-service';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {Modal, Portal, Provider} from 'react-native-paper';
+import {Dialog, Modal, Portal, Provider, Text} from 'react-native-paper';
 import TouchID from 'react-native-touch-id';
-import {
-  isMockingLocation,
-  MockLocationDetectorErrorCode,
-} from 'react-native-turbo-mock-location-detector';
 import {Bg, ILNullPhoto} from '../../assets';
+
+import Holiday from 'date-holidays';
 import {
   BackDropComponent,
   CardCircle,
@@ -58,42 +56,42 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../reduxx';
-import {COLORS, FONTS, RADIUS, SIZE, windowHeight} from '../../theme';
+import {
+  COLORS,
+  FONTS,
+  RADIUS,
+  SIZE,
+  windowHeight,
+  windowWidth,
+} from '../../theme';
 import PermintaanIzin from './PermintaanIzin';
-import Holiday from 'date-holidays';
 
 const Dashboard = ({navigation}: any) => {
   const dispatch = useAppDispatch();
+
   const [currTime, setCurrTime] = useState(moment());
+  const [isLoadingPresence, setIsLoadingPresence] = useState(false);
+  const [isModalVisible, setisModalVisible] = useState(false);
+  const [isInfoAbsen, setIsInfoAbsen] = useState(false);
+  const [isTimeForPresence, setIsTimeForPresence] = useState(false);
+  const [titlePresence, setTitlePresence] = useState('wait');
+  const [refreshing, setRefreshing] = useState(false);
+  const [isDialogVisible, setIsDialogVisible] = useState(false);
+
   const {isRequestPending, loading} = useAppSelector(
     (state: RootState) => state.dataRequest
   );
-
-  const newHD = new Holiday('ID');
-
-  const [isLoadingPresence, setIsLoadingPresence] = useState(false);
-
-  const [isModalVisible, setisModalVisible] = useState(false);
-
-  const [isInfoAbsen, setIsInfoAbsen] = useState(false);
-
-  const [isTimeForPresence, setIsTimeForPresence] = useState(false);
-
-  const [titlePresence, setTitlePresence] = useState('wait');
-
-  const [refreshing, setRefreshing] = useState(false);
-
   const {dataSetting} = useAppSelector((state: RootState) => state.dataSetting);
-
-  const {location, distance, locationPresence} = useAppSelector(
+  const {location, distance, locationPresence, isMocked} = useAppSelector(
     (state: RootState) => state.dataLocation
   );
   const {dataAkun} = useAppSelector((state: RootState) => state.dataAkun);
   const {presence, dataPresence} = useAppSelector(
     (state: RootState) => state.dataPresence
   );
-
   const {dataLogin} = useAppSelector((state: RootState) => state.dataAuth);
+
+  const newHD = new Holiday('ID');
 
   const dataForPresence = () => {
     const lat = location.latitude;
@@ -130,14 +128,8 @@ const Dashboard = ({navigation}: any) => {
   const attendance = async () => {
     setIsLoadingPresence(true);
     try {
-      const {isLocationMocked} = await isMockingLocation();
-      if (isLocationMocked) {
-        Alert.alert(
-          'Detected Location Spoofing',
-          'Please turn off location spoofing',
-          [{text: 'OK'}],
-          {cancelable: false}
-        );
+      if (isMocked) {
+        setIsDialogVisible(true);
       } else {
         if (presence === 'alreadyPresence') {
           showInfo('You have already checked in today', () => {});
@@ -187,18 +179,7 @@ const Dashboard = ({navigation}: any) => {
         }
       }
     } catch (error: any) {
-      switch (error.code) {
-        case MockLocationDetectorErrorCode.GPSNotEnabled: {
-          Alert.alert('GPS Not Enabled', 'Please enable GPS');
-          return;
-        }
-        case MockLocationDetectorErrorCode.CantDetermine: {
-          Alert.alert(
-            'Cannot determine if mock location is enabled',
-            'Please try again'
-          );
-        }
-      }
+      showError(error.message);
     } finally {
       setIsLoadingPresence(false);
     }
@@ -419,7 +400,7 @@ const Dashboard = ({navigation}: any) => {
         if (currTime.isBetween(mulaiJamPulang, batasJamPulang)) {
           dispatch(setPresence('keluar'));
           // If user is too far from location then set isTimeForPresence to false and titlePresence as "notInLocation"
-          if (distance > 0.5) {
+          if (distance > 0.05) {
             setIsTimeForPresence(false);
             setTitlePresence('notInLocation');
             return;
@@ -500,7 +481,7 @@ const Dashboard = ({navigation}: any) => {
                     }
                     onPress={() =>
                       showInfo(
-                        distance <= 0.1
+                        distance <= 0.05
                           ? 'Anda sudah berada di lingkungan sekolah'
                           : 'Anda belum di lingkungan sekolah',
                         () => {}
@@ -574,18 +555,41 @@ const Dashboard = ({navigation}: any) => {
               />
             </BottomSheet>
           </ImageBackground>
+          <Dialog
+            visible={isDialogVisible}
+            onDismiss={() => setIsDialogVisible(false)}
+            style={styles.dialog}>
+            <Dialog.Title style={{textAlign: 'center'}}>
+              Peringatan!!!
+            </Dialog.Title>
+            <Dialog.Content>
+              <LottieView
+                source={{
+                  uri: 'https://assets10.lottiefiles.com/packages/lf20_svy4ivvy.json',
+                }}
+                autoPlay
+                loop
+                style={styles.imageAnimation}
+              />
+              <Text style={styles.textDialog}>
+                Perangkat device terdeteksi menggunakan GPS palsu, Tolong
+                matikan GPS palsu Anda
+              </Text>
+            </Dialog.Content>
+            <Dialog.Actions style={{alignSelf: 'center', marginBottom: 20}}>
+              <CustomButton
+                onPress={() => setIsDialogVisible(false)}
+                type={'primary'}
+                title={'Okay'}
+                style={{width: '80%'}}
+              />
+            </Dialog.Actions>
+          </Dialog>
           <Modal
             visible={isModalVisible}
             onDismiss={() => {
               setisModalVisible(false);
               setIsInfoAbsen(false);
-            }}
-            contentContainerStyle={{
-              backgroundColor: 'white',
-              padding: 20,
-              marginHorizontal: 20,
-              marginVertical: 100,
-              borderRadius: 10,
             }}>
             {isInfoAbsen ? (
               <View style={styles.bottomView}>
@@ -605,7 +609,6 @@ const Dashboard = ({navigation}: any) => {
                     }
                   />
                 </View>
-                {/* <Gap height={20} /> */}
                 <Text style={styles.infoAbsenTitle}>Pulang :</Text>
 
                 <View style={styles.cardDashboard}>
@@ -770,6 +773,10 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 20,
     paddingHorizontal: 20,
+    padding: 20,
+    marginHorizontal: 20,
+    marginVertical: 100,
+    borderRadius: 10,
   },
 
   loginText: {
@@ -785,5 +792,23 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginTop: 12,
     color: COLORS.text.primary,
+  },
+
+  imageAnimation: {
+    width: windowWidth * 0.5,
+    height: windowWidth * 0.5,
+    alignSelf: 'center',
+  },
+  dialog: {
+    backgroundColor: COLORS.background.primary,
+  },
+
+  textDialog: {
+    fontFamily: FONTS.primary[800],
+    fontSize: 14,
+    marginTop: 12,
+    marginBottom: 4,
+    color: COLORS.text.primary,
+    textAlign: 'center',
   },
 });

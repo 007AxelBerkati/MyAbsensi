@@ -25,7 +25,7 @@ const Location = ({navigation, route}: any) => {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        {distance <= 0.1 ? (
+        {distance <= 0.05 ? (
           <Text
             style={{
               fontSize: SIZE.font16,

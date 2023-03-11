@@ -11,9 +11,10 @@ import {
   SET_DISTANCE,
 } from '../types';
 
-export const getLocationSuccess = (location: any) => ({
+export const getLocationSuccess = (location: any, mocked: any) => ({
   type: GET_LOCATION_SUCCESS,
   location,
+  mocked,
 });
 
 export const getLocationError = (error: any) => ({
@@ -36,8 +37,9 @@ export const getLocation = (locationPresence: any) => async (dispatch: any) => {
   Geolocation.getCurrentPosition(
     position => {
       const {latitude, longitude} = position.coords;
+      const {mocked} = position;
 
-      dispatch(getLocationSuccess({latitude, longitude}));
+      dispatch(getLocationSuccess({latitude, longitude}, mocked));
 
       const data: any = [];
 
