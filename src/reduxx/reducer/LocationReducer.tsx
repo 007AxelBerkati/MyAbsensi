@@ -5,6 +5,7 @@ import {
   GET_LOCATION_PRESENCE_LOADING,
   GET_LOCATION_PRESENCE_SUCCESS,
   GET_LOCATION_SUCCESS,
+  SET_CAN_PRESENCE,
   SET_DISTANCE,
 } from '../types';
 
@@ -15,6 +16,7 @@ type initialLocationState = {
   distance: number;
   locationPresence: any;
   isMocked: boolean;
+  canPresence: boolean;
 };
 
 const initialLocation: initialLocationState = {
@@ -29,6 +31,7 @@ const initialLocation: initialLocationState = {
   distance: 0,
   locationPresence: null,
   isMocked: false,
+  canPresence: false,
 };
 
 export const LocationReducer = (state = initialLocation, action: any) => {
@@ -75,6 +78,12 @@ export const LocationReducer = (state = initialLocation, action: any) => {
       return {
         ...state,
         distance: action.distance,
+      };
+
+    case SET_CAN_PRESENCE:
+      return {
+        ...state,
+        canPresence: action.canPresense,
       };
 
     default:

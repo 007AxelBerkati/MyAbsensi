@@ -117,6 +117,9 @@ export const SET_DISABLE_PRESENCE = '@SET_DISABLE_PRESENCE';
 // presence setPresence
 export const SET_PRESENCE = '@SET_PRESENCE';
 
+// canPresence
+export const SET_CAN_PRESENCE = '@SET_CAN_PRESENCE';
+
 // presence presence
 export const SET_PRESENCE_LOADING = '@SET_PRESENCE_LOADING';
 export const SET_PRESENCE_ERROR = '@SET_PRESENCE_ERROR';

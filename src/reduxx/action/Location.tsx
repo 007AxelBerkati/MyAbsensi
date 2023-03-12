@@ -8,8 +8,10 @@ import {
   GET_LOCATION_PRESENCE_LOADING,
   GET_LOCATION_PRESENCE_SUCCESS,
   GET_LOCATION_SUCCESS,
+  SET_CAN_PRESENCE,
   SET_DISTANCE,
 } from '../types';
+import Haversine from 'haversine';
 
 export const getLocationSuccess = (location: any, mocked: any) => ({
   type: GET_LOCATION_SUCCESS,
@@ -32,6 +34,11 @@ export const setDistance = (distance: any) => ({
   distance,
 });
 
+export const setCanPresence = (canPresense: any) => ({
+  type: SET_CAN_PRESENCE,
+  canPresense,
+});
+
 export const getLocation = (locationPresence: any) => async (dispatch: any) => {
   dispatch(getLocationLoading(true));
   Geolocation.getCurrentPosition(
@@ -43,20 +50,22 @@ export const getLocation = (locationPresence: any) => async (dispatch: any) => {
 
       const data: any = [];
 
-      locationPresence?.forEach((item: any) => {
-        const distance = haversineDistance(
-          {latitude, longitude},
-          {
-            latitude: item.location.latitude,
-            longitude: item.location.longitude,
-          },
-          true
-        );
-        data.push({
-          ...item,
-          distance,
-        });
-      });
+      if (Array.isArray(locationPresence) && locationPresence.length > 0) {
+        for (const item of locationPresence) {
+          const distance = Haversine(
+            {latitude, longitude},
+            {
+              latitude: item.location.latitude,
+              longitude: item.location.longitude,
+            }
+          );
+
+          data.push({
+            ...item,
+            distance,
+          });
+        }
+      }
 
       const sortedData = data.sort((a: any, b: any) => a.distance - b.distance);
 
