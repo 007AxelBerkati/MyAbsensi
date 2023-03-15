@@ -352,6 +352,9 @@ export const checkDataIzin = (uid: any) => async (dispatch: any) => {
           data.push(doc.data());
         }
       });
+
+      console.log('data', data);
+
       if (data.length === 3) {
         dispatch(checkDataIzinSuccess(false));
       } else {

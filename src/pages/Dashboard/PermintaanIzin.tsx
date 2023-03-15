@@ -87,7 +87,7 @@ const PermintaanIzin = ({handleCloseSheet, isRequestPending}: any) => {
     } else if (moment().day() === 0) {
       return 'Anda tidak bisa mengajukan izin, jika hari minggu';
     } else if (!bisaIzin) {
-      return 'Telah izin 2 kali berturut-turut';
+      return 'Telah izin 3 kali berturut-turut';
     } else {
       return 'Ajukan Izin';
     }
