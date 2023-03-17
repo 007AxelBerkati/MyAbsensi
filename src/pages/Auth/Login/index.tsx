@@ -31,10 +31,12 @@ import {
 } from '../../../reduxx';
 import {COLORS, FONTS, SIZE, windowHeight, windowWidth} from '../../../theme';
 import LottieView from 'lottie-react-native';
+import DeviceInfo from 'react-native-device-info';
 
 type loginUserProps = {
   email: string;
   password: string;
+  deviceID: string;
 };
 
 function LoginScreen({navigation}: any) {
@@ -46,8 +48,16 @@ function LoginScreen({navigation}: any) {
 
   const [dataLogin, setDataLogin] = useState(null);
 
-  const login = ({email, password}: loginUserProps) => {
-    dispatch(loginUser(email, password, navigation));
+  const [uniqueId, setuniqueId] = useState('');
+
+  useEffect(() => {
+    DeviceInfo.getUniqueId().then(uniqueId => {
+      setuniqueId(uniqueId);
+    });
+  }, []);
+
+  const login = ({email, password, deviceID}: loginUserProps) => {
+    dispatch(loginUser(email, password, deviceID, navigation));
   };
 
   useEffect(() => {
@@ -70,6 +80,7 @@ function LoginScreen({navigation}: any) {
                 const users = {
                   email: user.email,
                   password: user.password,
+                  deviceID: user.deviceID,
                 };
                 login(users);
               } else {
@@ -103,9 +114,12 @@ function LoginScreen({navigation}: any) {
         <View style={styles.bottomView}>
           <Text style={styles.loginText}>Login</Text>
           <Formik
-            initialValues={{email: '', password: ''}}
+            initialValues={{
+              email: '',
+              password: '',
+            }}
             onSubmit={values => {
-              login(values);
+              login({...values, deviceID: uniqueId});
             }}
             validationSchema={loginSchema}>
             {({

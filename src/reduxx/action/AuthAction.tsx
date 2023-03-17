@@ -72,7 +72,8 @@ export const setRole = (role: any) => ({
 });
 
 export const loginUser =
-  (email: any, password: any, navigation: any) => async (dispatch: any) => {
+  (email: any, password: any, deviceID: any, navigation: any) =>
+  async (dispatch: any) => {
     dispatch(setLoginLoading(true));
     await login(email, password)
       .then((res: any) => {
@@ -82,6 +83,18 @@ export const loginUser =
           .then(snapshot => {
             if (snapshot.val() !== null) {
               dispatch(setLoginSuccess(snapshot.val()));
+
+              if (snapshot.val().deviceID) {
+                if (snapshot.val().deviceID !== deviceID) {
+                  showError('Device ID Tidak Sesuai');
+                  return;
+                }
+              } else {
+                databaseRef()
+                  .ref(`users/${res?.user?.uid}`)
+                  .update({deviceID: deviceID});
+              }
+
               dispatch(setRole(snapshot.val().role));
               storeData('user', {
                 ...snapshot.val(),
@@ -92,6 +105,7 @@ export const loginUser =
                 email,
                 password,
                 uid: res.user.uid,
+                deviceID: deviceID,
               });
               showSuccess('Login Berhasil');
               navigation.replace('Dashboard');
